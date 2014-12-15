@@ -1,6 +1,7 @@
 package com.onecard;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.*;
 import android.view.Menu;
@@ -12,6 +13,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		startActivity(new Intent(MainActivity.this, GameMain.class));
 		Log.i("MYLog", "dd2");
 		Log.d("tag", "test");
 	}
