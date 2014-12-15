@@ -12,7 +12,8 @@ public interface CardSuffle {
 	/**
 	 * 무덤에 있는 덱 셔플하는 메서드
 	 * @param currentDec 현재 무덤에 있는 덱
+	 * @param useDec 사용한 덱
 	 * @return 새로 셔플한 덱
 	 */
-	public ArrayList<String> otherDecSuffle(ArrayList<String> currentDec);
+	public ArrayList<String> otherDecSuffle(ArrayList<String> currentDec, ArrayList<String> useDec);
 }

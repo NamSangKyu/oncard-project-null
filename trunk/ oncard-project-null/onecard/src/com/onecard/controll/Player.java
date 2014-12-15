@@ -1,6 +1,7 @@
 package com.onecard.controll;
 
 import java.util.ArrayList;
+import java.util.Queue;
 
 import com.onecard.gameinterface.AI;
 
@@ -11,6 +12,7 @@ public class Player {
 	private int win;
 	//플레이어 덱
 	private ArrayList<String> dec;
+	
 	public Player(String name, int win, ArrayList<String> dec) {
 		super();
 		this.name = name;
@@ -40,6 +42,4 @@ public class Player {
 	public String toString() {
 		return "Player [name=" + name + ", win=" + win + ", dec=" + dec + "]";
 	}
-	
-	
 }
