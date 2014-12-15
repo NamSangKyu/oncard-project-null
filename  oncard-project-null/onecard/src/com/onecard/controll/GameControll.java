@@ -159,6 +159,22 @@ public class GameControll {
 	public void setAi(AI ai) {
 		this.ai = ai;
 	}
+
+	public ArrayList<String> getTemplateDec() {
+		return templateDec;
+	}
+
+	public void setTemplateDec(ArrayList<String> templateDec) {
+		this.templateDec = templateDec;
+	}
+
+	public ArrayList<String> getUseDec() {
+		return useDec;
+	}
+
+	public void setUseDec(ArrayList<String> useDec) {
+		this.useDec = useDec;
+	}
 	
 	
 	
