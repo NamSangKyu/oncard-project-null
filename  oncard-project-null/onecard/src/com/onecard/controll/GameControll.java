@@ -41,9 +41,26 @@ public class GameControll {
 	}
     /**
      * 게임 시작 부분
+     * 
      */
-	public void start() {
+	public void start(int playerCount) {
 		// TODO Auto-generated method stub
+		//전체 카드덱 받아옴
+		ArrayList<ArrayList<String>> list = cardSuffle.createDec(playerCount);
+		
+		//플레이어 덱 셋팅
+		for(int i=0;i<playerCount;i++){
+			String name = "";
+			if(i!=0){
+				name = "인공지능 "+i;
+			}
+			playerList.add(new Player(name, 0, list.get(i)));
+		}
+		
+		//무덤 덱 및 사용한 덱 셋팅
+		templateDec = list.get(list.size()-1);
+		useDec.add(templateDec.get(0));
+		templateDec.remove(0);
 		
 	}
 	

@@ -15,7 +15,7 @@ public class GameStart extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(new GameDraw(GameStart.this));
 		controll = GameControll.getInstance();
-		controll.start();
+		controll.start(4);
 	}
 	
 }
