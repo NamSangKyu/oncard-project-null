@@ -24,6 +24,11 @@ public class GameControll {
 	private CardSuffle cardSuffle;
 	//게임 AI
 	private AI ai;
+	//사용자가 받을 무덤 덱
+	private ArrayList<String> templateDec;
+	//사용자가 낸 카드 무덤 덱
+	private ArrayList<String> useDec;
+	
 	private GameControll() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -73,31 +78,40 @@ public class GameControll {
 	 *카드 내기 및 먹는 부분 
 	 * @param state true 먹기, false 내기
 	 */
-	public GameCurrentState cardInputOutput(boolean state){
-		
-		
+	public GameCurrentState cardInputOutput(boolean state,int index){
+		if(state){
+			//카드 먹는 부분
+			playerList.get(playerTurn).getDec().add(templateDec.get(0));
+			templateDec.remove(0);
+		}else{
+			//카드 내는 부분
+			useDec.add(0, playerList.get(playerTurn).getDec().get(index));
+			playerList.get(playerTurn).getDec().remove(index);
+		}
+		//무덤 카드 셔플 부분
+		if(templateDec.size() < 5){
+			cardSuffle.otherDecSuffle(templateDec,useDec);
+		}else{
+			
+		}
 		return null;
 	}
 	
 	/**
-	 * 카드 선택 부분
-	 * @param state true : right, false : left
-	 */
-	public GameCurrentState cardSelect(boolean state){
-		return null;
-	}
-	/**
 	 * AI 활동 호출하는 메서드
-	 * @param groundCard
-	 * @param playerDec
-	 * @param item
-	 * @param state
+	 * @param item 적용된 아이템
+	 * @param state 선택된 문양
 	 */
-	public GameCurrentState playAI(String groundCard,ArrayList<ArrayList<String>> playerDec, String item, String state){
-		ai.play(groundCard, playerDec, item, state);
+	public GameCurrentState playAI(String item, String state){
+		//AI 선택 부분
+		ai.play(playerTurn, templateDec.get(0), item, state);
+		//카드 진행
+		
+		
 		return null;
 	}
 
+	//-----------------set/get method------------------------------
 	public boolean isTurn() {
 		return turn;
 	}
