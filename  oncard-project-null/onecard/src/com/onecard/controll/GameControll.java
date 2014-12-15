@@ -2,6 +2,7 @@ package com.onecard.controll;
 
 import java.util.ArrayList;
 
+import com.onecard.gameinterface.AI;
 import com.onecard.gameinterface.CardSuffle;
 
 public class GameControll {
@@ -21,7 +22,8 @@ public class GameControll {
 	private boolean gameState;
 	//카드 셔플 객체
 	private CardSuffle cardSuffle;
-	
+	//게임 AI
+	private AI ai;
 	private GameControll() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -44,14 +46,27 @@ public class GameControll {
 	 * 다음 턴으로 이동
 	 */
 	public GameCurrentState nextTurn(){
+		if(turn){
+			playerTurn++;
+		}else{
+			playerTurn--;
+		}
+		
+		if(playerTurn < 0)
+			playerTurn = playerList.size() -1;
+		if(playerTurn >= playerList.size())
+			playerTurn = 0;
+		
+		//현재 상태 만들어 주는 부분
 		return null;
 	}
 	
 	/**
 	 * 턴 방향 바뀌는 부분
 	 */
-	public GameCurrentState changeTurn(){
-		return null;
+	public void changeTurn(){
+		turn = !turn;
+		nextTurn();
 	}
 	
 	/**
@@ -59,6 +74,8 @@ public class GameControll {
 	 * @param state true 먹기, false 내기
 	 */
 	public GameCurrentState cardInputOutput(boolean state){
+		
+		
 		return null;
 	}
 	
@@ -69,6 +86,67 @@ public class GameControll {
 	public GameCurrentState cardSelect(boolean state){
 		return null;
 	}
+	/**
+	 * AI 활동 호출하는 메서드
+	 * @param groundCard
+	 * @param playerDec
+	 * @param item
+	 * @param state
+	 */
+	public GameCurrentState playAI(String groundCard,ArrayList<ArrayList<String>> playerDec, String item, String state){
+		ai.play(groundCard, playerDec, item, state);
+		return null;
+	}
+
+	public boolean isTurn() {
+		return turn;
+	}
+
+	public void setTurn(boolean turn) {
+		this.turn = turn;
+	}
+
+	public int getPlayerTurn() {
+		return playerTurn;
+	}
+
+	public void setPlayerTurn(int playerTurn) {
+		this.playerTurn = playerTurn;
+	}
+
+	public ArrayList<Player> getPlayerList() {
+		return playerList;
+	}
+
+	public void setPlayerList(ArrayList<Player> playerList) {
+		this.playerList = playerList;
+	}
+
+	public boolean isGameState() {
+		return gameState;
+	}
+
+	public void setGameState(boolean gameState) {
+		this.gameState = gameState;
+	}
+
+	public CardSuffle getCardSuffle() {
+		return cardSuffle;
+	}
+
+	public void setCardSuffle(CardSuffle cardSuffle) {
+		this.cardSuffle = cardSuffle;
+	}
+
+	public AI getAi() {
+		return ai;
+	}
+
+	public void setAi(AI ai) {
+		this.ai = ai;
+	}
+	
+	
 	
 	
 }
