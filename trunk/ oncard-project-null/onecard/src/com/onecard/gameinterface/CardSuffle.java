@@ -5,9 +5,10 @@ import java.util.ArrayList;
 public interface CardSuffle {
 	/**
 	 * 카드 최초 셔플하는 메서드
+	 * @param playerCount 플레이하는 인원
 	 * @return 각각의 플레이어 덱 및 무덤 덱
 	 */
-	public ArrayList<ArrayList<String>> createDec();
+	public ArrayList<ArrayList<String>> createDec(int playerCount);
 	
 	/**
 	 * 무덤에 있는 덱 셔플하는 메서드
