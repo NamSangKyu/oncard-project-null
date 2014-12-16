@@ -17,7 +17,7 @@ public class GameStart extends Activity {
 		setContentView(R.layout.activity_main);
 		
 		controll = GameControll.getInstance();
-		controll.start(4);
+		//controll.start(4);
 	}
 	
 	
