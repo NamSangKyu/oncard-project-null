@@ -2,6 +2,8 @@ package com.onecard.controll;
 
 import java.util.ArrayList;
 
+import com.onecard.gameinterface.Item;
+
 public class GameCurrentState {
 	// 바닥에 깔려 있는 패 or 낸 패
 	private String groundCard;
@@ -146,7 +148,29 @@ public class GameCurrentState {
 	 * 아이템 사용하는 부분
 	 * @param item
 	 */
-	public void useItem(String item){
+	public void useItem(int num){
+		
+		switch(num){
+		case 0:
+			attackCard *= 2;
+			break;
+		case 1:
+			attackCard += 2;
+			break;
+		case 2:
+			attackCard += 1;
+			break;
+		case 3:
+			attackCard = 0;
+			break;
+		case 4:
+			changeTurn();
+			break;
+		case 5:
+			attackCard /= 2;
+			break;
+			
+		}
 		
 	}
 	/**

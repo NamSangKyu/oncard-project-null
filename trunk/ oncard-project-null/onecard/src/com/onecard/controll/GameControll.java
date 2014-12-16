@@ -2,8 +2,11 @@ package com.onecard.controll;
 
 import java.util.ArrayList;
 
+import android.text.TextUtils.TruncateAt;
+
 import com.onecard.gameinterface.AI;
 import com.onecard.gameinterface.CardSuffle;
+import com.onecard.gameinterface.Item;
 
 public class GameControll extends Thread{
 	public static final int GAME_START = 0;
@@ -68,7 +71,19 @@ public class GameControll extends Thread{
 		currentState.nextTurn();
 		return currentState;
 	}
-
+	/**
+	 * 아이템 사용하기
+	 * @param item 사용할 아이템 명
+	 * @return 패 감소시키는 아이템은 사용후 카드 입력을 받아야 하므로 true 리턴, 그외 무적 및 턴 바꾸기는 카드를 받을 필요가 없으므로 false
+	 */
+	public boolean useItem(String item){
+		int num = Item.getInstance().getItemList().indexOf(item);
+		currentState.useItem(num);
+		if(num == 3||num == 4)
+			return false;
+		return true;
+	}
+	
 	/**
 	 * 카드 내기 및 먹는 부분
 	 * 
