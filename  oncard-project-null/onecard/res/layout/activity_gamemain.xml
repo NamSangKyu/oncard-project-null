@@ -2,30 +2,71 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="@drawable/home" >
 
-    <Button
-        android:id="@+id/btnGameStart"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="게임 시작" />
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="1"
+         >
 
-    <Button
-        android:id="@+id/btnRank"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="랭크" />
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="One Card"
+            android:textSize="56sp"
+            android:layout_weight="2"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+        	android:gravity="center" />
 
-    <Button
-        android:id="@+id/btnOption"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="옵션" />
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/btnExit"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="게임 종료" />
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="2" >
+        
+        <Button
+	        android:id="@+id/btnGameStart"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:text="게임 시작"
+	        android:textStyle="bold"
+	        android:textSize="32sp"
+	        android:layout_marginTop="10dp" />
+
+	    <Button
+	        android:id="@+id/btnRank"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:text="랭크"
+	        android:textStyle="bold"
+	        android:textSize="32sp"
+	        android:layout_marginTop="10dp" />
+	
+	    <Button
+	        android:id="@+id/btnOption"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:text="옵션"
+	        android:textStyle="bold"
+	        android:textSize="32sp"
+	        android:layout_marginTop="10dp" />
+	
+	    <Button
+	        android:id="@+id/btnExit"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:text="게임 종료"
+	        android:textStyle="bold"
+	        android:textSize="32sp"
+	        android:layout_marginTop="10dp" />
+        
+    </LinearLayout>
 
 </LinearLayout>

@@ -12,7 +12,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.main);
 		startActivity(new Intent(MainActivity.this, GameMain.class));
 		Log.i("MYLog", "dd2");
 		Log.d("tag", "test");
