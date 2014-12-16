@@ -7,6 +7,10 @@ import java.util.ArrayList;
  * @author user
  *
  */
+/**
+ * @author user
+ *
+ */
 public class GameCurrentState {
 	//바닥에 깔려 있는 패 or 낸 패
 	private String groundCard;
@@ -17,15 +21,18 @@ public class GameCurrentState {
 	//현재 턴인 플레이어 번호 == 리스트 인덱스와 동일
 	private int currentTurn;
 	//먹는 패
-	private String inOutCard;
+	private String inputCard;
+	//공격해서 누적된 카드 수
+	private int attackCard;
 	public GameCurrentState(String groundCard, ArrayList<Player> playerList,
-			boolean turn, int currentTurn, String inOutCard) {
+			boolean turn, int currentTurn, String inputCard, int attackCard) {
 		super();
 		this.groundCard = groundCard;
 		this.playerList = playerList;
 		this.turn = turn;
 		this.currentTurn = currentTurn;
-		this.inOutCard = inOutCard;
+		this.inputCard = inputCard;
+		this.attackCard = attackCard;
 	}
 	public String getGroundCard() {
 		return groundCard;
@@ -51,21 +58,25 @@ public class GameCurrentState {
 	public void setCurrentTurn(int currentTurn) {
 		this.currentTurn = currentTurn;
 	}
-	public String getInOutCard() {
-		return inOutCard;
+	public String getInputCard() {
+		return inputCard;
 	}
-	public void setInOutCard(String inOutCard) {
-		this.inOutCard = inOutCard;
+	public void setInputCard(String inputCard) {
+		this.inputCard = inputCard;
 	}
-	
+	public int getAttackCard() {
+		return attackCard;
+	}
+	public void setAttackCard(int attackCard) {
+		this.attackCard = attackCard;
+	}
 	@Override
 	public String toString() {
 		return "GameCurrentState [groundCard=" + groundCard + ", playerList="
 				+ playerList + ", turn=" + turn + ", currentTurn="
-				+ currentTurn + ", inOutCard=" + inOutCard + "]";
+				+ currentTurn + ", inputCard=" + inputCard + ", attackCard="
+				+ attackCard + "]";
 	}
-	
-	
 	
 	
 	
