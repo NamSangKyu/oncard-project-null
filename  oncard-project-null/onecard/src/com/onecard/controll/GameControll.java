@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import com.onecard.gameinterface.AI;
 import com.onecard.gameinterface.CardSuffle;
 
-public class GameControll{
+public class GameControll extends Thread{
 	public static final int GAME_START = 0;
 	public static final int GAME_RUN = 1;
 	public static final int GAME_OVER = 2;
+	
+	public boolean inputSelect;
 	public static GameCurrentState currentState = new GameCurrentState();
 	// 게임 컨트롤러
 	private static GameControll instance = new GameControll();
@@ -47,12 +49,15 @@ public class GameControll{
 		}
 	}
 
-	private void playingGame() {
+	public GameCurrentState playingGame() {
 		// TODO Auto-generated method stub
-		while(true){
-			if(currentState.getCurrentTurn()!=0)
-				playAI();
+		if(currentState.getCurrentTurn()!=0){
+			inputSelect = false;
+			return playAI();
+		}else{
+			inputSelect = true;
 		}
+		return currentState;
 	}
 
 	/**
@@ -65,13 +70,6 @@ public class GameControll{
 	}
 
 	/**
-	 * 턴 방향 바꾸고 다음턴으로 이동
-	 */
-	public void changeTurn() {
-		currentState.changeTurn();
-	}
-
-	/**
 	 * 카드 내기 및 먹는 부분
 	 * 
 	 * @param state
@@ -80,11 +78,10 @@ public class GameControll{
 	public GameCurrentState cardInputOutput(boolean state, int index) {
 		if(state){
 			currentState.inputCard();
-			return currentState;
 		}else{
 			currentState.outputCard(index);
-			return null;
 		}
+		return currentState;
 	}
 
 	/**
@@ -99,7 +96,6 @@ public class GameControll{
 		// AI 선택 부분
 		ai.play(currentState);
 		// 카드 진행 및 아이템 적용
-		
 		return currentState;
 	}
 

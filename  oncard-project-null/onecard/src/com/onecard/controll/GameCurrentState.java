@@ -50,6 +50,8 @@ public class GameCurrentState {
 	public GameCurrentState() {
 		super();
 		// TODO Auto-generated constructor stub
+		currentTurn = -1;
+		turn = true;
 	}
 
 	public String getGroundCard() {
@@ -154,28 +156,66 @@ public class GameCurrentState {
 		// TODO Auto-generated method stub
 		String tempCard = playerList.get(currentTurn).getDec().get(index);
 		if(checkCard(tempCard)){
-			
+			//낼 수 있는 카드 일때
+			//특수 카드 체크
+			checkSpecialCard(tempCard);
+			//낸 카드를 바닥으로 깔음
+			playerList.get(currentTurn).getDec().remove(index);
+			useDec.add(tempCard);
 		}else{
-			
+			//맞는 카드가 아님
+			currentTurn--;
 		}
-		
-		playerList.get(currentTurn).getDec().remove(index);
-		useDec.add(tempCard);
 	}
+	/**
+	 * 특수카드 체크 부분
+	 * @param tempCard 체크할 카드
+	 */
+	private void checkSpecialCard(String tempCard) {
+		// TODO Auto-generated method stub
+		switch(tempCard.charAt(1)){
+		case 'A':
+			attackCard += 3;
+			break;
+		case '2':
+			attackCard += 2;
+			break;
+		case 'C':
+			attackCard += 7;
+			break;
+		case 'B':
+			attackCard += 5;
+			break;
+		case 'Q':
+			changeTurn();
+			break;
+		case 'K':
+			currentTurn--;
+			break;
+		case 'J':
+			nextTurn();
+			break;
+		}
+	}
+
 	/**
 	 * 선택한 카드 체크하는 부분
 	 * @param tempCard 낼 카드
 	 * @return 내도 되는 카드면 참, 아니면 false
 	 */
 	private boolean checkCard(String tempCard) {
-		switch(tempCard.charAt(0)){
-		case 's':
-			break;
+		String groundCard = useDec.get(0);
+		boolean temp = false;
+		if(groundCard.charAt(0) == tempCard.charAt(0)){
+			temp = true;
+		}else if(tempCard.charAt(0) == 'J'){
+			temp = true;
+		}else{
+			if(groundCard.charAt(1) == tempCard.charAt(1))
+				temp = true;
+			temp = false;
 		}
-		
-		
-		
-		return false;
+		return temp;
 	}
 
 	/**
@@ -187,7 +227,7 @@ public class GameCurrentState {
 		// TODO Auto-generated method stub
 		if(attackCard == 0)
 			attackCard++;
-		while(attackCard < 0){
+		while(attackCard > 0){
 			playerList.get(currentTurn).getDec().add(templateDec.get(0));
 			templateDec.remove(0);
 			attackCard--;
@@ -214,6 +254,8 @@ public class GameCurrentState {
 		templateDec = list.get(list.size()-1);
 		useDec.add(templateDec.get(0));
 		templateDec.remove(0);
+		//초기 턴
+		currentTurn = -1;
 	}
 
 }
