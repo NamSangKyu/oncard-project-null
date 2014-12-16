@@ -12,13 +12,18 @@ public class Player {
 	private int win;
 	//플레이어 덱
 	private ArrayList<String> dec;
+	//아이템 리스트
+	private ArrayList<String> itemList;
 	
-	public Player(String name, int win, ArrayList<String> dec) {
+	public Player(String name, int win, ArrayList<String> dec,
+			ArrayList<String> itemList) {
 		super();
 		this.name = name;
 		this.win = win;
 		this.dec = dec;
+		this.itemList = itemList;
 	}
+
 	public String getName() {
 		return name;
 	}
