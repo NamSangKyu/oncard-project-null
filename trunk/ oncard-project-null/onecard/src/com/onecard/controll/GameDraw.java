@@ -7,12 +7,12 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
@@ -31,13 +31,23 @@ public class GameDraw extends SurfaceView implements Callback {
 	
 	private Resources res;						// Resources 객체
 	private BitmapDrawable bd;					// BitmapDrawable 객체
+	private Matrix matrix;
+	
 	static Bitmap imgBackground;				// 배경 비트맵
-	static Bitmap orgCard;						// 카드 원본
-	// 
+	static Bitmap card_org;						// 카드 원본
+	static Bitmap card_back_right;				// 오른쪽 플레이어 카드 뒷면
+	static Bitmap card_back_left;				// 왼쪽 플레이어 카드 뒷면		
+	static Bitmap card_back_top;				// 위쪽 플레이어 카드 뒷면
+	static Bitmap turn_left;					// 진행방향이 왼쪽
+	static Bitmap turn_right;					// 진행방향이 오른쪽
+	
 	Bitmap card[] = new Bitmap[54];				// 카드를 저장할 비트맵 배열
 	String cardName[][] = new String[54][2];	// 카드 이름과 비트맵 인덱스를 저장하는 2차원배열
+	
 	static int cw;								// 카드 가로길이
 	static int ch;								// 카드 세로길이
+	static int mgnLeft;							// 중앙에 놓여질 카드의 위치를 계산할 marginLeft 값
+	static int mgnTop;							// 중앙에 놓여질 카드의 위치를 계산할 marginTop 값
 	
 	static int mWidth, mHeight;					// 스크린 가로 세로
 	
@@ -61,56 +71,82 @@ public class GameDraw extends SurfaceView implements Callback {
 		mContext = context;
 		mThread = new GameThread(holder, context);
 		res = getResources();								// 리소스 가져오기
+		matrix = new Matrix();
 		
 		initGame();											// 게임환경 설정
-		initCard();											// 게임환경에 맞도록 카드길이 설정
+		initBitmap();										// 게임환경에 맞도록 카드길이 설정
 		
 		setFocusable(true);
 		
 	}
 	
-	//----------------------------------------------
-	// initCard() - 생성자에서 호출됨. 카드이미지 초기화
-	//----------------------------------------------
-	private void initCard() {
+	//-------------------------------------------------
+	// initCard() - 생성자에서 호출됨. Bitmap 전체 초기화
+	//-------------------------------------------------
+	private void initBitmap() {
+		// 배경화면 비트맵 설정
+		bd = (BitmapDrawable) res.getDrawable(R.drawable.background);		
+		imgBackground = bd.getBitmap();
+				
+		// 카드 원본 비트맵 설정
 		bd = (BitmapDrawable) res.getDrawable(R.drawable._card);
-		orgCard = bd.getBitmap();									// 카드 원본 비트맵 설정 (사진크기 : 202 * 282 )
+		card_org = bd.getBitmap();											
 		
-		cw=1196/13*2;
+		// 카드 뒷면 비트맵 설정(오른쪽 플레이어)
+		bd = (BitmapDrawable) res.getDrawable(R.drawable.back_right);
+		card_back_right = bd.getBitmap();									
+		
+		// 카드 뒷면 비트맵 설정(왼쪽 플레이어)
+		bd = (BitmapDrawable) res.getDrawable(R.drawable.back_left);		
+		card_back_left = bd.getBitmap();
+		
+		// 카드 뒷면 비트맵 설정(위쪽 플레이어)
+		bd = (BitmapDrawable) res.getDrawable(R.drawable.back_top);			
+		card_back_top = bd.getBitmap();
+		
+		// 진행방향 왼쪽 표시 비트맵
+		bd = (BitmapDrawable) res.getDrawable(R.drawable.turn_left);
+		turn_left = bd.getBitmap();
+		
+		// 진행방향 오른쪽 표시 비트맵
+		bd = (BitmapDrawable) res.getDrawable(R.drawable.turn_right);
+		turn_right = bd.getBitmap();
+		
+		cw=1196/13*2;			// 원본 카드 이미지에서 카드조각을 잘라낼 길이 
 		ch=641/5*2;
 		
 		// 클로버 카드
 		int x=0;
 		for(int i=0; i<13; i++) {
-			card[i] = Bitmap.createBitmap(orgCard, x, 0, cw, ch);
+			card[i] = Bitmap.createBitmap(card_org, x, 0, cw, ch);
 			x += cw;
 		}
 		
 		// 다이아 카드
 		x=0;
 		for(int i=0; i<13; i++) {
-			card[i+13] = Bitmap.createBitmap(orgCard, x, ch, cw, ch);
+			card[i+13] = Bitmap.createBitmap(card_org, x, ch, cw, ch);
 			x += cw;
 		}
 		
 		// 하트 카드
 		x=0;
 		for(int i=0; i<13; i++) {
-			card[i+26] = Bitmap.createBitmap(orgCard, x, ch*2, cw, ch);
+			card[i+26] = Bitmap.createBitmap(card_org, x, ch*2, cw, ch);
 			x += cw;
 		}
 		
 		// 스페이드 카드
 		x=0;
 		for(int i=0; i<13; i++) {
-			card[i+39] = Bitmap.createBitmap(orgCard, x, ch*3, cw, ch);
+			card[i+39] = Bitmap.createBitmap(card_org, x, ch*3, cw, ch);
 			x += cw;
 		}
 		
 		// 조커 카드
 		x=0;
 		for(int i=0; i<2; i++) {
-			card[i+52] = Bitmap.createBitmap(orgCard, x, ch*4, cw, ch);
+			card[i+52] = Bitmap.createBitmap(card_org, x, ch*4, cw, ch);
 			x += cw;
 		}
 		
@@ -186,7 +222,7 @@ public class GameDraw extends SurfaceView implements Callback {
 		// 스마트폰 가로, 세로 길이에 맞게 이미지 재조정
 		imageResize();
 		
-	}
+	} // initBitmap()
 	
 	//-------------------------------------------------------
 	// imageResize() - initCard()에서 호출됨. 이미지크기 재조정
@@ -194,19 +230,25 @@ public class GameDraw extends SurfaceView implements Callback {
 	private void imageResize() {
 		// 19/4 
 		// 29/6 
-		int x = mWidth*4/19;				// 재조정할 가로길이 : 스크린 가로길이 * 4/19
-		int y = mHeight*6/29;				// 재조정할 세로길이 : 스크린 세로길이 * 6/29
 		
+		// 변경된 길이로 카드 비트맵 재생성
 		for(int i=0; i<card.length; i++) {
-			card[i] = Bitmap.createScaledBitmap(card[i], x, y, true);
+			card[i] = Bitmap.createScaledBitmap(card[i], cw, ch, true);		
 		}
 		
-		cw = x;								// 변경된 카드 가로길이 저장
-		ch = y;								// 변경된 카드 세로길이 저장
-	}
+		// 카드뒷면 사이즈 재조정
+		int x = mHeight/7;
+		int y = mWidth/13;
+		
+		card_back_left = Bitmap.createScaledBitmap(card_back_left, y, x, true);
+		card_back_right = Bitmap.createScaledBitmap(card_back_right, y, x, true);
+		card_back_top = Bitmap.createScaledBitmap(card_back_top, x, y, true);
+		
+	} // imageResize()
+	
 	
 	//---------------------------------------------------------
-	// initGame() - 생성자에서 호출됨. 게임 환경 셋팅(배경, 스크린길이)
+	// initGame() - 생성자에서 호출됨. 게임 환경 셋팅(스크린길이)
 	//---------------------------------------------------------
 	private void initGame() {
 		// gameCtl = GameControll.getInstance();
@@ -214,14 +256,16 @@ public class GameDraw extends SurfaceView implements Callback {
 		DisplayMetrics metrics = new DisplayMetrics();
 		((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
-		mWidth = metrics.widthPixels;
-		mHeight = metrics.heightPixels;
+		mWidth = metrics.widthPixels;										// 스크린 가로길이
+		mHeight = metrics.heightPixels;										// 스크린 세로길이
 		
-		// 비트맵 드로어블 생성
-		bd = (BitmapDrawable) res.getDrawable(R.drawable.background);
+		cw = mWidth*4/19;													// 카드 가로길이
+		ch = mHeight*6/29;													// 카드 세로길이
 		
-		// 비트맵 드로어블 객체를 이용하여 비트맵 객체를 만듬
-		imgBackground = bd.getBitmap();
+		mgnLeft = (mWidth-cw)/2;
+		mgnTop = (mHeight-ch)/3;
+		
+		
 	}
 	
 	
@@ -303,14 +347,21 @@ public class GameDraw extends SurfaceView implements Callback {
 			canvas.drawBitmap(imgBackground, null, new Rect(0,0, mWidth, mHeight), null);
 			
 			// 카드 그리기
-			canvas.drawBitmap(card[0], 0, 0, null);
-			canvas.drawBitmap(card[12], cw, 0, null);
-			canvas.drawBitmap(card[53], cw*2, 0, null);
+			canvas.drawBitmap(card_back_left, 0, 0, null);
+			canvas.drawBitmap(card_back_top, card_back_right.getWidth(), 0, null);
+			canvas.drawBitmap(card_back_right, mWidth-card_back_right.getWidth(), 0, null);
+			
+			centerCardDraw(canvas);
+			
+			
 		}
 		
 		
-		public void countTime() {
-			
+		//-------------------------------------------
+		// centerCardDraw() - DrawAll()에서 호출됨
+		//-------------------------------------------
+		private void centerCardDraw(Canvas canvas) {
+			canvas.drawBitmap(card[23], mgnLeft, mgnTop, null);
 		}
 		
 		//---------------------------------
