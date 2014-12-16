@@ -21,31 +21,6 @@ public class GameCurrentState {
 	private ArrayList<String> useDec;
 	//현재 문양
 	private String pattern;
-	/**
-	 * 
-	 * @param groundCard
-	 *            바닥패 or 낸 패
-	 * @param playerList
-	 *            현재 플레이어 리스트
-	 * @param turn
-	 *            턴 방향
-	 * @param currentTurn
-	 *            현재 턴 번호
-	 * @param inputCard
-	 *            먹은 카드
-	 * @param attackCard
-	 *            공격해서 누적된 카드숫자
-	 */
-	public GameCurrentState(String groundCard, ArrayList<Player> playerList,
-			boolean turn, int currentTurn, String inputCard, int attackCard) {
-		super();
-		this.groundCard = groundCard;
-		this.playerList = playerList;
-		this.turn = turn;
-		this.currentTurn = currentTurn;
-		this.inputCard = inputCard;
-		this.attackCard = attackCard;
-	}
 
 	public GameCurrentState() {
 		super();
@@ -168,6 +143,13 @@ public class GameCurrentState {
 		}
 	}
 	/**
+	 * 아이템 사용하는 부분
+	 * @param item
+	 */
+	public void useItem(String item){
+		
+	}
+	/**
 	 * 특수카드 체크 부분
 	 * @param tempCard 체크할 카드
 	 */
@@ -189,6 +171,7 @@ public class GameCurrentState {
 		case 'Q':
 			changeTurn();
 			break;
+		case '7':
 		case 'K':
 			currentTurn--;
 			break;
@@ -197,7 +180,14 @@ public class GameCurrentState {
 			break;
 		}
 	}
-
+	/**
+	 * 7을 냈을 때 모양 바꾸기
+	 * @param pattern 모양 이니셜 하트 - H, 스페이드-S, 클로버-C, 다이아-D
+	 */
+	public void changePattern(String pattern){
+		this.pattern = pattern;
+	}
+	
 	/**
 	 * 선택한 카드 체크하는 부분
 	 * @param tempCard 낼 카드
@@ -206,7 +196,7 @@ public class GameCurrentState {
 	private boolean checkCard(String tempCard) {
 		String groundCard = useDec.get(0);
 		boolean temp = false;
-		if(groundCard.charAt(0) == tempCard.charAt(0)){
+		if(pattern.charAt(0) == tempCard.charAt(0)){
 			temp = true;
 		}else if(tempCard.charAt(0) == 'J'){
 			temp = true;
