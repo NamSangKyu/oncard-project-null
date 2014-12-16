@@ -380,6 +380,7 @@ public class GameDraw extends SurfaceView implements Callback {
 						// 시간 바
 							
 						DrawAll(canvas);
+						canRun = false;																	// 테스트용 코드
 					}
 				} finally {
 					if(canvas != null) {
