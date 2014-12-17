@@ -8,8 +8,7 @@ import com.onecard.gameinterface.CardSuffle;
 import com.onecard.gameinterface.GameResult;
 
 public class GameCurrentState {
-	// 바닥에 깔려 있는 패 or 낸 패
-	private String groundCard;
+	
 	// 플레이어 정보들 0번이 플레이어 나머지는 AI
 	private ArrayList<Player> playerList;
 	//턴 방향 false : left, true : right
@@ -47,14 +46,7 @@ public class GameCurrentState {
 		this.gameResultList = gameResultList;
 	}
 
-	public String getGroundCard() {
-		return groundCard;
-	}
-
-	public void setGroundCard(String groundCard) {
-		this.groundCard = groundCard;
-	}
-
+	
 	public ArrayList<Player> getPlayerList() {
 		return playerList;
 	}
@@ -113,7 +105,7 @@ public class GameCurrentState {
 
 	@Override
 	public String toString() {
-		return "GameCurrentState [groundCard=" + groundCard + ", playerList="
+		return "GameCurrentState [playerList="
 				+ playerList + ", turn=" + turn + ", currentTurn="
 				+ currentTurn + ", inputCard=" + inputCard + ", attackCard="
 				+ attackCard + "]";
