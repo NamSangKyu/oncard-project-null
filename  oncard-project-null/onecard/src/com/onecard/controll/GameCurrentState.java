@@ -158,6 +158,7 @@ public class GameCurrentState {
 			//낸 카드를 바닥으로 깔음
 			playerList.get(currentTurn).getDec().remove(index);
 			useDec.add(0,tempCard);
+			
 		}else{
 			//맞는 카드가 아님
 			currentTurn--;
@@ -239,8 +240,12 @@ public class GameCurrentState {
 	private boolean checkCard(String tempCard) {
 		String groundCard = useDec.get(0);
 		boolean temp = false;
-		if(pattern.charAt(0) == tempCard.charAt(0)){
-			temp = true;
+		if(pattern.charAt(0) == tempCard.charAt(0) || pattern.equals("A") || tempCard.charAt(0) == 'J'){
+			//공격이 있는지 없는 지에 따라서 체크
+			if(attackCard == 0)
+				temp = true;
+			else
+				temp = checkAttackCard(tempCard);
 		}else if(tempCard.charAt(0) == 'J'){
 			temp = true;
 		}else{
@@ -249,6 +254,22 @@ public class GameCurrentState {
 			temp = false;
 		}
 		return temp;
+	}
+	/**
+	 * 공격 카드 체크
+	 * @param tempCard
+	 * @return
+	 */
+	private boolean checkAttackCard(String tempCard) {
+		// TODO Auto-generated method stub
+		switch(tempCard.charAt(1)){
+		case 'A':
+		case '2':
+		case 'C':
+		case 'B':
+			return true;
+		}
+		return false;
 	}
 
 	/**
