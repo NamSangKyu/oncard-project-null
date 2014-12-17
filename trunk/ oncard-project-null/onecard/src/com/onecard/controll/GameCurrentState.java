@@ -2,7 +2,10 @@ package com.onecard.controll;
 
 import java.util.ArrayList;
 
-import com.onecard.gameinterface.Item;
+import com.onecard.CardModel;
+import com.onecard.GameMain;
+import com.onecard.gameinterface.CardSuffle;
+import com.onecard.gameinterface.GameResult;
 
 public class GameCurrentState {
 	// 바닥에 깔려 있는 패 or 낸 패
@@ -23,12 +26,25 @@ public class GameCurrentState {
 	private ArrayList<String> useDec;
 	//현재 문양
 	private String pattern;
-
+	// 카드 셔플 객체
+	private CardSuffle cardSuffle;
+	//각 플레이어 게임 결과 저장 리스트
+	private ArrayList<GameResult> gameResultList;
 	public GameCurrentState() {
 		super();
 		// TODO Auto-generated constructor stub
 		currentTurn = -1;
 		turn = true;
+		cardSuffle = CardModel.getInstance(null);
+		gameResultList = new ArrayList<GameResult>();
+	}
+	
+	public ArrayList<GameResult> getGameResultList() {
+		return gameResultList;
+	}
+
+	public void setGameResultList(ArrayList<GameResult> gameResultList) {
+		this.gameResultList = gameResultList;
 	}
 
 	public String getGroundCard() {
@@ -107,15 +123,18 @@ public class GameCurrentState {
 	 */
 	public void nextTurn() {
 		// TODO Auto-generated method stub
-		if(turn){
-			currentTurn++;
-		}else{
-			currentTurn--;
-		}
-		if(currentTurn< 0)
-			currentTurn = playerList.size()-1;
-		else
-			currentTurn = 0;
+		do{
+			if(turn){
+				currentTurn++;
+			}else{
+				currentTurn--;
+			}
+			if(currentTurn< 0)
+				currentTurn = playerList.size()-1;
+			else
+				currentTurn = 0;
+				
+		}while(playerList.get(currentTurn).isWorkout());
 	}
 	/**
 	 * 턴 바꾸고 다음턴으로 가기
@@ -252,8 +271,13 @@ public class GameCurrentState {
 	 * @param list 전체 덱
 	 * @param playerCount 플레이어 숫자
 	 */
-	public void createGame(ArrayList<ArrayList<String>> list,int playerCount) {
+	public void createGame(int playerCount) {
 		// TODO Auto-generated method stub
+		gameResultList = new ArrayList<GameResult>();
+		
+		// 전체 카드덱 받아옴
+		ArrayList<ArrayList<String>> list = cardSuffle.createDec(playerCount);
+		
 		playerList = new ArrayList<Player>();
 		// 플레이어 덱 셋팅
 		for (int i = 0; i < playerCount; i++) {
@@ -261,8 +285,9 @@ public class GameCurrentState {
 			if (i != 0) {
 				name = "인공지능 " + i;
 			}
-			//플레이어 추가 부분
-			//playerList.add(new Player(name, 0, list.get(i)));
+			//플레이어 추가 부분 - 맨마지막 부분은 아이템
+			playerList.add(new Player(name, 0, list.get(i), null));
+			gameResultList.add(new GameResult(name));
 		}
 		//무덤덱 및 초기 패 셋팅
 		templateDec = list.get(list.size()-1);
@@ -270,6 +295,80 @@ public class GameCurrentState {
 		templateDec.remove(0);
 		//초기 턴
 		currentTurn = -1;
+	}
+	/**
+	 * 현재 게임 종료 체크 부분
+	 * @return true : 게임 오버 or false 게임 계속
+	 */
+	public boolean checkGame() {
+		// TODO Auto-generated method stub
+		boolean temp = false;
+			//플레이어 및 AI가 모두 카드를 소진한 경우
+			if(playerList.get(0).getDec().size() == 0){
+				temp = true;
+			}
+			//현재 턴 플레이어 및 AI 파산체크
+			if(playerList.get(currentTurn).getDec().size() >= 15 || temp){
+				playerList.get(currentTurn).setWorkout(true);
+				templateDec.addAll(playerList.get(currentTurn).getDec());
+				cardSuffle.otherDecSuffle(templateDec, useDec);
+				//playerList.get(i).getDec().clear();
+			}
+			
+		return temp;
+	}
+
+	
+	public CardSuffle getCardSuffle() {
+		return cardSuffle;
+	}
+
+	public void setCardSuffle(CardSuffle cardSuffle) {
+		this.cardSuffle = cardSuffle;
+	}
+	/**
+	 * 승자 셋팅
+	 */
+	public void setWinner() {
+		// TODO Auto-generated method stub
+		for(int i=0;i<playerList.size();i++){
+			if(playerList.get(i).isWorkout()){
+				playerList.get(i).setWin(0);
+			}else{
+				playerList.get(i).setWin(playerList.get(i).getWin()+1);
+				gameResultList.get(i).setScore(gameResultList.get(i).getScore()+excuteScore(i));
+				gameResultList.get(i).setWin(gameResultList.get(i).getWin()+1);
+			}
+		}
+		
+	}
+	/**
+	 * 해당 플레이어 점수 산출 메서드
+	 * @param playerIndex 해당 플레이어 인덱스
+	 * @return 산출된 점수
+	 */
+	private int excuteScore(int playerIndex) {
+		// TODO Auto-generated method stub
+		int total = 0;
+		for(int i=0;i<playerList.size();i++){
+			if(i==playerIndex)
+				continue;
+			total += playerList.get(i).getDec().size() * playerList.get(i).getWin();
+		}
+		return total;
+	}
+	/**
+	 *  5연승한 플레이어가 있는 지 확인하는 메서드
+	 * @return 있으면 true, 없으면 false
+	 */
+	public boolean resultGame() {
+		// TODO Auto-generated method stub
+		for(int i=0;i<playerList.size();i++){
+			if(playerList.get(i).getWin() >= 5){
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

@@ -6,12 +6,14 @@ import android.text.TextUtils.TruncateAt;
 
 import com.onecard.gameinterface.AI;
 import com.onecard.gameinterface.CardSuffle;
+import com.onecard.gameinterface.GameResult;
 import com.onecard.gameinterface.Item;
 
-public class GameControll extends Thread{
+public class GameControll {
 	public static final int GAME_START = 0;
 	public static final int GAME_RUN = 1;
 	public static final int GAME_OVER = 2;
+	public static final int GAME_ROUND_EXIT = 3;
 	
 	public boolean inputSelect;
 	public static GameCurrentState currentState = new GameCurrentState();
@@ -19,8 +21,7 @@ public class GameControll extends Thread{
 	private static GameControll instance = new GameControll();
 	// 게임 상태 : 게임 시작 == 0, 게임 진행 == 1, 게임 오버 == 2
 	private int gameState;
-	// 카드 셔플 객체
-	private CardSuffle cardSuffle;
+	
 	// 게임 AI
 	private AI ai;
 
@@ -42,9 +43,8 @@ public class GameControll extends Thread{
 	 */
 	public void start(int playerCount) {
 		// TODO Auto-generated method stub
-		// 전체 카드덱 받아옴
-		ArrayList<ArrayList<String>> list = cardSuffle.createDec(playerCount);
-		currentState.createGame(list,playerCount);
+		
+		currentState.createGame(playerCount);
 
 		// 게임 시작 부분
 		if(gameState == GAME_START){
@@ -109,11 +109,44 @@ public class GameControll extends Thread{
 	 */
 	public GameCurrentState playAI() {
 		// AI 선택 부분
-		ai.play(currentState);
+		String aiPlay[] = ai.play(currentState);
+		//사용한 아이템
+		if(aiPlay[1]!=null){
+			useItem(aiPlay[1]);
+		}
+		//낸 카드
+		if(aiPlay[0]==null){
+			cardInputOutput(true, 0);
+		}else{
+			cardInputOutput(false, Integer.parseInt(aiPlay[0]));
+		}
 		// 카드 진행 및 아이템 적용
 		return currentState;
 	}
-
+	
+	/**
+	 * 게임오버 체크 부분
+	 */
+	public int checkGame(){
+		if(currentState.checkGame()){
+			gameState = GAME_ROUND_EXIT;
+			//1등을 제외한 모든 플레이어 연승 제거 및 점수 셋팅
+			currentState.setWinner();
+		}
+		if(currentState.resultGame()){
+			gameState = GAME_OVER;
+		}
+		return gameState;
+	}
+	
+	/**
+	 * 게임 결과 받아오기
+	 * 
+	 */
+	public ArrayList<GameResult> resultGame(){
+				return currentState.getGameResultList();
+	}
+	
 	// -----------------set/get method------------------------------
 
 	public static GameCurrentState getCurrentState() {
@@ -132,14 +165,7 @@ public class GameControll extends Thread{
 		this.gameState = gameState;
 	}
 
-	public CardSuffle getCardSuffle() {
-		return cardSuffle;
-	}
-
-	public void setCardSuffle(CardSuffle cardSuffle) {
-		this.cardSuffle = cardSuffle;
-	}
-
+	
 	public AI getAi() {
 		return ai;
 	}
