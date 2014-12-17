@@ -370,5 +370,24 @@ public class GameCurrentState {
 		}
 		return false;
 	}
+	/**
+	 * 새게임 시작하는 부분
+	 */
+	public void restart() {
+		// TODO Auto-generated method stub
+		// 전체 카드덱 받아옴
+				ArrayList<ArrayList<String>> list = cardSuffle.createDec(playerList.size());
+				
+				// 플레이어 덱 셋팅
+				for (int i = 0; i < playerList.size(); i++) {
+					playerList.get(i).setDec(list.get(i));
+				}
+				//무덤덱 및 초기 패 셋팅
+				templateDec = list.get(list.size()-1);
+				useDec.add(templateDec.get(0));
+				templateDec.remove(0);
+				//초기 턴
+				currentTurn = -1;
+	}
 
 }
