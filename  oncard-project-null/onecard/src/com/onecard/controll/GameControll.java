@@ -51,7 +51,17 @@ public class GameControll {
 			gameState = GAME_RUN;
 		}
 	}
-
+	
+	/**
+	 * 새게임 시작 부분
+	 * @return
+	 */
+	public void restart(){
+		currentState.restart();
+		gameState = GAME_RUN;
+	}
+	
+	
 	public GameCurrentState playingGame() {
 		// TODO Auto-generated method stub
 		if(currentState.getCurrentTurn()!=0){
@@ -154,8 +164,6 @@ public class GameControll {
 			currentState = new GameCurrentState();
 		return currentState;
 	}
-
-	
 
 	public int getGameState() {
 		return gameState;
