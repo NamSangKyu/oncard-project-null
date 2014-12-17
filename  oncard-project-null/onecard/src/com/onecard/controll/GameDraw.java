@@ -293,6 +293,7 @@ public class GameDraw extends SurfaceView implements Callback {
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		mThread.stopThread();
+		Log.d("MyLog", "surfaceDestroyed");
 		
 	}
 	
@@ -343,16 +344,18 @@ public class GameDraw extends SurfaceView implements Callback {
 		// DrawAll() - 게임화면 그리는 부분
 		//---------------------------------
 		public void DrawAll(Canvas canvas) {
-			// 배경 그리기
-			canvas.drawBitmap(imgBackground, null, new Rect(0,0, mWidth, mHeight), null);
-			
-			// 카드 그리기
-			canvas.drawBitmap(card_back_left, 0, 0, null);
-			canvas.drawBitmap(card_back_top, card_back_right.getWidth(), 0, null);
-			canvas.drawBitmap(card_back_right, mWidth-card_back_right.getWidth(), 0, null);
-			
-			centerCardDraw(canvas);
-			
+			if(canvas != null) {
+				// 배경 그리기
+				canvas.drawBitmap(imgBackground, null, new Rect(0,0, mWidth, mHeight), null);
+				
+				// 카드 그리기
+				canvas.drawBitmap(card_back_left, 0, 0, null);
+				canvas.drawBitmap(card_back_top, card_back_right.getWidth(), 0, null);
+				canvas.drawBitmap(card_back_right, mWidth-card_back_right.getWidth(), 0, null);
+				
+				centerCardDraw(canvas);
+				Log.d("MyLog", "DrawAll()");	
+			}
 			
 		}
 		
@@ -380,7 +383,7 @@ public class GameDraw extends SurfaceView implements Callback {
 						// 시간 바
 							
 						DrawAll(canvas);
-						canRun = false;																	// 테스트용 코드
+																						// 테스트용 코드
 					}
 				} finally {
 					if(canvas != null) {
