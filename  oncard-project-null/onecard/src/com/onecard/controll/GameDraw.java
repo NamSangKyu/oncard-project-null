@@ -8,9 +8,9 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
-import android.text.TextUtils.TruncateAt;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -33,13 +33,14 @@ public class GameDraw extends SurfaceView implements Callback {
 	private Matrix matrix;
 	
 	// Thread에서 canvas 작업에 필요한 변수들
+	private Paint mPaint;						// Paint 객체
 	private boolean cardIn;						// 카드 먹을 때
 	private boolean cardOut;					// 카드 낼 때
 	private int playerTurn;						// 어떤 플레이어의 턴
 	private boolean mTurn;						// 턴방향(오른쪽 : true, 왼쪽 : false)
 	private int centerCardIdx;					// 중앙에 그릴 카드 인덱스
 	private String centerCardName;				// 중앙에 그릴 카드 이름
-	private int cntWin;							// 이긴 횟수
+	private int cntWin;							// 플레이어가 이긴 횟수
 	private int playerNum;						// 플레이어 인원 수
 	private int cardNumPlayer;					// 플레이어의 카드갯수
 	private int cardNumLeft;					// 왼쪽 AI 카드갯수
@@ -48,16 +49,33 @@ public class GameDraw extends SurfaceView implements Callback {
 	private int cardMgnTop;						// 위쪽 플레이어의 뒤집어진 카드를 겹칠 간격
 	private int cardMgnLeft;					// 왼쪽 플레이어의 뒤집어진 카드를 겹칠 간격
 	private int cardMgnRight;					// 오른쪽 플레이어의 뒤집어진 카드를 겹칠 간격
+	private int winImgMgnLeft;					// 승리횟수 이미지 marginLeft
+	private int winImgMgnTop;					// 승리횟수 이미지 marginTop
+	private int mgnCardNL;						// 카드와 발바닥 사이의 거리
+	private int mgnCharLeft;					// 캐릭터를 그릴 위치 marginLeft
+	private int mgnCharTop;						// 캐릭터를 그릴 위치 marginTop
+	private int characterRad;					// 캐릭터의 지름
 	
 	// 계산용 변수
 	private int lengthTop;						// 위쪽 카드를 그릴 위치계산용 전체길이 변수
 	private int lengthLeft;						// 왼쪽 카드를 그릴 위치계산용 전체길이 변수
 	private int lengthRight;					// 오른쪽 카드를 그릴 위치계산용 전체길이 변수
-	private int mgnTop;							// 카드를 그릴 위치계산용 margin 변수
+	private int mgnTop;							// 뒷면카드를 그리기 시작할 위치계산용 margin 변수
 	private int mgnLeft;
 	private int mgnRight;
 	
 	static Bitmap imgBackground;				// 배경 비트맵
+	static Bitmap playerCharacter;				// 플레이어 캐릭터
+	static Bitmap leftCharacter;				// 왼쪽 AI 캐릭터
+	static Bitmap rightCharacter;				// 오른쪽 AI 캐릭터
+	static Bitmap topCharacter;					// 위쪽 AI 캐릭터
+	static Bitmap leaveWin;						// 발바닥(남은 승리 수)
+	static Bitmap win0;							// 승리 횟수 비트맵 0
+	static Bitmap win1;							// 승리 횟수 비트맵 1
+	static Bitmap win2;							// 승리 횟수 비트맵 2
+	static Bitmap win3;							// 승리 횟수 비트맵 3
+	static Bitmap win4;							// 승리 횟수 비트맵 4
+	static Bitmap win5;							// 승리 횟수 비트맵 5
 	static Bitmap card_org;						// 카드 원본
 	static Bitmap card_back_right;				// 오른쪽 플레이어 카드 뒷면
 	static Bitmap card_back_left;				// 왼쪽 플레이어 카드 뒷면		
@@ -85,7 +103,7 @@ public class GameDraw extends SurfaceView implements Callback {
 	private static GameControll gameControll;
 	private ArrayList<Player> playerList;		// 플레이어 리스트를 가져올 리스트 객체
 	private Player player;						// 플레이어(자신)의 정보를 가져올 Player 객체
-	private ArrayList<String> useDec;			// 사용한  덱(중앙에 겹쳐진 카드 더미)
+	private ArrayList<String> useDec;			// 사용한 덱(중앙에 겹쳐진 카드 더미)
 	private ArrayList<String> dec;				// 플레이어(자신)이 가진 카드를 저장할 리스트
 	
 	
@@ -146,6 +164,64 @@ public class GameDraw extends SurfaceView implements Callback {
 		// 진행방향 오른쪽 표시 비트맵
 		bd = (BitmapDrawable) res.getDrawable(R.drawable.turn_right);
 		turn_right = bd.getBitmap();
+		
+		// 플레이어의 캐릭터
+		bd = (BitmapDrawable) res.getDrawable(R.drawable.c1);
+		playerCharacter = bd.getBitmap();
+		
+		if(playerNum == 2) {
+			// 위쪽 AI의 캐릭터
+			bd = (BitmapDrawable) res.getDrawable(R.drawable.c4);
+			topCharacter = bd.getBitmap();
+		} else if(playerNum == 3) {
+			// 왼쪽 AI의 캐릭터
+			bd = (BitmapDrawable) res.getDrawable(R.drawable.c2);
+			leftCharacter = bd.getBitmap();
+			
+			// 오른쪽 AI의 캐릭터
+			bd = (BitmapDrawable) res.getDrawable(R.drawable.c3);
+			rightCharacter = bd.getBitmap();
+		} else if(playerNum == 4) {
+			// 왼쪽 AI의 캐릭터
+			bd = (BitmapDrawable) res.getDrawable(R.drawable.c2);
+			leftCharacter = bd.getBitmap();
+			
+			// 오른쪽 AI의 캐릭터
+			bd = (BitmapDrawable) res.getDrawable(R.drawable.c3);
+			rightCharacter = bd.getBitmap();
+			
+			// 위쪽 AI의 캐릭터
+			bd = (BitmapDrawable) res.getDrawable(R.drawable.c4);
+			topCharacter = bd.getBitmap();
+		}
+		
+		// 발바닥
+		bd = (BitmapDrawable) res.getDrawable(R.drawable.b1);
+		leaveWin = bd.getBitmap();
+		
+		// 승리 횟수 0
+		bd = (BitmapDrawable) res.getDrawable(R.drawable.w0);
+		win0 = bd.getBitmap();
+		
+		// 승리 횟수 1
+		bd = (BitmapDrawable) res.getDrawable(R.drawable.w1);
+		win1 = bd.getBitmap();
+		
+		// 승리 횟수 2
+		bd = (BitmapDrawable) res.getDrawable(R.drawable.w2);
+		win2 = bd.getBitmap();
+		
+		// 승리 횟수 3
+		bd = (BitmapDrawable) res.getDrawable(R.drawable.w3);
+		win3 = bd.getBitmap();
+		
+		// 승리 횟수 4
+		bd = (BitmapDrawable) res.getDrawable(R.drawable.w4);
+		win4 = bd.getBitmap();
+		
+		// 승리 횟수 5
+		bd = (BitmapDrawable) res.getDrawable(R.drawable.w5);
+		win5 = bd.getBitmap();
 		
 		cw=1196/13*2;			// 원본 카드 이미지에서 카드조각을 잘라낼 길이 
 		ch=641/5*2;
@@ -263,13 +339,13 @@ public class GameDraw extends SurfaceView implements Callback {
 	// imageResize() - initCard()에서 호출됨. 이미지크기 재조정
 	//-------------------------------------------------------
 	private void imageResize() {
-		// 19/4 
-		// 29/6 
+		// 19/4 스크린 가로 : mWidth
+		// 29/6 스크린 세로 : mHeight
 		
 		// 변경된 길이로 카드 비트맵 재생성
 		for(int i=0; i<card.length; i++) {
 			card[i] = Bitmap.createScaledBitmap(card[i], cw, ch, true);		
-		}
+		} // for
 		
 		// 카드뒷면 사이즈 재조정
 		bw = mHeight/7;
@@ -286,6 +362,34 @@ public class GameDraw extends SurfaceView implements Callback {
 		turn_left = Bitmap.createScaledBitmap(turn_left, tw, th, true);
 		turn_right = Bitmap.createScaledBitmap(turn_right, tw, th, true);
 		
+		// 캐릭터의 지름
+		characterRad = ch/2;
+		
+		// 캐릭터 비트맵 사이즈 재조정
+		playerCharacter = Bitmap.createScaledBitmap(playerCharacter, characterRad, characterRad, true);
+		
+		if(playerNum == 2) {
+			topCharacter = Bitmap.createScaledBitmap(topCharacter, characterRad, characterRad, true);
+		} else if(playerNum == 3) {
+			leftCharacter = Bitmap.createScaledBitmap(leftCharacter, characterRad, characterRad, true);
+			rightCharacter = Bitmap.createScaledBitmap(rightCharacter, characterRad, characterRad, true);
+		} else if(playerNum == 4) {
+			topCharacter = Bitmap.createScaledBitmap(topCharacter, characterRad, characterRad, true);
+			leftCharacter = Bitmap.createScaledBitmap(leftCharacter, characterRad, characterRad, true);
+			rightCharacter = Bitmap.createScaledBitmap(rightCharacter, characterRad, characterRad, true);
+		} // if
+		
+		// 발바닥 사이즈 재조정
+		leaveWin = Bitmap.createScaledBitmap(leaveWin, characterRad/3, characterRad/3, true);					// 발바닥 이미지 : 캐릭터 1/3
+		
+		// 승리 횟수 비트맵 사이즈 재조정
+		win0 = Bitmap.createScaledBitmap(win0, ch/4, ch/3, true);							// 승리횟수 이미지 : (카드높이의 1/4, 카드높이의 1/3)
+		win1 = Bitmap.createScaledBitmap(win1, ch/4, ch/3, true);
+		win2 = Bitmap.createScaledBitmap(win2, ch/4, ch/3, true);
+		win3 = Bitmap.createScaledBitmap(win3, ch/4, ch/3, true);
+		win4 = Bitmap.createScaledBitmap(win4, ch/4, ch/3, true);
+		win5 = Bitmap.createScaledBitmap(win5, ch/4, ch/3, true);
+		
 	} // imageResize()
 	
 	
@@ -293,9 +397,12 @@ public class GameDraw extends SurfaceView implements Callback {
 	// initGame() - 생성자에서 호출됨. 게임 환경 셋팅(스크린길이)
 	//---------------------------------------------------------
 	private void initGame() {
+		playerList = gameCurState.getPlayerList();			// 플레이어 리스트를 가져온다.
+		player = playerList.get(0);							// 플레이어 리스트에서 플레이어(자신)의 정보(Player 타입)를 가져옴.
+		playerNum = playerList.size();						// 플레이어 인원 수 설정
+		
 		DisplayMetrics metrics = new DisplayMetrics();
 		((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
 		mWidth = metrics.widthPixels;						// 스크린 가로길이
 		mHeight = metrics.heightPixels;						// 스크린 세로길이
 		
@@ -308,10 +415,15 @@ public class GameDraw extends SurfaceView implements Callback {
 		mgnLeftTurnImg = (mWidth-tw)/2;						// 턴표시 이미지 왼쪽 여백
 		mgnBotTurnImg = th/2;								// 턴표시 이미지 아래 여백
 		
-		playerList = gameCurState.getPlayerList();			// 플레이어 리스트를 가져온다.
-		player = playerList.get(0);							// 플레이어 리스트에서 플레이어(자신)의 정보(Player 타입)를 가져옴.
+		winImgMgnLeft = mWidth - win0.getWidth() - win0.getWidth()/3;	// 승리 횟수 이미지 margin값 설정
+		winImgMgnTop = winImgMgnLeft;
 		
-		playerNum = playerList.size();						// 플레이어 인원 수
+		mgnCardNL = bh + leaveWin.getWidth()/2;						// 뒷면카드와 발바닥 사이의 거리
+		mgnCharLeft = bh + doubleToInt(leaveWin.getWidth()*2);		// 캐릭터의 marginLeft
+		mgnCharTop = (mgnCenterTop - characterRad/2);				// 캐릭터의 marginTop
+		
+		
+		mPaint = new Paint();								// Paint 생성
 		
 		
 		
@@ -492,8 +604,8 @@ public class GameDraw extends SurfaceView implements Callback {
 			lengthLeft = doubleToInt(cardNumTop*bw - ((cardMgnLeft) * (cardNumTop-1)));			// 왼쪽에 그릴 카드 전체길이 구하기
 			lengthRight = doubleToInt(cardNumTop*bw - ((cardMgnRight) * (cardNumTop-1)));		// 오른쪽에 그릴 카드 전체길이 구하기
 			mgnTop = (mWidth - lengthTop)/2;													// 위쪽 카드를 그리기 시작할 위치
-			mgnLeft = (mHeight - lengthLeft)/2;													// 왼쪽 카드를 그리기 시작할 위치
-			mgnRight = (mHeight - lengthRight)/2;												// 오른쪽 카드를 그리기 시작할 위치
+			mgnLeft = (mHeight - ch - lengthLeft)/2;													// 왼쪽 카드를 그리기 시작할 위치
+			mgnRight = (mHeight - ch - lengthRight)/2;												// 오른쪽 카드를 그리기 시작할 위치
 			
 			break;
 		} // switch
@@ -519,44 +631,129 @@ public class GameDraw extends SurfaceView implements Callback {
 				canvas.drawBitmap(imgBackground, null, new Rect(0,0, mWidth, mHeight), null);
 				
 				// 연승 횟수 그리기
-				// cntWin에 따라 비트맵에서 해당숫자 가져오기
+				if(cntWin == 0) {
+					canvas.drawBitmap(win0, winImgMgnLeft, winImgMgnTop, null);
+				} else if(cntWin == 1) {
+					canvas.drawBitmap(win1, winImgMgnLeft, winImgMgnTop, null);
+				} else if(cntWin == 2) {
+					canvas.drawBitmap(win2, winImgMgnLeft, winImgMgnTop, null);
+				} else if(cntWin == 3) {
+					canvas.drawBitmap(win3, winImgMgnLeft, winImgMgnTop, null);
+				} else if(cntWin == 4) {
+					canvas.drawBitmap(win4, winImgMgnLeft, winImgMgnTop, null);
+				} else if(cntWin == 5) {
+					canvas.drawBitmap(win5, winImgMgnLeft, winImgMgnTop, null);
+				}
 				
-				// AI가 소유한 카드 그리기(뒷면 카드)
-				if(playerNum == 2) {														// 2인용
+				int mgnBotB = mHeight - ch - doubleToInt(leaveWin.getHeight()*2);							// 플레이어의 발바닥 계산 margin
+				int mgnBotC = mHeight - ch - doubleToInt(leaveWin.getHeight()*2.5) - characterRad;			// 플레이어의 캐릭터 계산 margin
+				// 플레이어의 캐릭터 그리기
+				canvas.drawBitmap(playerCharacter, (mWidth-topCharacter.getWidth())/2, mgnBotC, null);
+				// 플레이어의 발바닥 그리기
+				switch(cntWin) {
+				case 0:
+					canvas.drawBitmap(leaveWin, (mWidth-doubleToInt(cntWin*5))/2, mgnBotB, null);
+					break;
+					
+				case 1:
+					canvas.drawBitmap(leaveWin, (mWidth-doubleToInt(cntWin*4))/2, mgnBotB, null);
+					break;
+					
+				case 2:
+					canvas.drawBitmap(leaveWin, (mWidth-doubleToInt(cntWin*3))/2, mgnBotB, null);
+					break;
+					
+				case 3:
+					canvas.drawBitmap(leaveWin, (mWidth-doubleToInt(cntWin*2))/2, mgnBotB, null);
+					break;
+					
+				case 4:
+					canvas.drawBitmap(leaveWin, (mWidth-doubleToInt(cntWin*1))/2, mgnBotB, null);
+					break;
+				} // switch()
+				
+				// AI가 소유한 카드 그리기 & 캐릭터 그리기 & 발바닥 그리기
+				if(playerNum == 2) {	// 2인용이면
 					// 카드갯수를 가져와서 나열할 길이를 계산하여 적절한 위치에 겹쳐 그린다.
 					// 뒷면카드를 전부 그렸을때 나오는 길이 double -> int 
-					
+					// 위쪽 AI 카드 그리기
 					for(int i=0; i<cardNumTop; i++) {
 						canvas.drawBitmap(card_back_top, mgnTop, 0, null);
 						mgnTop += cardMgnTop;
 					} // for
 					
-				} else if(playerNum == 3) {													// 3인용
+					// 캐릭터 그리기
+					canvas.drawBitmap(topCharacter, (mWidth-topCharacter.getWidth())/2, mgnCharLeft, null);
+					// 발바닥 그리기
+					int win = playerList.get(1).getWin();
+					switch(win) {
+					case 0:
+						canvas.drawBitmap(leaveWin, (mWidth-doubleToInt(win*5))/2, mgnCardNL, null);
+						break;
+						
+					case 1:
+						canvas.drawBitmap(leaveWin, (mWidth-doubleToInt(win*4))/2, mgnCardNL, null);
+						break;
+						
+					case 2:
+						canvas.drawBitmap(leaveWin, (mWidth-doubleToInt(win*3))/2, mgnCardNL, null);
+						break;
+						
+					case 3:
+						canvas.drawBitmap(leaveWin, (mWidth-doubleToInt(win*2))/2, mgnCardNL, null);
+						break;
+						
+					case 4:
+						canvas.drawBitmap(leaveWin, (mWidth-doubleToInt(win*1))/2, mgnCardNL, null);
+						break;
+					} // switch()
+					
+				} else if(playerNum == 3) {		// 3인용이면
+					// 왼쪽 AI 카드 그리기
 					for(int i=0; i<cardNumLeft; i++) {
 						canvas.drawBitmap(card_back_left, 0, mgnLeft, null);
 						mgnLeft += cardMgnLeft;
 					} // for
 					
+					// 오른쪽 AI 카드 그리기
 					for(int i=0; i<cardNumRight; i++) {
 						canvas.drawBitmap(card_back_right, mWidth-bh, mgnRight, null);
 						mgnRight += cardMgnRight;
 					} // for
 					
-				} else if(playerNum == 4) {													// 4인용
+					// 캐릭터 그리기
+					canvas.drawBitmap(leftCharacter, mgnCharLeft, mgnCharTop, null);
+					canvas.drawBitmap(rightCharacter, mWidth - mgnCharLeft - characterRad, mgnCharTop, null);
+					
+					// 발바닥 그리기
+					// TODO
+					
+				} else if(playerNum == 4) {		// 4인용이면
+					// 왼쪽 AI 카드 그리기
+					for(int i=0; i<cardNumLeft; i++) {
+						canvas.drawBitmap(card_back_left, 0, mgnLeft, null);
+						mgnLeft += cardMgnLeft;
+					} // for
+					
+					// 오른쪽 AI 카드 그리기
+					for(int i=0; i<cardNumRight; i++) {
+						canvas.drawBitmap(card_back_right, mWidth-bh, mgnRight, null);
+						mgnRight += cardMgnRight;
+					} // for
+					
+					// 위쪽 AI 카드 그리기
 					for(int i=0; i<cardNumTop; i++) {
 						canvas.drawBitmap(card_back_top, mgnTop, 0, null);
 						mgnTop += cardMgnTop;
 					} // for
 					
-					for(int i=0; i<cardNumLeft; i++) {
-						canvas.drawBitmap(card_back_left, 0, mgnLeft, null);
-						mgnLeft += cardMgnLeft;
-					} // for
+					// 캐릭터 그리기
+					canvas.drawBitmap(leftCharacter, mgnCharLeft, mgnCharTop, null);
+					canvas.drawBitmap(rightCharacter, mWidth - mgnCharLeft - characterRad, mgnCharTop, null);
+					canvas.drawBitmap(topCharacter, (mWidth-topCharacter.getWidth())/2, mgnCharLeft, null);
 					
-					for(int i=0; i<cardNumRight; i++) {
-						canvas.drawBitmap(card_back_right, mWidth-bh, mgnRight, null);
-						mgnRight += cardMgnRight;
-					} // for
+					// 발바닥 그리기
+					
 				} // if
 				
 				// 플레이어의 카드 그리기(앞면 카드)
@@ -573,6 +770,7 @@ public class GameDraw extends SurfaceView implements Callback {
 				
 				// 중앙카드 그리기
 				canvas.drawBitmap(card[centerCardIdx], mgnCenterLeft, mgnCenterTop, null);
+				
 			} // if(canvas != null)
 			
 		} // DrawAll() 끝
@@ -591,11 +789,11 @@ public class GameDraw extends SurfaceView implements Callback {
 						// 턴마다 시간간격
 						// 시간 바
 						
-						decCheck();						// 플레이어들이 들고있는 카드 검사
-						winCheck();						// 자신이 이긴 횟수 검사
-						turnCheck();					// 플레이어 턴 검사, 턴 방향 검사
-						centerCardCheck();				// 중앙에 내려진 카드 검사
-						DrawAll(canvas);				// 전부 그리기
+						decCheck();				// 플레이어들이 들고있는 카드 검사
+						winCheck();				// 플레이어들이 이긴 횟수 검사
+						turnCheck();			// 플레이어 턴 검사, 턴 방향 검사
+						centerCardCheck();		// 중앙에 내려진 카드 검사
+						DrawAll(canvas);		// 전부 그리기
 						
 					}
 				} finally {
