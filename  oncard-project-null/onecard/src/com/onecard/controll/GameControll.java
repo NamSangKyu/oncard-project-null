@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.text.TextUtils.TruncateAt;
 
+import com.onecard.Ais;
 import com.onecard.gameinterface.AI;
 import com.onecard.gameinterface.CardSuffle;
 import com.onecard.gameinterface.GameResult;
@@ -45,7 +46,7 @@ public class GameControll {
 		// TODO Auto-generated method stub
 		
 		currentState.createGame(playerCount);
-
+		ai = Ais.getInstance(null);
 		// 게임 시작 부분
 		if(gameState == GAME_START){
 			gameState = GAME_RUN;
