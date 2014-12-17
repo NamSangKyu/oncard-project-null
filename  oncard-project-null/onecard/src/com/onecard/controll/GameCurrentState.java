@@ -103,6 +103,14 @@ public class GameCurrentState {
 		this.useDec = useDec;
 	}
 
+	public String getPattern() {
+		return pattern;
+	}
+
+	public void setPattern(String pattern) {
+		this.pattern = pattern;
+	}
+
 	@Override
 	public String toString() {
 		return "GameCurrentState [playerList="
@@ -149,7 +157,7 @@ public class GameCurrentState {
 			checkSpecialCard(tempCard);
 			//낸 카드를 바닥으로 깔음
 			playerList.get(currentTurn).getDec().remove(index);
-			useDec.add(tempCard);
+			useDec.add(0,tempCard);
 		}else{
 			//맞는 카드가 아님
 			currentTurn--;
