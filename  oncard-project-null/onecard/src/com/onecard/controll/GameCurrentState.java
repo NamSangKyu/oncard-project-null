@@ -295,14 +295,14 @@ public class GameCurrentState {
 	public void createGame(int playerCount) {
 		// TODO Auto-generated method stub
 		gameResultList = new ArrayList<GameResult>();
-		
+		useDec = new ArrayList<String>();
 		// 전체 카드덱 받아옴
 		ArrayList<ArrayList<String>> list = cardSuffle.createDec(playerCount);
 		
 		playerList = new ArrayList<Player>();
 		// 플레이어 덱 셋팅
 		for (int i = 0; i < playerCount; i++) {
-			String name = "";
+			String name = "플레이어";
 			if (i != 0) {
 				name = "인공지능 " + i;
 			}
