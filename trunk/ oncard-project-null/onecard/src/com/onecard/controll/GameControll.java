@@ -98,8 +98,8 @@ public class GameControll {
 	/**
 	 * 카드 내기 및 먹는 부분
 	 * 
-	 * @param state
-	 *            true 먹기, false 내기
+	 * @param state true 먹기, false 내기
+	 *            
 	 */
 	public GameCurrentState cardInputOutput(boolean state, int index) {
 		if(state){
