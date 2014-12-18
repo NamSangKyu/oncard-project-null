@@ -215,6 +215,9 @@ public class GameDraw extends SurfaceView implements Callback {
 			win[i] = bd.getBitmap();
 		}
 		
+		winImgMgnLeft = mWidth - win[0].getWidth() - win[0].getWidth()/3;	// 승리 횟수 이미지 margin값 설정
+		winImgMgnTop = winImgMgnLeft;
+		
 //		// 승리 횟수 0
 //		bd = (BitmapDrawable) res.getDrawable(R.drawable.w0);
 //		win0 = bd.getBitmap();
@@ -440,8 +443,7 @@ public class GameDraw extends SurfaceView implements Callback {
 		mgnLeftTurnImg = (mWidth-tw)/2;						// 턴표시 이미지 왼쪽 여백
 		mgnBotTurnImg = th/2;								// 턴표시 이미지 아래 여백
 		
-		winImgMgnLeft = mWidth - win[0].getWidth() - win[0].getWidth()/3;	// 승리 횟수 이미지 margin값 설정
-		winImgMgnTop = winImgMgnLeft;
+		
 		
 		mgnCardNL = bh + leaveWin.getWidth()/2;						// 뒷면카드와 발바닥 사이의 거리
 		mgnCharLeft = bh + doubleToInt(leaveWin.getWidth()*2);		// 캐릭터의 marginLeft
