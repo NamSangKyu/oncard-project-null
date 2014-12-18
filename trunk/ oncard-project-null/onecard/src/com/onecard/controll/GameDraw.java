@@ -1,6 +1,7 @@
 package com.onecard.controll;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.app.Activity;
 import android.content.Context;
@@ -57,10 +58,12 @@ public class GameDraw extends SurfaceView implements Callback {
 	private int characterRad;					// 캐릭터의 지름
 	private int forWin;							// 목표 승리 횟수
 	
-	// 계산용 변수
+	// 카드를 그릴 위치 계산용 변수
+	private int lengthPlayer;					// 플레이어 카드를 그릴 위치 계산용 전체길이 변수
 	private int lengthTop;						// 위쪽 카드를 그릴 위치계산용 전체길이 변수
 	private int lengthLeft;						// 왼쪽 카드를 그릴 위치계산용 전체길이 변수
 	private int lengthRight;					// 오른쪽 카드를 그릴 위치계산용 전체길이 변수
+	private int mgnPlayer;						// 플레이어를 그리기 시작할 위치계산용 margin 변수
 	private int mgnTop;							// 뒷면카드를 그리기 시작할 위치계산용 margin 변수
 	private int mgnLeft;
 	private int mgnRight;
@@ -90,6 +93,7 @@ public class GameDraw extends SurfaceView implements Callback {
 	
 	static int cw;								// 카드 가로길이
 	static int ch;								// 카드 세로길이
+	static int cmargin;							// 플레이어 카드 margin
 	static int bw;								// 카드 뒷면 긴쪽길이
 	static int bh;								// 카드 뒷면 짧은쪽 길이
 	static int tw;								// 턴표시 가로길이
@@ -107,6 +111,7 @@ public class GameDraw extends SurfaceView implements Callback {
 	private Player player;						// 플레이어(자신)의 정보를 가져올 Player 객체
 	private ArrayList<String> useDec;			// 사용한 덱(중앙에 겹쳐진 카드 더미)
 	private ArrayList<String> dec;				// 플레이어(자신)이 가진 카드를 저장할 리스트
+	private HashMap<String , Integer> map;
 	
 	
 	
@@ -124,6 +129,7 @@ public class GameDraw extends SurfaceView implements Callback {
 		mThread = new GameThread(holder, context);
 		res = getResources();								// 리소스 가져오기
 		matrix = new Matrix();
+		map = new HashMap<String , Integer>();				// 해쉬맵 생성
 		gameControll = GameControll.getInstance();
 		gameCurState = gameControll.getCurrentState();
 		
@@ -336,6 +342,11 @@ public class GameDraw extends SurfaceView implements Callback {
 		// 카드 이미지와 이름 매치
 		for(int i=0; i<card.length; i++) {
 			cardName[i][1] = Integer.toString(i);
+		}
+		
+		// 해쉬맵 초기화
+		for(int i=0; i<card.length; i++) {
+			map.put(cardName[i][0], i);
 		}
 		
 		// 스마트폰 가로, 세로 길이에 맞게 이미지 재조정
@@ -553,6 +564,15 @@ public class GameDraw extends SurfaceView implements Callback {
 		dec = player.getDec();									// 플레이어가 가진 카드정보 읽어오기
 		cardNumPlayer = dec.size();								// 플레이어의 카드 갯수
 		
+		if(cardNumPlayer >= 9) {								// 플레이어 카드가 9장 이상이면
+			cmargin = doubleToInt(cw*0.3);						// 간격 1/3
+		} else {
+			cmargin = doubleToInt(cw*0.5);						// 아니면 1/2
+		}
+		
+		lengthPlayer = doubleToInt(cardNumPlayer*cw - ((cmargin) * (cardNumPlayer-1)));
+		mgnPlayer = (mWidth - lengthPlayer)/2;
+		
 		switch(playerNum) {
 		case 2:													// 인원이 2명이면
 			cardNumTop = playerList.get(1).getDec().size();		// 위쪽 AI의 카드갯수를 읽어온다.
@@ -613,11 +633,11 @@ public class GameDraw extends SurfaceView implements Callback {
 				cardMgnRight = doubleToInt(bw*0.5);
 			}
 			
-			lengthTop = doubleToInt(cardNumTop*bw - ((cardMgnTop) * (cardNumTop-1)));			// 위쪽에 그릴 카드 전체길이 구하기
-			lengthLeft = doubleToInt(cardNumTop*bw - ((cardMgnLeft) * (cardNumTop-1)));			// 왼쪽에 그릴 카드 전체길이 구하기
-			lengthRight = doubleToInt(cardNumTop*bw - ((cardMgnRight) * (cardNumTop-1)));		// 오른쪽에 그릴 카드 전체길이 구하기
-			mgnTop = (mWidth - lengthTop)/2;													// 위쪽 카드를 그리기 시작할 위치
-			mgnLeft = (mHeight - ch - lengthLeft)/2;													// 왼쪽 카드를 그리기 시작할 위치
+			lengthTop = doubleToInt(cardNumTop*bw - ((cardMgnTop) * (cardNumTop-1)));				// 위쪽에 그릴 카드 전체길이 구하기
+			lengthLeft = doubleToInt(cardNumLeft*bw - ((cardMgnLeft) * (cardNumLeft-1)));			// 왼쪽에 그릴 카드 전체길이 구하기
+			lengthRight = doubleToInt(cardNumRight*bw - ((cardMgnRight) * (cardNumRight-1)));		// 오른쪽에 그릴 카드 전체길이 구하기
+			mgnTop = (mWidth - lengthTop)/2;														// 위쪽 카드를 그리기 시작할 위치
+			mgnLeft = (mHeight - ch - lengthLeft)/2;												// 왼쪽 카드를 그리기 시작할 위치
 			mgnRight = (mHeight - ch - lengthRight)/2;												// 오른쪽 카드를 그리기 시작할 위치
 			
 			break;
@@ -673,7 +693,11 @@ public class GameDraw extends SurfaceView implements Callback {
 				}
 				
 				// 플레이어의 카드 그리기(앞면 카드)
-				// TODO
+				for(int i=0; i<dec.size(); i++) {
+					if(map.containsKey(dec.get(i))){
+						canvas.drawBitmap(card[map.get(i)], mgnPlayer, mHeight-ch, null);
+					}
+				}
 				
 				// AI가 소유한 카드 그리기 & 캐릭터 그리기 & 발바닥 그리기
 				if(playerNum == 2) {																		// 2인용이면
@@ -814,11 +838,13 @@ public class GameDraw extends SurfaceView implements Callback {
 						
 						// 턴마다 시간간격
 						// 시간 바
-						
-						decCheck();				// 플레이어들이 들고있는 카드 검사
 						winCheck();				// 플레이어들이 이긴 횟수 검사
 						turnCheck();			// 플레이어 턴 검사, 턴 방향 검사
 						centerCardCheck();		// 중앙에 내려진 카드 검사
+						decCheck();				// 플레이어들이 들고있는 카드 검사
+						
+						
+						
 						DrawAll(canvas);		// 전부 그리기
 						
 					}
