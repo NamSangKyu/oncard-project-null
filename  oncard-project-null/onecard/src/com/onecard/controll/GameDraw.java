@@ -130,7 +130,9 @@ public class GameDraw extends SurfaceView implements Callback {
 		res = getResources();								// 리소스 가져오기
 		matrix = new Matrix();
 		map = new HashMap<String , Integer>();				// 해쉬맵 생성
+		
 		gameControll = GameControll.getInstance();
+		gameControll.start(4);
 		gameCurState = gameControll.getCurrentState();
 		
 		initGame();											// 게임환경 설정
