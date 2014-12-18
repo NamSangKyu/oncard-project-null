@@ -1017,9 +1017,11 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 			
 			if(Math.abs(inOut) >= mHeight/3) {
 				if(inOut >= 0) {
+					gameControll.nextTurn();
 					// 카드 내기
-					gameControll.cardInputOutput(false, idx);
+					gameControll.cardInputOutput(false, upIndexNum);
 				} else {
+					gameControll.nextTurn();
 					// 카드 먹기
 					gameControll.cardInputOutput(true, 0);
 				}
@@ -1029,7 +1031,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 	}
 
 	
-	
+// 에러 : 첫번째 턴일 때 gameCurrentState의 패턴 - 초기값이 없음.	
 	
 
 } // end of class GameDraw
