@@ -67,7 +67,8 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 	private int forWin;							// 목표 승리 횟수
 	private Rect mRect;							// 플레이어 카드 onScroll 계산용 Rect
 	private boolean upIndex[];					// 플레이어 카드 중 UP 표시할 Index
-	private int upIndexNum;
+	private int upIndexNum;						// 카드가 소유한 카드에서 up한 인덱스(0~14)
+	private int idx;							// 사용자가 up한 카드 실제 인덱스
 	
 	// 카드를 그릴 위치 계산용 변수
 	private int lengthPlayer;					// 플레이어 카드를 그릴 위치 계산용 전체길이 변수
@@ -737,7 +738,6 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 				// 플레이어의 카드 그리기(앞면 카드)
 				for(int i=0; i<dec.size(); i++) {
 					String cName = dec.get(i);
-					int idx=0;
 					
 					for(int j=0; j<card.length; j++) {
 						if(cardName[j][0].equals(cName)) {
@@ -978,25 +978,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 
 	@Override
 	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-		int x = (int) e1.getX();
-		int y = (int) e1.getY(); 
 		
-		Log.d("MyLog", "onScroll 호출");
-		Log.d("MyLog", "distanceX : " + distanceX + "abs(distanceX) : " + Math.abs(distanceX) + "x,y : " + x +","+ y);
-		
-		if(mRect.contains(x, y)) {
-			if(distanceX >= 0) {
-				// 왼쪽으로 카드 선택
-				if((upIndexNum != 0)  && (Math.abs(distanceX) >= cmargin)) {
-					upIndexNum--;
-				}
-			} else {
-				// 오른쪽으로 카드 선택
-				if((upIndexNum < cardNumPlayer-1)  && (Math.abs(distanceX) >= cmargin)) {
-					upIndexNum++;
-				}
-			}
-		}
 		// 왼쪽으로 이동 : +
 		// 오른쪽으로 이동 : -
 		// 아래로 이동하면 : +
@@ -1013,9 +995,36 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 
 
 	@Override
-	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-			float velocityY) {
-			Log.d("MyLog", "onFling 호출");
+	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+			Log.d("MyLog", "onFling 호출, velocityY = " + velocityY);
+			
+			int move = (int) e1.getX() - (int) e2.getX();
+			int inOut = (int) e1.getY() - (int) e2.getY();
+			
+			if(Math.abs(move) >= mWidth/4) {
+				if(move >= 0) {
+					// 왼쪽으로 카드 선택
+					if((upIndexNum != 0)) {
+						upIndexNum--;
+					}
+				} else {
+					// 오른쪽으로 카드 선택
+					if((upIndexNum < cardNumPlayer-1)) {
+						upIndexNum++;
+					}
+				} // if
+			} // if
+			
+			if(Math.abs(inOut) >= mHeight/3) {
+				if(inOut >= 0) {
+					// 카드 내기
+					gameControll.cardInputOutput(false, idx);
+				} else {
+					// 카드 먹기
+					gameControll.cardInputOutput(true, 0);
+				}
+			}
+			
 		return false;
 	}
 
