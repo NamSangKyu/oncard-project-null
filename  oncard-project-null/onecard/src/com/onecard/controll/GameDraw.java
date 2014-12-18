@@ -138,17 +138,17 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		mHolder = holder;
 		mContext = context;
 		mThread = new GameThread(holder, context);
-		res = getResources();								// 리소스 가져오기
+		res = getResources();									// 리소스 가져오기
 		matrix = new Matrix();
-		map = new HashMap<String , Integer>();				// 해쉬맵 생성
-		mDetector = new GestureDetector(getContext(), this);
+		map = new HashMap<String , Integer>();					// 해쉬맵 생성
+		mDetector = new GestureDetector(getContext(), this);	// Detector 객체 생성
 		
 		gameControll = GameControll.getInstance();
 		gameControll.start(4);
 		gameCurState = gameControll.getCurrentState();
 		
-		initGame();											// 게임환경 설정
-		initBitmap();										// 게임환경에 맞도록 카드길이 설정
+		initGame();												// 게임환경 설정
+		initBitmap();											// 게임환경에 맞도록 카드길이 설정
 		
 		setFocusable(true);
 		
@@ -949,7 +949,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		// TODO Auto-generated method stub
 		mDetector.onTouchEvent(event);
 		
-		return super.onTouchEvent(event);
+		return true;
 	}
 
 
@@ -977,20 +977,22 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 
 
 	@Override
-	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
-			float distanceY) {
-		Log.d("MyLog", "onScroll 호출");
+	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
 		int x = (int) e1.getX();
 		int y = (int) e1.getY(); 
+		
+		Log.d("MyLog", "onScroll 호출");
+		Log.d("MyLog", "distanceX : " + distanceX + "abs(distanceX) : " + Math.abs(distanceX) + "x,y : " + x +","+ y);
+		
 		if(mRect.contains(x, y)) {
-			if(distanceX >= 0 && Math.abs(distanceX) >= cw) {
+			if(distanceX >= 0) {
 				// 왼쪽으로 카드 선택
-				if(upIndexNum != 0) {
+				if((upIndexNum != 0)  && (Math.abs(distanceX) >= cmargin)) {
 					upIndexNum--;
 				}
 			} else {
 				// 오른쪽으로 카드 선택
-				if(upIndexNum < cardNumPlayer-1) {
+				if((upIndexNum < cardNumPlayer-1)  && (Math.abs(distanceX) >= cmargin)) {
 					upIndexNum++;
 				}
 			}
