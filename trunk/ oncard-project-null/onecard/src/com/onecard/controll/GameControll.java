@@ -123,10 +123,10 @@ public class GameControll {
 	public GameCurrentState playAI() {
 		// AI 선택 부분
 		String aiPlay[] = ai.play(currentState);
-		//사용한 아이템
+		/*//사용한 아이템
 		if(aiPlay[1]!=null){
 			useItem(aiPlay[1]);
-		}
+		}*/
 		//낸 카드
 		if(aiPlay[0]==null){
 			cardInputOutput(true, 0);
