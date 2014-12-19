@@ -4,13 +4,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 public class GameMain extends Activity {
-	private Button btnStart, btnRank, btnOption, btnExit;
+	private ImageButton btnStart, btnRank, btnOption, btnExit;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -20,10 +21,10 @@ public class GameMain extends Activity {
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 				
 		setContentView(R.layout.activity_gamemain);
-		btnStart = (Button) findViewById(R.id.btnGameStart);
-		btnRank = (Button) findViewById(R.id.btnRank);
-		btnOption = (Button) findViewById(R.id.btnOption);
-		btnExit = (Button) findViewById(R.id.btnExit);
+		btnStart = (ImageButton) findViewById(R.id.btnGameStart);
+		btnRank = (ImageButton) findViewById(R.id.btnRank);
+		btnOption = (ImageButton) findViewById(R.id.btnOption);
+		btnExit = (ImageButton) findViewById(R.id.btnExit);
 		//게임 시작 부분
 		btnStart.setOnClickListener(new OnClickListener() {
 			
