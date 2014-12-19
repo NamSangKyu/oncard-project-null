@@ -104,10 +104,18 @@ public class GameControll {
 	public GameCurrentState cardInputOutput(boolean state, int index) {
 		Log.d("MyLog", " index : " +state + " index : " +index);
 		if(state){
-			currentState.inputCard();
+			if(currentState.getTemplateDec().size() > 0)
+				currentState.inputCard();
+			else
+				currentState.setCurrentTurn(currentState.getCurrentTurn()-1);
 		}else{
 			currentState.outputCard(index);
 		}
+		//카드가 5장 이하면 사용한 덱을 무덤 덱으로 셔플
+		if(currentState.getTemplateDec().size() < 5){
+			currentState.cardMerge();
+		}
+
 		Log.d("MyLog", "카드 inputoutput after");
 		Log.d("MyLog",currentState.toString());
 		return currentState;
@@ -133,7 +141,8 @@ public class GameControll {
 		if(aiPlay[0]==null){
 			cardInputOutput(true, 0);
 		}else{
-			cardInputOutput(false, Integer.parseInt(aiPlay[0]));
+			int cardIndex = currentState.getPlayerList().get(currentState.getCurrentTurn()).getDec().indexOf(aiPlay[0]);
+			cardInputOutput(false, cardIndex);
 		}
 		// 카드 진행 및 아이템 적용
 		return currentState;
