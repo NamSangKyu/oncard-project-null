@@ -100,7 +100,7 @@ public class Ais implements com.onecard.gameinterface.AI
 	public String[] play(GameCurrentState currentState)
 	{
 		Gc = currentState;
-		Log.i("MyLog", "fsdlfisldkufh:::"+Gc.getTemplateDec().get(0));
+		Log.i("MyLog", "t1:::"+Gc.getTemplateDec().get(0));
 		patten = currentState.getPattern();
 		pattens = patten.toCharArray();
 		if (!send.isEmpty())
@@ -631,30 +631,28 @@ public class Ais implements com.onecard.gameinterface.AI
 				break;
 				
 			}
-			else if (value[0] == 'J' || value[0] == 'C' || value[0] == 'H' || value[0] == 'D' || value[0] == 'A')
+			else if (coms[1] == attack[2])
 			{
 				
-				if (coms[1] == attack[2])
-				{
+				
 					//조커유무
 					Log.i("MyLog", "jk");
 					send.add(playing.get(i).toString());
 					itemuse();
 					break;
-				}
+				
 				
 			}
-			else if (value[0] == 'J' || value[0] == 'C' || value[0] == 'H' || value[0] == 'D' || value[0] == 'A')
+			else if (coms[1] == attack[3])
 			{
 				
-				if (coms[1] == attack[3])
-				{
+				
 					//조커유무
 					Log.i("MyLog", "jk");
 					send.add(playing.get(i).toString());
 					itemuse();
 					break;
-				}
+				
 			}else{
 				nulls += 1;
 				Log.i("MyLog", "nulls");
