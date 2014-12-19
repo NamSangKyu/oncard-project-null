@@ -133,7 +133,7 @@ public class GameCurrentState {
 			}
 			if(currentTurn< 0)
 				currentTurn = playerList.size()-1;
-			else
+			else if(currentTurn >= playerList.size())
 				currentTurn = 0;
 				
 		}while(playerList.get(currentTurn).isWorkout());
