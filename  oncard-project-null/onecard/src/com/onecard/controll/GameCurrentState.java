@@ -157,11 +157,11 @@ public class GameCurrentState {
 		
 		if(checkCard(tempCard)){
 			//낼 수 있는 카드 일때
-			//특수 카드 체크
-			checkSpecialCard(tempCard);
 			//낸 카드를 바닥으로 깔음
 			playerList.get(currentTurn).getDec().remove(index);
 			useDec.add(0,tempCard);
+			//특수 카드 체크
+			checkSpecialCard(tempCard);
 			
 		}else{
 			//맞는 카드가 아님
