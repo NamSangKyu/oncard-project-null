@@ -9,19 +9,18 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
-        android:layout_weight="1"
+        android:layout_weight="1.5"
          >
 
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <ImageView
+            android:layout_margin="20dp"
+            android:id="@+id/imageView1"
             android:layout_gravity="center"
-            android:text="One Card"
-            android:textSize="56sp"
-            android:layout_weight="2"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-        	android:gravity="center" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/kkoonecard" />
+
+        
 
     </LinearLayout>
 
@@ -29,43 +28,41 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
-        android:layout_weight="2" >
+        android:layout_weight="2" 
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="30dp">
         
-        <Button
-	        android:id="@+id/btnGameStart"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:text="게임 시작"
-	        android:textStyle="bold"
-	        android:textSize="32sp"
-	        android:layout_marginTop="10dp" />
+		<ImageButton
+            android:id="@+id/btnGameStart"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:src="@drawable/start" />
 
-	    <Button
-	        android:id="@+id/btnRank"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:text="랭크"
-	        android:textStyle="bold"
-	        android:textSize="32sp"
-	        android:layout_marginTop="10dp" />
-	
-	    <Button
-	        android:id="@+id/btnOption"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:text="옵션"
-	        android:textStyle="bold"
-	        android:textSize="32sp"
-	        android:layout_marginTop="10dp" />
-	
-	    <Button
-	        android:id="@+id/btnExit"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:text="게임 종료"
-	        android:textStyle="bold"
-	        android:textSize="32sp"
-	        android:layout_marginTop="10dp" />
+		<ImageButton
+		    android:id="@+id/btnRank"
+		    android:layout_width="wrap_content"
+		    android:layout_height="0dp"
+		    android:layout_weight="1"
+		    android:layout_marginTop="10dp"
+		    android:src="@drawable/ranking" />
+
+		<ImageButton
+		    android:id="@+id/btnOption"
+		    android:layout_width="wrap_content"
+		    android:layout_height="0dp"
+		    android:layout_weight="1"
+		    android:layout_marginTop="10dp"
+		    android:src="@drawable/option" />
+
+		<ImageButton
+		    android:id="@+id/btnExit"
+		    android:layout_width="wrap_content"
+		    android:layout_height="0dp"
+		    android:layout_weight="1"
+		    android:layout_marginTop="10dp"
+		    android:src="@drawable/exit" />
         
     </LinearLayout>
 

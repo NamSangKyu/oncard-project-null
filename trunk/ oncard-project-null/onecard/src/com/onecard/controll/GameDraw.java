@@ -46,7 +46,10 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 	private boolean mTurn;						// 턴방향(오른쪽 : true, 왼쪽 : false)
 	private int centerCardIdx;					// 중앙에 그릴 카드 인덱스
 	private String centerCardName;				// 중앙에 그릴 카드 이름
-	private int cntWin;							// 플레이어가 이긴 횟수
+	private int cntWinPlayer;					// 플레이어가 이긴 횟수
+	private int cntWinLeft;
+	private int cntWinRight;
+	private int cntWinTop;
 	private int playerNum;						// 플레이어 인원 수
 	private int cardNumPlayer;					// 플레이어의 카드갯수
 	private int cardNumLeft;					// 왼쪽 AI 카드갯수
@@ -66,6 +69,8 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 	private boolean upIndex[];					// 플레이어 카드 중 UP 표시할 Index
 	private int upIndexNum;						// 카드가 소유한 카드에서 up한 인덱스(0~14)
 	private int idx;							// 사용자가 up한 카드 실제 인덱스
+	private String whoWin;						// 이긴 플레이어의 이름
+	private int whoWinIdx;						// 이긴 플레이어의 번호
 	
 	// 카드를 그릴 위치 계산용 변수
 	private int lengthPlayer;					// 플레이어 카드를 그릴 위치 계산용 전체길이 변수
@@ -576,8 +581,20 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 	// winCheck() - run()에서 호출됨, (이긴 횟수 알아오기)
 	//----------------------------------------------------------------
 	public void winCheck() {
-		cntWin = player.getWin();								// 플레이어의 이긴 횟수 읽어오기
-	}
+		cntWinPlayer = player.getWin();								// 플레이어의 이긴 횟수 읽어오기
+		
+		if(playerNum == 2) {
+			cntWinTop = playerList.get(1).getWin();
+		} else if(playerNum == 3) {
+			cntWinRight = playerList.get(1).getWin();
+			cntWinLeft = playerList.get(2).getWin();
+		} else if(playerNum == 4) {
+			cntWinRight = playerList.get(1).getWin();
+			cntWinTop = playerList.get(2).getWin();
+			cntWinLeft = playerList.get(3).getWin();
+		}
+		
+	} // winCheck()
 	
 	
 	//----------------------------------------------------------------
@@ -610,7 +627,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		case 2:														// 인원이 2명이면
 			cardNumTop = playerList.get(1).getDec().size();			// 위쪽 AI의 카드갯수를 읽어온다.
 			
-			if(cardNumTop >= 10) {									// 위쪽 플레이어 카드가 9장 이상이면
+			if(cardNumTop >= 11) {									// 위쪽 플레이어 카드가 9장 이상이면
 				cardMgnTop = doubleToInt(bw*0.25);					// 뒷면카드 간격을 줄임.
 			} else {
 				cardMgnTop = doubleToInt(bw*0.4);
@@ -638,7 +655,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 			} 
 
 			lengthLeft = cw + cardMgnLeft*(cardNumLeft-1);			// 왼쪽에 그릴 카드 전체길이 구하기
-			lengthRight = cw + cardMgnRight*(cardNumRight-1);			// 오른쪽에 그릴 카드 전체길이 구하기
+			lengthRight = cw + cardMgnRight*(cardNumRight-1);		// 오른쪽에 그릴 카드 전체길이 구하기
 			mgnLeft = (mHeight - lengthLeft)/2;						// 왼쪽 카드를 그리기 시작할 위치
 			mgnRight = (mHeight - lengthRight)/2;					// 오른쪽 카드를 그리기 시작할 위치
 			break;
@@ -655,13 +672,13 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 			}
 			
 			if(cardNumLeft >= 11) {									// 왼쪽 플레이어 카드가 11장 이상이면
-				cardMgnLeft = doubleToInt(bw*0.3);					// 뒷면카드 간격을 줄임
+				cardMgnLeft = doubleToInt(bw*0.25);					// 뒷면카드 간격을 줄임
 			} else {
 				cardMgnLeft = doubleToInt(bw*0.4);
 			} 
 
 			if(cardNumRight >= 11) {								// 오른쪽 플레이어 카드가 11장 이상이면
-				cardMgnRight = doubleToInt(bw*0.3);					// 뒷면카드 간격을 줄임
+				cardMgnRight = doubleToInt(bw*0.25);					// 뒷면카드 간격을 줄임
 			} else {
 				cardMgnRight = doubleToInt(bw*0.4);
 			}
@@ -679,6 +696,23 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		checkGame = gameCurState.checkGame();							// 게임 승패 확인
 		
 	} // decCheck()
+	
+	
+	//---------------------------------------------
+	// whoWin() - run()에서 호출됨. 이긴사람 정보 획득
+	//---------------------------------------------
+	public void whoWin() {
+		gameControll.checkGame();
+		winCheck();
+		
+		for(int i=0; i<playerNum; i++) {
+			if(gameCurState.getGameResultList().get(i).getWin() != 0) {
+				whoWin = gameCurState.getGameResultList().get(i).getName();
+				whoWinIdx = i;
+			}
+		}
+		
+	}
 	
 	//---------------------------------
 	// GameThread
@@ -719,8 +753,8 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 				canvas.drawBitmap(playerCharacter, (mWidth-(topCharacter.getWidth()))/2, mgnBotC, null);
 				
 				// 플레이어의 발바닥 그리기
-				int mgnWidthPlayer = (mWidth-doubleToInt(leaveWin.getWidth()*(forWin-cntWin)))/2;			// 발바닥 전체 길이
-				for(int i=0; i<forWin - cntWin; i++) {														// 발바닥 그리기
+				int mgnWidthPlayer = (mWidth-doubleToInt(leaveWin.getWidth()*(forWin-cntWinPlayer)))/2;			// 발바닥 전체 길이
+				for(int i=0; i<forWin - cntWinPlayer; i++) {														// 발바닥 그리기
 					canvas.drawBitmap(leaveWin, mgnWidthPlayer, mgnBotB, null);
 					mgnWidthPlayer += leaveWin.getWidth();
 				} // for
@@ -757,9 +791,8 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 					canvas.drawBitmap(topCharacter, (mWidth-topCharacter.getWidth())/2, mgnCharLeft, null);
 					
 					// 발바닥 그리기
-					int win = playerList.get(1).getWin();													// 위쪽 AI 승리 횟수
-					int mgnWidthTop = (mWidth-doubleToInt(leaveWin.getWidth()*(forWin-win)))/2;				// 발바닥 전체 길이
-					for(int i=0; i<forWin - win; i++) {														// 발바닥 그리기
+					int mgnWidthTop = (mWidth-doubleToInt(leaveWin.getWidth()*(forWin-cntWinTop)))/2;				// 발바닥 전체 길이
+					for(int i=0; i<forWin - cntWinTop; i++) {												// 발바닥 그리기
 						canvas.drawBitmap(leaveWin, mgnWidthTop, mgnCardNL, null);
 						mgnWidthTop += leaveWin.getWidth();
 					} // for
@@ -784,19 +817,17 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 					canvas.drawBitmap(rightCharacter, mWidth - mgnCharLeft - characterRad, mgnCharTop, null);
 					
 					// 발바닥 그리기
-					int winR = playerList.get(1).getWin();					// 오른쪽 AI 승리횟수
-					int winL = playerList.get(2).getWin();					// 왼쪽 AI 승리횟수
-					int mgnHeightLeft = (mHeight - ch - doubleToInt(leaveWin.getHeight()*(forWin-winL)))/2;		// 발바닥 전체 길이
-					int mgnHeightRight = (mHeight - ch - doubleToInt(leaveWin.getHeight()*(forWin-winR)))/2;	// 발바닥 전체 길이
+					int mgnHeightLeft = (mHeight - ch - doubleToInt(leaveWin.getHeight()*(forWin-cntWinLeft)))/2;		// 발바닥 전체 길이
+					int mgnHeightRight = (mHeight - ch - doubleToInt(leaveWin.getHeight()*(forWin-cntWinRight)))/2;	// 발바닥 전체 길이
 					
 					// 왼쪽 발바닥
-					for(int i=0; i<forWin - winL; i++) {
+					for(int i=0; i<forWin - cntWinLeft; i++) {
 						canvas.drawBitmap(leaveWin, mgnCardNL, mgnHeightLeft, null);
 						mgnHeightLeft += leaveWin.getHeight();
 					} // for
 					
 					// 오른쪽 발바닥
-					for(int i=0; i<forWin - winR; i++) {
+					for(int i=0; i<forWin - cntWinRight; i++) {
 						canvas.drawBitmap(leaveWin, mWidth - mgnCardNL - leaveWin.getWidth(), mgnHeightRight, null);
 						mgnHeightRight += leaveWin.getHeight();
 					} // for
@@ -828,34 +859,31 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 					canvas.drawBitmap(topCharacter, (mWidth-topCharacter.getWidth())/2, mgnCharLeft, null);
 					
 					// 발바닥 그리기
-					int winR = playerList.get(1).getWin();					// 오른쪽 AI 승리횟수
-					int winT = playerList.get(2).getWin();					// 위쪽 AI 승리횟수
-					int winL = playerList.get(3).getWin();					// 왼쪽 AI 승리횟수
-					int mgnHeightLeft = (mHeight - ch - doubleToInt(leaveWin.getHeight()*(forWin-winL)))/2;			// 발바닥 전체 길이
-					int mgnHeightRight = (mHeight - ch - doubleToInt(leaveWin.getHeight()*(forWin-winR)))/2;		// 발바닥 전체 길이
-					int mgnWidthTop = (mWidth-doubleToInt(leaveWin.getWidth()*(forWin-winT)))/2;					// 발바닥 전체 길이
+					int mgnHeightLeft = (mHeight - ch - doubleToInt(leaveWin.getHeight()*(forWin-cntWinLeft)))/2;			// 발바닥 전체 길이
+					int mgnHeightRight = (mHeight - ch - doubleToInt(leaveWin.getHeight()*(forWin-cntWinRight)))/2;		// 발바닥 전체 길이
+					int mgnWidthTop = (mWidth-doubleToInt(leaveWin.getWidth()*(forWin-cntWinTop)))/2;					// 발바닥 전체 길이
 					
 					// 왼쪽 발바닥
-					for(int i=0; i<forWin - winL; i++) {
+					for(int i=0; i<forWin - cntWinLeft; i++) {
 						canvas.drawBitmap(leaveWin, mgnCardNL, mgnHeightLeft, null);
 						mgnHeightLeft += leaveWin.getHeight();
 					} // for
 					
 					// 오른쪽 발바닥
-					for(int i=0; i<forWin - winR; i++) {
+					for(int i=0; i<forWin - cntWinRight; i++) {
 						canvas.drawBitmap(leaveWin, mWidth - mgnCardNL - leaveWin.getWidth(), mgnHeightRight, null);
 						mgnHeightRight += leaveWin.getHeight();
 					} // for
 					
 					// 위쪽 발바닥
-					for(int i=0; i<forWin - winT; i++) {														// 발바닥 그리기
+					for(int i=0; i<forWin - cntWinTop; i++) {														// 발바닥 그리기
 						canvas.drawBitmap(leaveWin, mgnWidthTop, mgnCardNL, null);
 						mgnWidthTop += leaveWin.getWidth();
 					} // for
 				} // if(), AI와 관련된 그리기 끝
 				
 				// 연승 횟수 그리기
-				canvas.drawBitmap(win[cntWin], winImgMgnLeft, winImgMgnTop, null);
+				canvas.drawBitmap(win[cntWinPlayer], winImgMgnLeft, winImgMgnTop, null);
 				
 				// 턴 표시 그리기
 				if(mTurn) {
@@ -872,6 +900,14 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 			} // if(canvas != null)
 			
 		} // DrawAll() 끝
+		
+		
+		//-------------------------------------------------
+		// DrawWin() - run()에서 호출. 승리했을 경우 그리는 곳
+		//-------------------------------------------------
+		public void DrawWin(Canvas canvas) {
+			
+		} // DrawWin() 끝
 		
 		
 		//---------------------------------
@@ -891,9 +927,14 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 						turnCheck();				// 플레이어 턴 검사, 턴 방향 검사
 						centerCardCheck();			// 중앙에 내려진 카드 검사
 						decCheck();					// 플레이어들이 들고있는 카드 검사
-						
+					
+						if(checkGame) {				// 게임의 승패 확인
+							whoWin();				// 누가 승리했는지 확인
+							gameControll.restart();
+						}
 						
 						DrawAll(canvas);			// 전부 그리기
+						
 						
 					}
 				} finally {
