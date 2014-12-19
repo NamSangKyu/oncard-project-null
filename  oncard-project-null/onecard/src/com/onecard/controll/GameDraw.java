@@ -719,7 +719,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 				for(int i=0; i<forWin - cntWin; i++) {														// 발바닥 그리기
 					canvas.drawBitmap(leaveWin, mgnWidthPlayer, mgnBotB, null);
 					mgnWidthPlayer += leaveWin.getWidth();
-				}
+				} // for
 				
 				// 플레이어의 카드 그리기(앞면 카드)
 				for(int i=0; i<dec.size(); i++) {
@@ -731,13 +731,13 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 						}
 					}
 					
-					if(upIndexNum == i) {
+					if(upIndexNum == i && playerTurn == 0) {
 						canvas.drawBitmap(card[idx], mgnPlayer, mHeight-ch, null);
 					} else {
 						canvas.drawBitmap(card[idx], mgnPlayer, mHeight-(ch-ch/4), null);
 					}
 					mgnPlayer += cmargin;
-				}
+				} // for
 				
 				// AI가 소유한 카드 그리기 & 캐릭터 그리기 & 발바닥 그리기
 				if(playerNum == 2) {																		// 2인용이면
