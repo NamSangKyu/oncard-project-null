@@ -249,42 +249,42 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 //		bd = (BitmapDrawable) res.getDrawable(R.drawable.w5);
 //		win5 = bd.getBitmap();
 		
-		cw=card_org.getWidth()/13;														// 원본 카드 이미지에서 카드조각을 잘라낼 길이 
-		ch=card_org.getHeight()/5;
+		int cw2=card_org.getWidth()/13;														// 원본 카드 이미지에서 카드조각을 잘라낼 길이 
+		int ch2=card_org.getHeight()/5;
 		
 		// 클로버 카드
 		int x=0;
 		for(int i=0; i<13; i++) {
-			card[i] = Bitmap.createBitmap(card_org, x, 0, cw, ch);
-			x += cw;
+			card[i] = Bitmap.createBitmap(card_org, x, 0, cw2, ch2);
+			x += cw2;
 		}
 		
 		// 다이아 카드
 		x=0;
 		for(int i=0; i<13; i++) {
-			card[i+13] = Bitmap.createBitmap(card_org, x, ch, cw, ch);
-			x += cw;
+			card[i+13] = Bitmap.createBitmap(card_org, x, ch2, cw2, ch2);
+			x += cw2;
 		}
 		
 		// 하트 카드
 		x=0;
 		for(int i=0; i<13; i++) {
-			card[i+26] = Bitmap.createBitmap(card_org, x, ch*2, cw, ch);
-			x += cw;
+			card[i+26] = Bitmap.createBitmap(card_org, x, ch2*2, cw2, ch2);
+			x += cw2;
 		}
 		
 		// 스페이드 카드
 		x=0;
 		for(int i=0; i<13; i++) {
-			card[i+39] = Bitmap.createBitmap(card_org, x, ch*3, cw, ch);
-			x += cw;
+			card[i+39] = Bitmap.createBitmap(card_org, x, ch2*3, cw2, ch2);
+			x += cw2;
 		}
 		
 		// 조커 카드
 		x=0;
 		for(int i=0; i<2; i++) {
-			card[i+52] = Bitmap.createBitmap(card_org, x, ch*4, cw, ch);
-			x += cw;
+			card[i+52] = Bitmap.createBitmap(card_org, x, ch2*4, cw2, ch2);
+			x += cw2;
 		}
 		
 		// 클로버
@@ -944,7 +944,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		if(playerTurn != 0) {
 			gameControll.playAI();
 			gameControll.nextTurn();
-			
+			upIndexNum = 0;
 		}
 		
 		return false;
