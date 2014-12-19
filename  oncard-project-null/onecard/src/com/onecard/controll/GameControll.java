@@ -136,7 +136,12 @@ public class GameControll {
 		// 카드 진행 및 아이템 적용
 		return currentState;
 	}
-	
+	/**
+	 * 모양 바꾸기
+	 */
+	public void changePattern(String pattern){
+		currentState.changePattern(pattern);
+	}
 	/**
 	 * 게임오버 체크 부분
 	 */
