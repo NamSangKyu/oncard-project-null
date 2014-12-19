@@ -3,6 +3,7 @@ package com.onecard.controll;
 import java.util.ArrayList;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import com.onecard.CardModel;
 import com.onecard.GameMain;
@@ -162,11 +163,7 @@ public class GameCurrentState {
 			changePattern(String.valueOf(tempCard.charAt(0)));
 			//특수 카드 체크
 			checkSpecialCard(tempCard);
-			//카드 개수 체크
-			//
-			if(playerList.get(currentTurn).getDec().size() == 0){
-				playerList.get(currentTurn).setWorkout(true);
-			}
+			
 		}else{
 			//맞는 카드가 아님
 			currentTurn--;
@@ -428,6 +425,18 @@ public class GameCurrentState {
 				currentTurn = -1;
 	}
 	public void cardMerge(){
-		cardSuffle.otherDecSuffle(templateDec, useDec);
+		String temp = useDec.get(0);
+		useDec.remove(0);
+		templateDec.addAll(useDec);
+		useDec.clear();
+		useDec.add(temp);
+		Log.d("MyLog", "Card Merge");
+		
+		Log.d("MyLog", temp);
+		Log.d("MyLog", useDec.toString());
+		Log.d("MyLog", templateDec.toString());
+		for(int i=0;i<playerList.size();i++){
+			Log.d("MyLog", playerList.get(i).getDec().toString());
+		}
 	}
 }
