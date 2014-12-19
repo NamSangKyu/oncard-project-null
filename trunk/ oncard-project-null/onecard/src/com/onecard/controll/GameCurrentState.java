@@ -260,7 +260,8 @@ public class GameCurrentState {
 			Log.d("MyLog", "숫자가 같은지 판단하는 부분");
 			if(groundCard.charAt(1) == tempCard.charAt(1))
 				temp = true;
-			temp = false;
+			else	
+				temp = false;
 		}
 		return temp;
 	}
