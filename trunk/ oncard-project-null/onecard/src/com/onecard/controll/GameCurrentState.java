@@ -2,6 +2,8 @@ package com.onecard.controll;
 
 import java.util.ArrayList;
 
+import android.util.Log;
+
 import com.onecard.CardModel;
 import com.onecard.GameMain;
 import com.onecard.gameinterface.CardSuffle;
@@ -129,9 +131,9 @@ public class GameCurrentState {
 			}else{
 				currentTurn--;
 			}
-			if(currentTurn < 0)
+			if(currentTurn< 0)
 				currentTurn = playerList.size()-1;
-			else if(currentTurn >= playerList.size())
+			else
 				currentTurn = 0;
 				
 		}while(playerList.get(currentTurn).isWorkout());
@@ -151,6 +153,8 @@ public class GameCurrentState {
 	public void outputCard(int index) {
 		// TODO Auto-generated method stub
 		String tempCard = playerList.get(currentTurn).getDec().get(index);
+		Log.d("MyLog", "outputCard() : currentTurn : " + currentTurn);
+		
 		if(checkCard(tempCard)){
 			//낼 수 있는 카드 일때
 			//특수 카드 체크

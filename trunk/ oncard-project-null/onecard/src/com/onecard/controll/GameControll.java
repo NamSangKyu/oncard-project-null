@@ -1,13 +1,12 @@
 package com.onecard.controll;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
-import android.text.TextUtils.TruncateAt;
 import android.util.Log;
 
 import com.onecard.Ais;
 import com.onecard.gameinterface.AI;
-import com.onecard.gameinterface.CardSuffle;
 import com.onecard.gameinterface.GameResult;
 import com.onecard.gameinterface.Item;
 
@@ -123,6 +122,7 @@ public class GameControll {
 	public GameCurrentState playAI() {
 		// AI 선택 부분
 		String aiPlay[] = ai.play(currentState);
+		Log.d("MyLog", "ai : " + Arrays.toString(aiPlay));
 		/*//사용한 아이템
 		if(aiPlay[1]!=null){
 			useItem(aiPlay[1]);
