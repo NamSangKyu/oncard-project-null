@@ -249,8 +249,8 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 //		bd = (BitmapDrawable) res.getDrawable(R.drawable.w5);
 //		win5 = bd.getBitmap();
 		
-		//cw=1196/13*2;														// 원본 카드 이미지에서 카드조각을 잘라낼 길이 
-		//ch=641/5*2;
+		cw=card_org.getWidth()/13;														// 원본 카드 이미지에서 카드조각을 잘라낼 길이 
+		ch=card_org.getHeight()/5;
 		
 		// 클로버 카드
 		int x=0;
