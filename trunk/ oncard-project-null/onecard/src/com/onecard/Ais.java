@@ -1,10 +1,9 @@
 package com.onecard;
 
-
-
 import java.util.*;
 
 import android.content.*;
+import android.util.*;
 
 import com.onecard.controll.*;
 
@@ -20,19 +19,22 @@ public class Ais implements com.onecard.gameinterface.AI
 	String groundcard;
 	
 	//연산용
+	String lastcard;
 	String counterattack;
-	String othercard;	
+	String othercard;
+	String comb;
 	char[] value;
-	char[] coms;	
+	char[] coms;
 	char[] attack = { '2', 'A', 'B', 'C' };
 	char[] two = { 'K', 'J' };
 	char[] pattens;
 	int random;
 	int nulls = 0;
+	int sum=0;
 	
 	//게임 난이도
 	int level = 0;
-
+	
 	//연산용
 	int attacknum;
 	int attackok;
@@ -49,10 +51,11 @@ public class Ais implements com.onecard.gameinterface.AI
 	ArrayList<String> attackcard = new ArrayList<String>();
 	ArrayList<String> twocardlist = new ArrayList<String>();
 	ArrayList<String> nottwocardlist = new ArrayList<String>();
+	ArrayList<String> combocard = new ArrayList<String>();
 	ArrayList<Character> same = new ArrayList<Character>();
 	ArrayList<Character> notsame;
 	
-	private  GameCurrentState Gc;
+	private GameCurrentState Gc;
 	
 	private Context mContext;
 	
@@ -97,6 +100,7 @@ public class Ais implements com.onecard.gameinterface.AI
 	public String[] play(GameCurrentState currentState)
 	{
 		Gc = currentState;
+		Log.i("MyLog", "fsdlfisldkufh:::"+Gc.getTemplateDec().get(0));
 		patten = currentState.getPattern();
 		pattens = patten.toCharArray();
 		if (!send.isEmpty())
@@ -105,7 +109,7 @@ public class Ais implements com.onecard.gameinterface.AI
 		}
 		;
 		usernum();
-		newpatten();
+	
 		trunnum(Gc.getCurrentTurn());
 		switch (level)
 		{
@@ -337,6 +341,8 @@ public class Ais implements com.onecard.gameinterface.AI
 			send.add(userattack());
 			for (int i = 0; i < send.size(); i++)
 			{
+				sends = new String[send.size()];
+		
 				sends[i] = send.get(i);
 			}
 			
@@ -391,6 +397,8 @@ public class Ais implements com.onecard.gameinterface.AI
 			send.add(userattack());
 			for (int i = 0; i < send.size(); i++)
 			{
+				sends = new String[send.size()];
+			
 				sends[i] = send.get(i);
 			}
 			
@@ -504,8 +512,7 @@ public class Ais implements com.onecard.gameinterface.AI
 				break;
 				
 			}
-			else if (value[0] == 'J' || value[0] == 'C'
-					||value[0] == 'H' || value[0] == 'D'|| value[0] == 'A')
+			else if (value[0] == 'J' || value[0] == 'C' || value[0] == 'H' || value[0] == 'D' || value[0] == 'A')
 			{
 				
 				if (coms[1] == attack[2])
@@ -517,8 +524,7 @@ public class Ais implements com.onecard.gameinterface.AI
 				}
 				
 			}
-			else if (value[0] == 'J' || value[0] == 'C'
-					||value[0] == 'H' || value[0] == 'D'|| value[0] == 'A')
+			else if (value[0] == 'J' || value[0] == 'C' || value[0] == 'H' || value[0] == 'D' || value[0] == 'A')
 			{
 				
 				if (coms[1] == attack[3])
@@ -548,6 +554,7 @@ public class Ais implements com.onecard.gameinterface.AI
 		
 		for (int i = 0; i < send.size(); i++)
 		{
+			sends = new String[send.size()];
 			sends[i] = send.get(i);
 		}
 		
@@ -558,7 +565,7 @@ public class Ais implements com.onecard.gameinterface.AI
 	{
 		
 		//공격타이밍이 아닐때
-		value =groundcard.toCharArray();
+		value = groundcard.toCharArray();
 		for (int i = 0; i < playing.size(); i++)
 		{
 			coms = playing.get(i).toCharArray();
@@ -577,8 +584,7 @@ public class Ais implements com.onecard.gameinterface.AI
 				break;
 				
 			}
-			else if (value[0] == 'J' || value[0] == 'C'
-					||value[0] == 'H' || value[0] == 'D'|| value[0] == 'A')
+			else if (value[0] == 'J' || value[0] == 'C' || value[0] == 'H' || value[0] == 'D' || value[0] == 'A')
 			{
 				
 				if (coms[1] == attack[2])
@@ -590,8 +596,7 @@ public class Ais implements com.onecard.gameinterface.AI
 				}
 				
 			}
-			else if (value[0] == 'J' || value[0] == 'C'
-					||value[0] == 'H' || value[0] == 'D'|| value[0] == 'A')
+			else if (value[0] == 'J' || value[0] == 'C' || value[0] == 'H' || value[0] == 'D' || value[0] == 'A')
 			{
 				if (coms[1] == attack[3])
 				{
@@ -650,8 +655,7 @@ public class Ais implements com.onecard.gameinterface.AI
 				break;
 				
 			}
-			else if (value[0] == 'J' || value[0] == 'C'
-					||value[0] == 'H' || value[0] == 'D'|| value[0] == 'A')
+			else if (value[0] == 'J' || value[0] == 'C' || value[0] == 'H' || value[0] == 'D' || value[0] == 'A')
 			{
 				
 				if (coms[1] == attack[2])
@@ -663,8 +667,7 @@ public class Ais implements com.onecard.gameinterface.AI
 				}
 				
 			}
-			else if (value[0] == 'J' || value[0] == 'C'
-					||value[0] == 'H' || value[0] == 'D'|| value[0] == 'A')
+			else if (value[0] == 'J' || value[0] == 'C' || value[0] == 'H' || value[0] == 'D' || value[0] == 'A')
 			{
 				if (coms[1] == attack[3])
 				{
@@ -703,278 +706,13 @@ public class Ais implements com.onecard.gameinterface.AI
 	}
 	
 	
-	public String finish0()
-	{
-		int what = 0;
-		if (finish1())
-		{
-			//처음 조건충족시
-			if (finish2())
-			{
-				//겹치는게 있을시
-				if (finish4())
-				{
-					//겹치는개 1개
-					if (finish5())
-					{
-						
-						//내는로직실행
-						what = 1;
-						
-					}
-					else
-					{
-						what = 0;
-					}
-					
-				}
-				else
-				{
-					//겹치는개 2개이상
-					
-					//내는로직실행
-					what = 2;
-					
-				}
-				
-			}
-			else
-			{
-				//겹치는게 없을시
-				if (finish3())
-				{
-					if(finish31()){
-						what = 3;
-					}else{
-						what = 4;
-					}
-					//남은것들 k
-					//내는로직실행
-					
-					
-				}
-				else
-				{
-					//남은것들 j
-					
-					//내는로직실행
-					what = 0;
-					
-				}
-				
-			}
-			
-		}
-		else
-		{
-			//통상진행
-			what = 0;
-		}
-		
-		return finishAll(what);
-	}
 	
 	
-	public boolean finish1()
-	{
-		int num = 0;
-		finish = true;
-		if (!twocardlist.isEmpty() || !nottwocardlist.isEmpty())
-		{
-			twocardlist.clear();
-			nottwocardlist.clear();
-		}
-		for (int i = 0; i < playing.size(); i++)
-		{
-			if (playing.get(i).toCharArray()[1] == two[0] || playing.get(i).toCharArray()[1] == two[1])
-			{
-				twocardlist.add(playing.get(i).toString());
-				
-			}
-			else
-			{
-				nottwocardlist.add(playing.get(i).toString());
-				
-			}
-			;
-		}
-		
-		if (nottwocardlist.size() < 2 && twocardlist.size() > 0)
-		{
-			for (int i = 0; i < nottwocardlist.size(); i++)
-			{
-				othercard = nottwocardlist.get(i);
-			}
-			
-			for (int i = 0; i < twocardlist.size(); i++)
-			{
-				if (twocardlist.get(i).toCharArray()[0] == othercard.toCharArray()[0])
-				{
-					num += 1;
-				}
-			}
-			if (num == 0)
-			{
-				finish = false;
-				//더블카드와 남은 한개의 카드의 색이 하나도 같지 않으면 false
-				
-			}
-			
-		}
-		else
-		{
-			finish = false;
-			
-		}
-		return finish;
-		//j,k를 제외한카드가 1장이남고 j,k가 1장 이상이고 j,k중 1장과 문양이 같은게 있을때 true
-	}
 	
 	
-	public boolean finish2()
-	{
-		finish = true;
-		for (int i = 0; i < twocardlist.size(); i++)
-		{
-			for (int n = 0; n < twocardlist.size(); n++)
-			{
-				if (twocardlist.get(i) != twocardlist.get(n))
-				{
-					if (twocardlist.get(i).toCharArray()[0] == twocardlist.get(n).toCharArray()[0])
-					{
-						
-						same.add(twocardlist.get(i).toCharArray()[0]);
-						
-					}
-					
-				}
-			}
-			
-		}
-		
-		notsame = new ArrayList<Character>(new HashSet<Character>(same));
-		
-		if (notsame.size() < 1)
-		{
-			finish = false;
-		}
-		
-		return finish;
-		
-		//j,k가 겹치는 문양이 하나도 없으면 false
-		
-	}
 	
 	
-	public boolean finish3()
-	{
-		finish = false;
-		int j = 0;
-		int k = 0;
 		
-		for(int i = 0 ; i<twocardlist.size();i++){
-			if(twocardlist.get(i).toCharArray()[1]==two[0]){
-				k+=1;
-			}else if(twocardlist.get(i).toCharArray()[1]==two[1])
-			{
-				j+=1;
-			}
-		}
-		
-		//jkjk방지 if문
-		if(k==0||j==0){
-		
-		
-			finish = true;
-			
-		
-		}
-		return finish;
-		
-	}
-	public boolean finish31()
-	{
-		finish = true;
-
-		
-		if (twocardlist.get(0).toCharArray()[1] == two[0])
-		{
-			//남은것들이 k일때
-			
-		}
-		else
-		{
-			//남은것들이 j일때
-			finish = false;
-			
-		}
-		
-		return finish;
-		
-	}
-	
-	
-	public boolean finish4()
-	{
-		finish = true;
-		if (notsame.size() > 1)
-		{
-			finish = false;
-		}
-		
-		return finish;
-		//j,k가 겹치는 문양이 2개이상일시 false
-		
-	}
-	
-	
-	public boolean finish5()
-	{
-		//남은문양이 필드카드와 겹치면안됨
-		finish = true;
-		if (userdeck.get(0).toCharArray()[0] == othercard.toCharArray()[0])
-		{
-			finish = false;
-		}
-		return finish;
-		
-	}
-	
-	
-	public String finishAll(int what)
-	{
-
-		String comb = null;
-		switch (what)
-		{
-			case 0:
-				
-				break;
-			case 1:
-				
-				break;
-			case 2:
-				
-				break;
-			case 3:
-				
-				break;
-			case 4:
-				
-				break;
-			
-			default:
-				break;
-		}
-		return comb;
 	}
 
 
-
-	public void newpatten(){
-		char [] grounds = groundcard.toCharArray();
-		grounds[0] = pattens[0];
-		
-	}
-	;
-}
