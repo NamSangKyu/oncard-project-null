@@ -162,7 +162,11 @@ public class GameCurrentState {
 			changePattern(String.valueOf(tempCard.charAt(0)));
 			//특수 카드 체크
 			checkSpecialCard(tempCard);
-			
+			//카드 개수 체크
+			//
+			if(playerList.get(currentTurn).getDec().size() == 0){
+				playerList.get(currentTurn).setWorkout(true);
+			}
 		}else{
 			//맞는 카드가 아님
 			currentTurn--;
@@ -291,12 +295,20 @@ public class GameCurrentState {
 		// TODO Auto-generated method stub
 		if(attackCard == 0)
 			attackCard++;
+		
 		while(attackCard > 0){
 			playerList.get(currentTurn).getDec().add(templateDec.get(0));
 			templateDec.remove(0);
 			attackCard--;
 		}
+		checkUerDec();
 	}
+	private void checkUerDec() {
+		// TODO Auto-generated method stub
+		if(playerList.get(currentTurn).getDec().size()>=15)
+			playerList.get(currentTurn).setWorkout(true);
+	}
+
 	/**
 	 * 게임 생성 메서드
 	 * @param list 전체 덱
@@ -337,18 +349,10 @@ public class GameCurrentState {
 	public boolean checkGame() {
 		// TODO Auto-generated method stub
 		boolean temp = false;
-			//플레이어 및 AI가 모두 카드를 소진한 경우
-			if(playerList.get(0).getDec().size() == 0){
+		for(int i=0;i<playerList.size();i++){
+			if(playerList.get(i).getDec().size()==0)
 				temp = true;
-			}
-			//현재 턴 플레이어 및 AI 파산체크
-			if(playerList.get(currentTurn).getDec().size() >= 15 || temp){
-				playerList.get(currentTurn).setWorkout(true);
-				templateDec.addAll(playerList.get(currentTurn).getDec());
-				cardSuffle.otherDecSuffle(templateDec, useDec);
-				//playerList.get(i).getDec().clear();
-			}
-			
+		}
 		return temp;
 	}
 
