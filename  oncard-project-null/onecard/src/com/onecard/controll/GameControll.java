@@ -111,7 +111,7 @@ public class GameControll {
 		}else{
 			currentState.outputCard(index);
 		}
-		//카드가 5장 이하면 사용한 덱을 무덤 덱으로 셔플
+				//카드가 5장 이하면 사용한 덱을 무덤 덱으로 셔플
 		if(currentState.getTemplateDec().size() < 5){
 			currentState.cardMerge();
 		}
