@@ -108,6 +108,8 @@ public class GameControll {
 		}else{
 			currentState.outputCard(index);
 		}
+		Log.d("MyLog", "카드 inputoutput after");
+		Log.d("MyLog",currentState.toString());
 		return currentState;
 	}
 
