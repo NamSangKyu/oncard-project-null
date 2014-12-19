@@ -459,6 +459,8 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		
 		forWin = 5;											// 목표 승리 수 5회
 		upIndexNum = 3;										// upIndexNum 초기값 3, - 4번째 카드;
+		
+		gameControll.nextTurn();							// 턴 초기값이 -1 이므로 플레이어 턴(0)으로 바꾼다.
 
 		
 	}
@@ -929,10 +931,15 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		// TODO Auto-generated method stub
-		mDetector.onTouchEvent(event);
+
+		// 플레이어 턴일때만 터치
+		if(playerTurn == 0) {
+			mDetector.onTouchEvent(event);
+			
+			return true;
+		}
 		
-		return true;
+		return false;
 	}
 
 
@@ -1006,18 +1013,27 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 			
 			// 플레이어가 카드를 내거나 먹거나 
 			if(Math.abs(inOut) >= mHeight/3 && playerTurn == 0) {			// 플레이어 턴일때만 카드터치 인식을 받겠다.
-				gameControll.nextTurn();									// 다음 턴으로 넘긴다.
 				
-				if(inOut >= 0) {
-					// 카드 내기
-					gameControll.cardInputOutput(false, upIndexNum);		// 카드를 내고, 사용자 소유의 카드 인덱스를 넘긴다. (0~14)
-				} else {
-					// 카드 먹기
-					gameControll.cardInputOutput(true, 0);
-				}
+				
+				do {
+					if(inOut >= 0) {
+						// 카드 내기
+						gameControll.cardInputOutput(false, upIndexNum);		// 카드를 내고, 사용자 소유의 카드 인덱스를 넘긴다. (0~14)
+						
+					} else {
+						// 카드 먹기
+						gameControll.cardInputOutput(true, 0);
+					}
+					
+					gameControll.nextTurn();									// 다음 턴으로 넘긴다.
+					turnCheck();												// 플레이어 턴 재검사
+				} while(playerTurn == 0);
+					
+				
 				
 			} // if
 			
+			Log.d("MyLog", "현재상황 : " + gameCurState.toString());
 		return false;
 	}
 
