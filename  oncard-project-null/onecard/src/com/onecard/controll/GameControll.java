@@ -115,7 +115,7 @@ public class GameControll {
 		if(currentState.getTemplateDec().size() < 5){
 			currentState.cardMerge();
 		}
-
+		
 		Log.d("MyLog", "카드 inputoutput after");
 		Log.d("MyLog",currentState.toString());
 		return currentState;
