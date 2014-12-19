@@ -144,7 +144,6 @@ public class GameCurrentState {
 	public void changeTurn() {
 		// TODO Auto-generated method stub
 		setTurn(!isTurn());
-		nextTurn();
 	}
 	/**
 	 * 카드 내기
