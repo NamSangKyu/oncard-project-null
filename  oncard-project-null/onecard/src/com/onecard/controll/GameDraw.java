@@ -39,6 +39,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 	private Matrix matrix;
 	
 	// Thread에서 canvas 작업에 필요한 변수들
+	private boolean checkGame;					// 게임 승패 여부
 	private boolean cardIn;						// 카드 먹을 때
 	private boolean cardOut;					// 카드 낼 때
 	private int playerTurn;						// 어떤 플레이어의 턴
@@ -588,8 +589,8 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		
 		//upIndex = new boolean[cardNumPlayer];
 		
-		if(cardNumPlayer >= 10) {									// 플레이어 카드가 9장 이상이면
-			cmargin = doubleToInt(cw*0.3);							// 간격 1/3
+		if(cardNumPlayer >= 11) {									// 플레이어 카드가 9장 이상이면
+			cmargin = doubleToInt(cw*0.25);							// 간격 1/3
 		} else {
 			cmargin = doubleToInt(cw*0.4);							// 아니면 1/2
 		}
@@ -610,7 +611,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 			cardNumTop = playerList.get(1).getDec().size();			// 위쪽 AI의 카드갯수를 읽어온다.
 			
 			if(cardNumTop >= 10) {									// 위쪽 플레이어 카드가 9장 이상이면
-				cardMgnTop = doubleToInt(bw*0.3);					// 뒷면카드 간격을 줄임.
+				cardMgnTop = doubleToInt(bw*0.25);					// 뒷면카드 간격을 줄임.
 			} else {
 				cardMgnTop = doubleToInt(bw*0.4);
 			}
@@ -647,8 +648,8 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 			cardNumTop = playerList.get(2).getDec().size();			// Index 2번이 위쪽 AI
 			cardNumLeft = playerList.get(3).getDec().size();		// Index 3번이 왼쪽 AI
 			
-			if(cardNumTop >= 10) {									// 위쪽 플레이어 카드가 9장 이상이면
-				cardMgnTop = doubleToInt(bw*0.3);					// 뒷면카드 간격을 줄임.
+			if(cardNumTop >= 11) {									// 위쪽 플레이어 카드가 9장 이상이면
+				cardMgnTop = doubleToInt(bw*0.25);					// 뒷면카드 간격을 줄임.
 			} else {
 				cardMgnTop = doubleToInt(bw*0.4);
 			}
@@ -674,6 +675,9 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 			
 			break;
 		} // switch
+		
+		checkGame = gameCurState.checkGame();							// 게임 승패 확인
+		
 	} // decCheck()
 	
 	//---------------------------------
@@ -883,12 +887,13 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 						// 턴마다 시간간격
 						// 시간 바
 						
-						winCheck();				// 플레이어들이 이긴 횟수 검사
-						turnCheck();			// 플레이어 턴 검사, 턴 방향 검사
-						centerCardCheck();		// 중앙에 내려진 카드 검사
-						decCheck();				// 플레이어들이 들고있는 카드 검사
+						winCheck();					// 플레이어들이 이긴 횟수 검사
+						turnCheck();				// 플레이어 턴 검사, 턴 방향 검사
+						centerCardCheck();			// 중앙에 내려진 카드 검사
+						decCheck();					// 플레이어들이 들고있는 카드 검사
 						
-						DrawAll(canvas);		// 전부 그리기
+						
+						DrawAll(canvas);			// 전부 그리기
 						
 					}
 				} finally {
