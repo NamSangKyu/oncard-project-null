@@ -422,5 +422,7 @@ public class GameCurrentState {
 				//초기 턴
 				currentTurn = -1;
 	}
-
+	public void cardMerge(){
+		cardSuffle.otherDecSuffle(templateDec, useDec);
+	}
 }
