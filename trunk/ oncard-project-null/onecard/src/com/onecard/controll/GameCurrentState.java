@@ -327,6 +327,8 @@ public class GameCurrentState {
 		pattern = String.valueOf(useDec.get(0).charAt(0));
 		//초기 턴
 		currentTurn = -1;
+		//공격카드 초기화
+		attackCard = 0;
 	}
 	/**
 	 * 현재 게임 종료 체크 부분
