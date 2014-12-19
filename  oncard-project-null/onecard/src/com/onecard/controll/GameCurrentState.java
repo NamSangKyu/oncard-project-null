@@ -243,16 +243,21 @@ public class GameCurrentState {
 	 */
 	private boolean checkCard(String tempCard) {
 		String groundCard = useDec.get(0);
+		Log.d("MyLog", "카드 체크 부분");
+		Log.d("MyLog", "낸 카드 : "+tempCard);
+		Log.d("MyLog", "바닥카드 : "+groundCard);
+		
+		
 		boolean temp = false;
-		if(pattern.charAt(0) == tempCard.charAt(0) || pattern.equals("A") || tempCard.charAt(0) == 'J'){
+		if(pattern.charAt(0) == tempCard.charAt(0) || pattern.equals("J") || tempCard.charAt(0) == 'J'){
+			Log.d("MyLog", "공격여부 체크 부분");
 			//공격이 있는지 없는 지에 따라서 체크
 			if(attackCard == 0)
 				temp = true;
 			else
 				temp = checkAttackCard(tempCard);
-		}else if(tempCard.charAt(0) == 'J'){
-			temp = true;
 		}else{
+			Log.d("MyLog", "숫자가 같은지 판단하는 부분");
 			if(groundCard.charAt(1) == tempCard.charAt(1))
 				temp = true;
 			temp = false;
