@@ -39,10 +39,6 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 	private Matrix matrix;
 	
 	// Thread에서 canvas 작업에 필요한 변수들
-	private Paint paintPlayer;					// Paint
-	private Paint paintLeft;					
-	private Paint paintRight;
-	private Paint paintTop;
 	private boolean cardIn;						// 카드 먹을 때
 	private boolean cardOut;					// 카드 낼 때
 	private int playerTurn;						// 어떤 플레이어의 턴
@@ -464,18 +460,6 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		forWin = 5;											// 목표 승리 수 5회
 		upIndexNum = 3;										// upIndexNum 초기값 3, - 4번째 카드;
 
-		paintPlayer = new Paint();
-		
-		if(playerNum == 2) {								// 플레이어 수에 따라 Paint객체 생성
-			paintTop = new Paint();
-		} else if(playerNum == 3) {
-			paintLeft = new Paint();
-			paintRight = new Paint();
-		} else if(playerNum == 4) {
-			paintTop = new Paint();
-			paintLeft = new Paint();
-			paintRight = new Paint();
-		}
 		
 	}
 	
@@ -896,12 +880,11 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 						
 						// 턴마다 시간간격
 						// 시간 바
+						
 						winCheck();				// 플레이어들이 이긴 횟수 검사
 						turnCheck();			// 플레이어 턴 검사, 턴 방향 검사
 						centerCardCheck();		// 중앙에 내려진 카드 검사
 						decCheck();				// 플레이어들이 들고있는 카드 검사
-						
-						
 						
 						DrawAll(canvas);		// 전부 그리기
 						
@@ -955,9 +938,13 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 
 	@Override
 	public boolean onDown(MotionEvent e) {
-		if(mRect.contains((int)e.getX(), (int)e.getY())) {
-			Log.d("MyLog", "onDown 호출");
+		
+		// 플레이어 턴이 아니면 터치할때마다 AI턴을 실행한다.
+		if(playerTurn != 0) {
+			gameControll.playAI();
+			gameControll.nextTurn();
 		}
+		
 		return false;
 	}
 
@@ -1001,7 +988,9 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 			int move = (int) e1.getX() - (int) e2.getX();
 			int inOut = (int) e1.getY() - (int) e2.getY();
 			
-			if(Math.abs(move) >= mWidth/4) {
+			
+			// 플레이어 카드 좌우로 선택
+			if(Math.abs(move) >= mWidth/4 && playerTurn == 0) {				// 카드 좌우로 선택, 플레이어 턴일때만 카드터치 인식을 받겠다.
 				if(move >= 0) {
 					// 왼쪽으로 카드 선택
 					if((upIndexNum != 0)) {
@@ -1015,17 +1004,19 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 				} // if
 			} // if
 			
-			if(Math.abs(inOut) >= mHeight/3) {
+			// 플레이어가 카드를 내거나 먹거나 
+			if(Math.abs(inOut) >= mHeight/3 && playerTurn == 0) {			// 플레이어 턴일때만 카드터치 인식을 받겠다.
+				gameControll.nextTurn();									// 다음 턴으로 넘긴다.
+				
 				if(inOut >= 0) {
-					gameControll.nextTurn();
 					// 카드 내기
-					gameControll.cardInputOutput(false, upIndexNum);
+					gameControll.cardInputOutput(false, upIndexNum);		// 카드를 내고, 사용자 소유의 카드 인덱스를 넘긴다. (0~14)
 				} else {
-					gameControll.nextTurn();
 					// 카드 먹기
 					gameControll.cardInputOutput(true, 0);
 				}
-			}
+				
+			} // if
 			
 		return false;
 	}
