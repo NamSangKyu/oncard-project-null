@@ -466,6 +466,16 @@ public class Ais implements com.onecard.gameinterface.AI
 				hardattackorder();
 				
 			}
+		}else if(userattack().equals("Nocounter")){
+			send.add(null);
+			send.add(null);
+			sends = new String[send.size()];
+			for (int i = 0; i < send.size(); i++)
+			{
+			Log.i("MyLog", "useratteack");
+		
+				sends[i] = send.get(i);
+			}
 		}
 		else
 		{
@@ -705,27 +715,28 @@ public class Ais implements com.onecard.gameinterface.AI
 				break;
 				
 			}
-			else if (value[0] == 'J' || value[0] == 'C' || value[0] == 'H' || value[0] == 'D' || value[0] == 'A')
+			else if (coms[1] == attack[2])
 			{
 				
-				if (coms[1] == attack[2])
-				{
+				
 					//조커유무
+					Log.i("MyLog", "jk");
 					send.add(playing.get(i).toString());
 					itemuse();
 					break;
-				}
+				
 				
 			}
-			else if (value[0] == 'J' || value[0] == 'C' || value[0] == 'H' || value[0] == 'D' || value[0] == 'A')
+			else if (coms[1] == attack[3])
 			{
-				if (coms[1] == attack[3])
-				{
+				
+				
 					//조커유무
+					Log.i("MyLog", "jk");
 					send.add(playing.get(i).toString());
 					itemuse();
 					break;
-				}
+				
 			}
 			else
 			{
@@ -744,6 +755,7 @@ public class Ais implements com.onecard.gameinterface.AI
 		;
 		
 		/////리턴값 출력
+		sends = new String[send.size()];
 		for (int i = 0; i < send.size(); i++)
 		{
 			sends[i] = send.get(i);
@@ -776,28 +788,28 @@ public class Ais implements com.onecard.gameinterface.AI
 				break;
 				
 			}
-			else if (value[0] == 'J' || value[0] == 'C' || value[0] == 'H' || value[0] == 'D' || value[0] == 'A')
+			else if (coms[1] == attack[2])
 			{
 				
-				if (coms[1] == attack[2])
-				{
+				
 					//조커유무
+					Log.i("MyLog", "jk");
 					send.add(playing.get(i).toString());
 					itemuse();
 					break;
-				}
+				
 				
 			}
-			else if (value[0] == 'J' || value[0] == 'C' || value[0] == 'H' || value[0] == 'D' || value[0] == 'A')
+			else if (coms[1] == attack[3])
 			{
-				if (coms[1] == attack[3])
-				{
+				
+				
 					//조커유무
-					send.add(whatattackcards().get(i).toString());
+					Log.i("MyLog", "jk");
+					send.add(playing.get(i).toString());
 					itemuse();
-					
 					break;
-				}
+				
 			}
 			else
 			{
