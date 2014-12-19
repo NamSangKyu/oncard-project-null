@@ -3,6 +3,7 @@ package com.onecard.controll;
 import java.util.ArrayList;
 
 import android.text.TextUtils.TruncateAt;
+import android.util.Log;
 
 import com.onecard.Ais;
 import com.onecard.gameinterface.AI;
@@ -102,6 +103,7 @@ public class GameControll {
 	 *            
 	 */
 	public GameCurrentState cardInputOutput(boolean state, int index) {
+		Log.d("MyLog", " index : " +state + " index : " +index);
 		if(state){
 			currentState.inputCard();
 		}else{

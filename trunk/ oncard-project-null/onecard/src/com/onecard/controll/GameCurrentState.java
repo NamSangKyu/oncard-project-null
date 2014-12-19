@@ -314,6 +314,7 @@ public class GameCurrentState {
 		templateDec = list.get(list.size()-1);
 		useDec.add(templateDec.get(0));
 		templateDec.remove(0);
+		pattern = String.valueOf(useDec.get(0).charAt(0));
 		//초기 턴
 		currentTurn = -1;
 	}
