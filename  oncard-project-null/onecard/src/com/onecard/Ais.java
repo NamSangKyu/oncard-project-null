@@ -154,6 +154,8 @@ public class Ais implements com.onecard.gameinterface.AI
 				break;
 		}
 		
+		Log.i("MyLog","szzzasdasdzzz : : : " +  sends[0]);
+		
 		return sends;
 		
 	};
@@ -339,9 +341,10 @@ public class Ais implements com.onecard.gameinterface.AI
 		{
 			//유저가 공격을 했을때
 			send.add(userattack());
+			sends = new String[send.size()];
 			for (int i = 0; i < send.size(); i++)
 			{
-				sends = new String[send.size()];
+			
 		
 				sends[i] = send.get(i);
 			}
@@ -395,9 +398,10 @@ public class Ais implements com.onecard.gameinterface.AI
 		{
 			//유저가 공격을 했을때
 			send.add(userattack());
+			sends = new String[send.size()];
 			for (int i = 0; i < send.size(); i++)
 			{
-				sends = new String[send.size()];
+			
 			
 				sends[i] = send.get(i);
 			}
@@ -485,6 +489,7 @@ public class Ais implements com.onecard.gameinterface.AI
 			if (value[0] == coms[0])
 			{
 				send.add(playing.get(i).toString());
+				Log.i("MyLog", "put card" +playing.get(i).toString());
 				if (value[1] == attack[0] || value[1] == attack[1])
 				{
 					random = (int) (Math.random() * com1item.length);
@@ -500,6 +505,7 @@ public class Ais implements com.onecard.gameinterface.AI
 			else if (value[1] == coms[1])
 			{
 				send.add(playing.get(i).toString());
+				Log.i("MyLog", "3333333333");
 				if (value[1] == attack[0] || value[1] == attack[1])
 				{
 					random = (int) (Math.random() * com1item.length);
@@ -543,6 +549,7 @@ public class Ais implements com.onecard.gameinterface.AI
 			;
 			if (nulls == playing.size())
 			{
+				Log.i("MyLog", "111111111");
 				send.add(null);
 				send.add(null);
 				nulls = 0;
@@ -551,11 +558,13 @@ public class Ais implements com.onecard.gameinterface.AI
 			
 		}
 		;
-		
+		sends = new String[send.size()];
 		for (int i = 0; i < send.size(); i++)
 		{
-			sends = new String[send.size()];
+			
 			sends[i] = send.get(i);
+			Log.i("MyLog","zzzzzz : : : " +  send.get(i));
+			Log.i("MyLog","szzzzzz : : : " +  sends[i]);
 		}
 		
 	}
@@ -623,6 +632,7 @@ public class Ais implements com.onecard.gameinterface.AI
 		;
 		
 		/////리턴값 출력
+		sends = new String[send.size()];
 		for (int i = 0; i < send.size(); i++)
 		{
 			sends[i] = send.get(i);
@@ -697,6 +707,7 @@ public class Ais implements com.onecard.gameinterface.AI
 		/////리턴값 출력
 		if (nulls != 999)
 		{
+			sends = new String[send.size()];
 			for (int i = 0; i < send.size(); i++)
 			{
 				sends[i] = send.get(i);
