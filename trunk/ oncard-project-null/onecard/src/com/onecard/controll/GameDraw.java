@@ -621,8 +621,14 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 			break;
 			
 		case 3:														// 인원이 3명이면
-			cardNumLeft = playerList.get(1).getDec().size();		// Index 1번이 왼쪽 AI
-			cardNumRight = playerList.get(2).getDec().size();		// Index 2번이 오른쪽 AI
+			cardNumRight = playerList.get(1).getDec().size();		// Index 1번이 오른쪽 AI
+			cardNumLeft = playerList.get(2).getDec().size();		// Index 2번이 왼쪽 AI
+			
+			if(cardNumRight >= 11) {								// 오른쪽 플레이어 카드가 11장 이상이면
+				cardMgnRight = doubleToInt(bw*0.15);				// 뒷면카드 간격을 줄임
+			} else {
+				cardMgnRight = doubleToInt(bw*0.4);
+			}
 			
 			if(cardNumLeft >= 11) {									// 왼쪽 플레이어 카드가 11장 이상이면
 				cardMgnLeft = doubleToInt(bw*0.15);					// 뒷면카드 간격을 줄임
@@ -630,12 +636,6 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 				cardMgnLeft = doubleToInt(bw*0.4);
 			} 
 
-			if(cardNumRight >= 11) {								// 오른쪽 플레이어 카드가 11장 이상이면
-				cardMgnRight = doubleToInt(bw*0.15);				// 뒷면카드 간격을 줄임
-			} else {
-				cardMgnRight = doubleToInt(bw*0.4);
-			}
-			
 			lengthLeft = cw + cardMgnLeft*(cardNumLeft-1);			// 왼쪽에 그릴 카드 전체길이 구하기
 			lengthRight = cw + cardMgnRight*(cardNumRight-1);			// 오른쪽에 그릴 카드 전체길이 구하기
 			mgnLeft = (mHeight - lengthLeft)/2;						// 왼쪽 카드를 그리기 시작할 위치
@@ -643,9 +643,9 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 			break;
 			
 		case 4:														// 인원이 4명이면
-			cardNumLeft = playerList.get(1).getDec().size();		// Index 1번이 왼쪽 AI
-			cardNumRight = playerList.get(2).getDec().size();		// Index 2번이 오른쪽 AI
-			cardNumTop = playerList.get(3).getDec().size();			// Index 3번이 위쪽 AI
+			cardNumRight = playerList.get(1).getDec().size();		// Index 1번이 오른쪽 AI
+			cardNumTop = playerList.get(2).getDec().size();			// Index 2번이 위쪽 AI
+			cardNumLeft = playerList.get(3).getDec().size();		// Index 3번이 왼쪽 AI
 			
 			if(cardNumTop >= 10) {									// 위쪽 플레이어 카드가 9장 이상이면
 				cardMgnTop = doubleToInt(bw*0.15);					// 뒷면카드 간격을 줄임.
@@ -780,8 +780,8 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 					canvas.drawBitmap(rightCharacter, mWidth - mgnCharLeft - characterRad, mgnCharTop, null);
 					
 					// 발바닥 그리기
-					int winL = playerList.get(1).getWin();					// 왼쪽 AI 승리횟수
-					int winR = playerList.get(2).getWin();					// 오른쪽 AI 승리횟수
+					int winR = playerList.get(1).getWin();					// 오른쪽 AI 승리횟수
+					int winL = playerList.get(2).getWin();					// 왼쪽 AI 승리횟수
 					int mgnHeightLeft = (mHeight - ch - doubleToInt(leaveWin.getHeight()*(forWin-winL)))/2;		// 발바닥 전체 길이
 					int mgnHeightRight = (mHeight - ch - doubleToInt(leaveWin.getHeight()*(forWin-winR)))/2;	// 발바닥 전체 길이
 					
@@ -824,9 +824,9 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 					canvas.drawBitmap(topCharacter, (mWidth-topCharacter.getWidth())/2, mgnCharLeft, null);
 					
 					// 발바닥 그리기
-					int winL = playerList.get(1).getWin();					// 왼쪽 AI 승리횟수
-					int winR = playerList.get(2).getWin();					// 오른쪽 AI 승리횟수
-					int winT = playerList.get(3).getWin();					// 위쪽 AI 승리횟수
+					int winR = playerList.get(1).getWin();					// 오른쪽 AI 승리횟수
+					int winT = playerList.get(2).getWin();					// 위쪽 AI 승리횟수
+					int winL = playerList.get(3).getWin();					// 왼쪽 AI 승리횟수
 					int mgnHeightLeft = (mHeight - ch - doubleToInt(leaveWin.getHeight()*(forWin-winL)))/2;			// 발바닥 전체 길이
 					int mgnHeightRight = (mHeight - ch - doubleToInt(leaveWin.getHeight()*(forWin-winR)))/2;		// 발바닥 전체 길이
 					int mgnWidthTop = (mWidth-doubleToInt(leaveWin.getWidth()*(forWin-winT)))/2;					// 발바닥 전체 길이
@@ -931,15 +931,9 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-
-		// 플레이어 턴일때만 터치
-		if(playerTurn == 0) {
 			mDetector.onTouchEvent(event);
 			
 			return true;
-		}
-		
-		return false;
 	}
 
 
@@ -1015,7 +1009,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 			if(Math.abs(inOut) >= mHeight/3 && playerTurn == 0) {			// 플레이어 턴일때만 카드터치 인식을 받겠다.
 				
 				
-				do {
+//				do {
 					if(inOut >= 0) {
 						// 카드 내기
 						gameControll.cardInputOutput(false, upIndexNum);		// 카드를 내고, 사용자 소유의 카드 인덱스를 넘긴다. (0~14)
@@ -1027,7 +1021,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 					
 					gameControll.nextTurn();									// 다음 턴으로 넘긴다.
 					turnCheck();												// 플레이어 턴 재검사
-				} while(playerTurn == 0);
+//				} while(playerTurn == 0);
 					
 				
 				
@@ -1039,6 +1033,8 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 
 	
 // 에러 : 첫번째 턴일 때 gameCurrentState의 패턴 - 초기값이 없음.	
+// 하트 큐 카드 카드 안사라짐
+	// 턴넘기기
 	
 
 } // end of class GameDraw
