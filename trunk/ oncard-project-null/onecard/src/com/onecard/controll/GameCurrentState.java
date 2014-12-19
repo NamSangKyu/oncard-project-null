@@ -160,6 +160,7 @@ public class GameCurrentState {
 			//낸 카드를 바닥으로 깔음
 			playerList.get(currentTurn).getDec().remove(index);
 			useDec.add(0,tempCard);
+			changePattern(String.valueOf(tempCard.charAt(0)));
 			//특수 카드 체크
 			checkSpecialCard(tempCard);
 			
