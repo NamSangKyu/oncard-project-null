@@ -499,7 +499,7 @@ public class GameCurrentState {
 				.size());
 		Log.d("restart", list.toString());
 		useDec.clear();
-		templateDec.clear();
+		
 		// 플레이어 설정 
 		for (int i = 0; i < playerList.size(); i++) {
 			//덱 셋팅
@@ -508,11 +508,11 @@ public class GameCurrentState {
 			playerList.get(i).setWorkout(false);
 			
 		}
-		// 무덤덱 및 초기 패 셋팅
-		templateDec.addAll(list.get(list.size() - 1));
-		Log.d("restart", templateDec.toString());
 		Log.d("restart", list.get(list.size() - 1).toString());
+		// 무덤덱 및 초기 패 셋팅
+		templateDec = list.get(list.size() - 1);
 		useDec.add(templateDec.get(0));
+		changePattern(String.valueOf(useDec.get(0).charAt(0)));
 		templateDec.remove(0);
 		// 초기 턴
 		currentTurn = 0;
