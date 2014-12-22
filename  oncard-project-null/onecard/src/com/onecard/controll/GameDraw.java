@@ -27,6 +27,7 @@ import com.onecard.GameStart;
 import com.onecard.MainActivity;
 import com.onecard.R;
 import com.onecard.Options;
+import com.onecard.GlobalVars;
 
 public class GameDraw extends SurfaceView implements Callback, OnGestureListener {
 	public static final String TAG = "MyLog";
@@ -150,7 +151,15 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		mDetector = new GestureDetector(getContext(), this);	// Detector 객체 생성
 		
 		gameControll = GameControll.getInstance();
-		gameControll.start(4);				// 설정된 게임 인원으로 시작
+		playerNum = ((GlobalVars) context.getApplicationContext()).getPlayerNum();
+		if(playerNum == 2 || playerNum == 3 || playerNum == 4) {
+			
+			gameControll.start(playerNum);									// 설정된 게임 인원으로 시작
+		} else {
+			Log.d("MyLog", "playerNum : " + playerNum);
+			gameControll.start(4);
+		}
+		
 		gameCurState = gameControll.getCurrentState();
 		
 		initGame();												// 게임환경 설정
@@ -1130,6 +1139,10 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 			// 플레이어가 카드를 내거나 먹거나 
 			if(Math.abs(inOut) >= mHeight/6 && playerTurn == 0) {			// 플레이어 턴일때만 카드터치 인식을 받겠다.
 				
+				Log.d("MyLog", "mgnCharLeft : " + mgnCharLeft);
+				Log.d("MyLog", "bh : " + bh);
+				Log.d("MyLog", "leaveWin : " + leaveWin.getWidth());
+				Log.d("MyLog", "mWidth : " + mWidth);
 					if(inOut >= 0) {
 						// 카드 내기
 						gameControll.cardInputOutput(false, upIndexNum);		// 카드를 내고, 사용자 소유의 카드 인덱스를 넘긴다. (0~14)
