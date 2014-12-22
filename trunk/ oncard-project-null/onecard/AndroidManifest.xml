@@ -25,6 +25,7 @@
         </activity>
         
         <activity android:name="GameStart"></activity>
+        <activity android:name="Options"></activity>
     </application>
 
 </manifest>

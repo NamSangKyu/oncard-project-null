@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/home" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/meunbar"
+        android:layout_marginBottom="30dip" 
+	    android:layout_marginLeft="35dip" 
+	    android:layout_marginRight="35dip" 
+	    android:layout_marginTop="45dip" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="50dp"
+            android:gravity="center" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="플레이어 수"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:gravity="center">
+            
+            <RadioGroup 
+				android:id="@+id/RadioGroup01" 
+				android:layout_height="wrap_content" 
+				android:layout_width="wrap_content" 
+				android:orientation="horizontal" 
+				android:layout_marginRight="10dp"
+				android:gravity="center">
+				<RadioButton 
+			    	android:id="@+id/xRadio1" 
+					android:layout_width="wrap_content" 
+					android:layout_height="wrap_content" 
+					android:tag="2" 
+					android:text=" 2" 
+					android:layout_marginRight="10dp"
+					android:layout_weight="1"/>
+				<RadioButton 
+			    	android:id="@+id/xRadio2" 
+					android:layout_width="wrap_content" 
+					android:layout_height="wrap_content" 
+					android:tag="3" 
+					android:text=" 3" 
+					android:layout_marginRight="10dp"
+					android:layout_weight="1"/>
+				<RadioButton 
+			    	android:id="@+id/xRadio3" 
+					android:layout_width="wrap_content" 
+					android:layout_height="wrap_content" 
+					android:tag="4" 
+					android:text=" 4" 
+					android:layout_weight="1"/>
+				
+			</RadioGroup>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="130dp"
+            android:gravity="center" >
+
+            <Button
+                android:id="@+id/btnExit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="확인" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

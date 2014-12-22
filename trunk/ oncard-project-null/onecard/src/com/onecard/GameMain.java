@@ -7,11 +7,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageButton;
 
 public class GameMain extends Activity {
 	private ImageButton btnStart, btnRank, btnOption, btnExit;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -25,13 +25,15 @@ public class GameMain extends Activity {
 		btnRank = (ImageButton) findViewById(R.id.btnRank);
 		btnOption = (ImageButton) findViewById(R.id.btnOption);
 		btnExit = (ImageButton) findViewById(R.id.btnExit);
+		
+		
 		//게임 시작 부분
 		btnStart.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				startActivity(new Intent(GameMain.this,GameStart.class));
+				startActivity(new Intent(GameMain.this, GameStart.class));
+				
 			}
 		});
 		//게임 랭크 확인 부분
@@ -48,8 +50,9 @@ public class GameMain extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+				Intent intent = new Intent(GameMain.this, Options.class);
 				
+				startActivityForResult(intent, 1);
 			}
 		});
 		//게임 종료 부분
@@ -63,5 +66,21 @@ public class GameMain extends Activity {
 			}
 		});
 	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		
+		switch(requestCode) {
+		case 1 :
+			if(resultCode == RESULT_OK) {
+			}
+			break;
+			
+		default :
+			break;
+		} // switch
+	} // onActivityResult
 	
 }
