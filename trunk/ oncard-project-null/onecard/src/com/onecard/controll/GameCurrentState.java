@@ -396,6 +396,13 @@ public class GameCurrentState {
 			if (playerList.get(i).getDec().size() == 0)
 				temp = true;
 		}
+		int count = 0;
+		for(int i=0;i < playerList.size(); i++) {
+			if(playerList.get(i).isWorkout())
+				count++;
+		}
+		if(playerList.size() - count == 1)
+			temp = true;
 		return temp;
 	}
 
@@ -460,9 +467,10 @@ public class GameCurrentState {
 		for (int i = 0; i < playerList.size(); i++) {
 			if (i == playerIndex)
 				continue;
-			total += playerList.get(i).getDec().size()
-					* playerList.get(i).getWin();
+			total += playerList.get(i).getDec().size();
+					
 		}
+		total *= playerList.get(playerIndex).getWin();
 		return total;
 	}
 
@@ -489,7 +497,9 @@ public class GameCurrentState {
 		// 전체 카드덱 받아옴
 		ArrayList<ArrayList<String>> list = cardSuffle.createDec(playerList
 				.size());
-
+		Log.d("restart", list.toString());
+		useDec.clear();
+		templateDec.clear();
 		// 플레이어 설정 
 		for (int i = 0; i < playerList.size(); i++) {
 			//덱 셋팅
@@ -499,7 +509,9 @@ public class GameCurrentState {
 			
 		}
 		// 무덤덱 및 초기 패 셋팅
-		templateDec = list.get(list.size() - 1);
+		templateDec.addAll(list.get(list.size() - 1));
+		Log.d("restart", templateDec.toString());
+		Log.d("restart", list.get(list.size() - 1).toString());
 		useDec.add(templateDec.get(0));
 		templateDec.remove(0);
 		// 초기 턴
