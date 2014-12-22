@@ -116,8 +116,27 @@ public class GameControll {
 			currentState.cardMerge();
 		}
 		
-		Log.d("MyLog", "카드 inputoutput after");
-		Log.d("MyLog",currentState.toString());
+		Log.d("CardInfo", "카드 inputoutput after");
+		Log.d("CardInfo","선택된 카드 인덱스 : " + index);
+		Log.d("CardInfo","누적된 공격 수 : " + currentState.getAttackCard());
+		Log.d("CardInfo","현재 패턴 : " + currentState.getPattern());
+		Log.d("CardInfo","무덤 덱 : " + currentState.getTemplateDec().toString());
+		Log.d("CardInfo","사용한 덱 : " + currentState.getUseDec().toString());
+		int count = 0;
+		for(int i=0;i<currentState.getPlayerList().size();i++){
+			Log.d("CardInfo",currentState.getPlayerList().get(i).getName()+" 덱 : " + currentState.getPlayerList().get(i).getDec().toString());
+			if(!currentState.getPlayerList().get(i).isWorkout()){
+				count += currentState.getPlayerList().get(i).getDec().size();
+			}
+		}
+		for(int i=0;i<currentState.getPlayerList().size();i++){
+			Log.d("CardInfo",currentState.getPlayerList().get(i).getName()+" 상태 : " + currentState.getPlayerList().get(i).isWorkout());
+		}
+		count += currentState.getTemplateDec().size();
+		count += currentState.getUseDec().size();
+		
+		Log.d("CardInfo","총 카드 개수 : " + count);
+		Log.d("CardInfo","현재 턴 : " + currentState.getCurrentTurn());
 		return currentState;
 	}
 
