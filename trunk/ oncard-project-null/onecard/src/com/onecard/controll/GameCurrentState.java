@@ -330,6 +330,10 @@ public class GameCurrentState {
 				playerList.get(currentTurn).getDec().add(templateDec.get(0));
 				templateDec.remove(0);
 				attackCard--;
+				if(templateDec.size() <= 0)
+					cardMerge();
+				if(templateDec.size() <= 0)
+					break;
 			}
 		}
 		checkUerDec();
@@ -408,16 +412,37 @@ public class GameCurrentState {
 	 */
 	public void setWinner() {
 		// TODO Auto-generated method stub
-		
+		int winIndex=playerList.size();
 		for (int i = 0; i < playerList.size(); i++) {
-			if (playerList.get(i).isWorkout()) {
-				playerList.get(i).setWin(0);
-			} else {
-				playerList.get(i).setWin(playerList.get(i).getWin() + 1);
-				gameResultList.get(i).setScore(
-						gameResultList.get(i).getScore() + excuteScore(i));
-				gameResultList.get(i)
-						.setWin(gameResultList.get(i).getWin() + 1);
+			if (playerList.get(i).getDec().size()==0){
+				winIndex = i;
+				break;
+			}
+		}
+		//카드가 0개로 승리할경우 처리부분
+		if(winIndex != playerList.size()){
+			for (int i = 0; i < playerList.size(); i++) {
+				if(i!=winIndex){
+					playerList.get(i).setWin(0);
+				}else{
+					playerList.get(i).setWin(playerList.get(i).getWin() + 1);
+					gameResultList.get(i).setScore(
+							gameResultList.get(i).getScore() + excuteScore(i));
+					gameResultList.get(i)
+							.setWin(gameResultList.get(i).getWin() + 1);
+				}
+			}
+		}else{
+			for (int i = 0; i < playerList.size(); i++) {
+				if (playerList.get(i).isWorkout()) {
+					playerList.get(i).setWin(0);
+				} else {
+					playerList.get(i).setWin(playerList.get(i).getWin() + 1);
+					gameResultList.get(i).setScore(
+							gameResultList.get(i).getScore() + excuteScore(i));
+					gameResultList.get(i)
+					.setWin(gameResultList.get(i).getWin() + 1);
+				}
 			}
 		}
 	}
