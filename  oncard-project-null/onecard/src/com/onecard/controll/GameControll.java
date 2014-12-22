@@ -180,6 +180,9 @@ public class GameControll {
 			gameState = GAME_ROUND_EXIT;
 			//1등을 제외한 모든 플레이어 연승 제거 및 점수 셋팅
 			currentState.setWinner();
+			for(int i=0;i<currentState.getGameResultList().size();i++){
+				Log.d("GameResult", currentState.getGameResultList().get(i).toString());
+			}
 		}
 		if(currentState.resultGame()){
 			gameState = GAME_OVER;
