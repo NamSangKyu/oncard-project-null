@@ -2,9 +2,10 @@ package com.onecard;
 
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -12,36 +13,31 @@ import android.widget.RadioGroup;
 public class Options extends Activity {
 	
 	RadioGroup radioGroup;
-	Intent resultIntent;
+	Button mBtnConfirm;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.options);
 		
-		 resultIntent = new Intent();
-		
 		radioGroup = (RadioGroup) findViewById(R.id.RadioGroup01);
+		mBtnConfirm = (Button) findViewById(R.id.btnConfirm);
 		
-		
+		mBtnConfirm.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Log.d("MyLog", "Confirm : ");
+				setting();
+				finish();
+			}
+		});
 	} // end of onCreate()
 	
-	
-	//-----------------------------------
-    // Button Click
-    //-----------------------------------
-	Button.OnClickListener OnButtonClick = new Button.OnClickListener() {
-		public void onClick(View v) {
-			
-			switch (v.getId()) {
-			case R.id.btnExit :		
-					setting();
-					finish();
-			
-			} // switch
-		}
 
-    };
+	
+	
+	
     
 	// 체크된 라디오 버튼 값 불러오기
 	private void setting() {							
@@ -52,10 +48,10 @@ public class Options extends Activity {
     	tmpRadio = (RadioButton) findViewById(id);
     	int playerNum = Integer.parseInt(tmpRadio.getTag().toString());
     	
-    	resultIntent.putExtra("playerNum", playerNum);
-		
-		setResult(RESULT_OK, resultIntent);
-	
+    	((GlobalVars)getApplicationContext()).setPlayerNum(playerNum);
+    	
+    	Log.d("MyLog", "setting() : " + ((GlobalVars)getApplicationContext()).getPlayerNum());
+    	
     }
 	
 

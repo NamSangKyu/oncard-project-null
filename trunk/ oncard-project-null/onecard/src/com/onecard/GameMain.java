@@ -50,9 +50,7 @@ public class GameMain extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(GameMain.this, Options.class);
-				
-				startActivityForResult(intent, 1);
+				startActivity(new Intent(GameMain.this, Options.class));
 			}
 		});
 		//게임 종료 부분
@@ -67,20 +65,5 @@ public class GameMain extends Activity {
 		});
 	}
 	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
-		super.onActivityResult(requestCode, resultCode, data);
-		
-		switch(requestCode) {
-		case 1 :
-			if(resultCode == RESULT_OK) {
-			}
-			break;
-			
-		default :
-			break;
-		} // switch
-	} // onActivityResult
 	
 }
