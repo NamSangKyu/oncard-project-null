@@ -150,7 +150,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		mDetector = new GestureDetector(getContext(), this);	// Detector 객체 생성
 		
 		gameControll = GameControll.getInstance();
-		gameControll.start(2);				// 설정된 게임 인원으로 시작
+		gameControll.start(4);				// 설정된 게임 인원으로 시작
 		gameCurState = gameControll.getCurrentState();
 		
 		initGame();												// 게임환경 설정
