@@ -379,9 +379,11 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 			map.put(cardName[i][0], i);
 		}
 		
-		mgnCardNL = bh + leaveWin.getWidth();						// 뒷면카드와 발바닥 사이의 거리
-		mgnCharLeft = bh + doubleToInt(leaveWin.getWidth()*1.5);		// 캐릭터의 marginLeft
-		mgnCharTop = mgnCenterTop + leaveWin.getHeight()/2;					// 캐릭터의 marginTop
+		
+		mgnCardNL = leaveWin.getWidth();						// 뒷면카드와 발바닥 사이의 거리
+		mgnCharLeft = doubleToInt(leaveWin.getWidth()*1.5);		// 캐릭터의 marginLeft
+		mgnCharTop = mgnCenterTop + leaveWin.getHeight()/2;		// 캐릭터의 marginTop
+		
 		
 		// 스마트폰 가로, 세로 길이에 맞게 이미지 재조정
 		imageResize();
@@ -1139,10 +1141,6 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 			// 플레이어가 카드를 내거나 먹거나 
 			if(Math.abs(inOut) >= mHeight/6 && playerTurn == 0) {			// 플레이어 턴일때만 카드터치 인식을 받겠다.
 				
-				Log.d("MyLog", "mgnCharLeft : " + mgnCharLeft);
-				Log.d("MyLog", "bh : " + bh);
-				Log.d("MyLog", "leaveWin : " + leaveWin.getWidth());
-				Log.d("MyLog", "mWidth : " + mWidth);
 					if(inOut >= 0) {
 						// 카드 내기
 						gameControll.cardInputOutput(false, upIndexNum);		// 카드를 내고, 사용자 소유의 카드 인덱스를 넘긴다. (0~14)
