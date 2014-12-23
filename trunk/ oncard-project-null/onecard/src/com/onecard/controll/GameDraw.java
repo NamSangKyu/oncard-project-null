@@ -38,7 +38,6 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 	private GestureDetector mDetector;			// GestureDetector 객체
 	private Resources res;						// Resources 객체
 	private BitmapDrawable bd;					// BitmapDrawable 객체
-	private Matrix matrix;
 	
 	// Thread에서 canvas 작업에 필요한 변수들
 	private boolean checkGame;					// 게임 승패 여부
@@ -68,8 +67,6 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 	private int mgnCharTop;						// 캐릭터를 그릴 위치 marginTop
 	private int characterRad;					// 캐릭터의 지름
 	private int forWin;							// 목표 승리 횟수
-	private Rect mRect;							// 플레이어 카드 onScroll 계산용 Rect
-	private boolean upIndex[];					// 플레이어 카드 중 UP 표시할 Index
 	private int upIndexNum;						// 카드가 소유한 카드에서 up한 인덱스(0~14)
 	private int idx;							// 사용자가 up한 카드 실제 인덱스
 	private String whoWin;						// 이긴 플레이어의 이름
@@ -123,7 +120,6 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 	private static SoundManager soundManager;
 	private ArrayList<Player> playerList;		// 플레이어 리스트를 가져올 리스트 객체
 	private Player player;						// 플레이어(자신)의 정보를 가져올 Player 객체
-	private ArrayList<String> useDec;			// 사용한 덱(중앙에 겹쳐진 카드 더미)
 	private ArrayList<String> dec;				// 플레이어(자신)이 가진 카드를 저장할 리스트
 	private HashMap<String , Integer> map;		// 카드이름과 카드번호를 저장할 HashMap
 	private Paint mPaint = new Paint();
@@ -151,7 +147,6 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		mContext = context;
 		mThread = new GameThread(holder, context);
 		res = getResources();									// 리소스 가져오기
-		matrix = new Matrix();
 		map = new HashMap<String , Integer>();					// 해쉬맵 생성
 		mDetector = new GestureDetector(getContext(), this);	// Detector 객체 생성
 		
@@ -166,7 +161,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 			gameControll.start(4);									// 디폴트 4명으로 시작
 		}
 		
-		gameCurState = gameControll.getCurrentState();
+		gameCurState = GameControll.getCurrentState();
 		mediaManager = MediaManager.getInstance();
 		soundManager = SoundManager.getInstance();
 		mediaManager.init(mContext);
@@ -177,7 +172,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		
 		setFocusable(true);
 		
-	}
+	} // 생성자
 	
 	
 	//-------------------------------------------------
@@ -381,6 +376,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		
 	} // initBitmap()
 	
+	
 	//-------------------------------------------------------
 	// imageResize() - initCard()에서 호출됨. 이미지크기 재조정
 	//-------------------------------------------------------
@@ -411,7 +407,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		turn_left = Bitmap.createScaledBitmap(turn_left, tw, th, true);
 		turn_right = Bitmap.createScaledBitmap(turn_right, tw, th, true);
 		
-		mgnLeftTurnImg = (mWidth-tw)/2;						// 턴표시 이미지 왼쪽 여백
+		mgnLeftTurnImg = (mWidth-tw)/2;					// 턴표시 이미지 왼쪽 여백
 		mgnBotTurnImg = th;								// 턴표시 이미지 아래 여백
 		
 		// 캐릭터의 지름
@@ -441,13 +437,6 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		
 		winImgMgnLeft = mWidth - doubleToInt(win[0].getWidth()*1.1);						// 승리 횟수 이미지 margin값 설정
 		winImgMgnTop = win[0].getWidth()/4;
-		
-//		win0 = Bitmap.createScaledBitmap(win0, ch/4, ch/3, true);							// 승리횟수 이미지 : (카드높이의 1/4, 카드높이의 1/3)
-//		win1 = Bitmap.createScaledBitmap(win1, ch/4, ch/3, true);
-//		win2 = Bitmap.createScaledBitmap(win2, ch/4, ch/3, true);
-//		win3 = Bitmap.createScaledBitmap(win3, ch/4, ch/3, true);
-//		win4 = Bitmap.createScaledBitmap(win4, ch/4, ch/3, true);
-//		win5 = Bitmap.createScaledBitmap(win5, ch/4, ch/3, true);
 		
 	} // imageResize()
 	
@@ -499,7 +488,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 
 		mediaManager.play(1);
 		
-	}
+	} // initGame()
 	
 	
 	//-------------------------------------------------------------
@@ -513,17 +502,21 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		} catch (Exception e) {
 			RestartGame(); 
 		}
-		
-	}
+	} // surfaceCreated()
 
+	
+	//-------------------------------------------------------------
+	// surfaceChanged() - SurfaceView가 변경되면 자동 호출
+	//-------------------------------------------------------------
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
 			int height) {
-		// TODO Auto-generated method stub
 		
-	}
+	} // surfaceChanged()
 
-	
+	//-------------------------------------------------------------
+	// surfaceDestroyed() - SurfaceView가 제거되면 자동 호출(쓰레드 멈춤)
+	//-------------------------------------------------------------
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		mThread.stopThread();  
@@ -555,7 +548,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		}
 		Log.d("MyLog", "surfaceDestroyed");
 		
-	}
+	} // surfaceDestroyed()
 	
 	
 	//---------------------------------
@@ -605,8 +598,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 	public void turnCheck() {
 		playerTurn = gameCurState.getCurrentTurn();				// 누구의 턴인가(0 ~ 3)
 		mTurn = gameCurState.isTurn();							// 오른쪽 : true, 왼쪽 : false
-	
-	}
+	} // turnCheck()
 	
 	
 	//----------------------------------------------------------------
@@ -661,18 +653,10 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 			cmargin = doubleToInt(cw*0.4);							// 아니면 1/2
 		}
 		
-		lengthPlayer = cw + cmargin*(cardNumPlayer-1);
-		mgnPlayer = (mWidth - lengthPlayer)/2;
+		lengthPlayer = cw + cmargin*(cardNumPlayer-1);				// 플레이어의 카드 길이
+		mgnPlayer = (mWidth - lengthPlayer)/2;						// 플레이어 카드 왼쪽 마진
 		
-		
-		int x1 = mgnPlayer;
-		int y1 = mHeight - ch;
-		int x2 = x1 + lengthPlayer;
-		int y2 = mHeight;
-		mRect = new Rect(x1, y1, x2, y2);
-		
-		
-		switch(playerNum) {
+		switch(playerNum) {											// 플레이어 인원에 따라서
 		case 2:														// 인원이 2명이면
 			cardNumTop = playerList.get(1).getDec().size();			// 위쪽 AI의 카드갯수를 읽어온다.
 			
@@ -758,10 +742,9 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 			if(gameCurState.getGameResultList().get(i).getWin() != 0) {
 				whoWin = gameCurState.getGameResultList().get(i).getName();
 				whoWinIdx = i;
-			}
-		}
-		
-	}
+			} // if
+		} // for
+	} // whoWin()
 	
 	//---------------------------------
 	// GameThread
@@ -770,9 +753,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		boolean canRun = true;
 		boolean isWait = false;
 		
-		public GameThread(SurfaceHolder holder, Context context) {
-			
-		}
+		public GameThread(SurfaceHolder holder, Context context) {}
 		
 		//------------------------------------------------
 		// DrawAll() - run()에서 호출, (게임화면 그리는 부분)
@@ -781,20 +762,6 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 			if(canvas != null) {
 				// 배경 그리기
 				canvas.drawBitmap(imgBackground, null, new Rect(0,0, mWidth, mHeight), null);
-				
-//				if(cntWin == 0) {
-//					canvas.drawBitmap(win0, winImgMgnLeft, winImgMgnTop, null);
-//				} else if(cntWin == 1) {
-//					canvas.drawBitmap(win1, winImgMgnLeft, winImgMgnTop, null);
-//				} else if(cntWin == 2) {
-//					canvas.drawBitmap(win2, winImgMgnLeft, winImgMgnTop, null);
-//				} else if(cntWin == 3) {
-//					canvas.drawBitmap(win3, winImgMgnLeft, winImgMgnTop, null);
-//				} else if(cntWin == 4) {
-//					canvas.drawBitmap(win4, winImgMgnLeft, winImgMgnTop, null);
-//				} else if(cntWin == 5) {
-//					canvas.drawBitmap(win5, winImgMgnLeft, winImgMgnTop, null);
-//				}
 				
 				int mgnBotB = mHeight - ch - doubleToInt(leaveWin.getHeight()*2);							// 플레이어의 발바닥 계산 margin
 				int mgnBotC = mHeight - ch - doubleToInt(leaveWin.getHeight()*2.5) - characterRad;			// 플레이어의 캐릭터 계산 margin
@@ -1275,8 +1242,8 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 
 
 /* <남은 작업들>
- * 시간 바
- * 
+ * 결과창
+ * 컴퓨터 애니메이션
  */
 
 
