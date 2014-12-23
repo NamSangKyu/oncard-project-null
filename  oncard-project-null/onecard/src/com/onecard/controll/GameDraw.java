@@ -24,7 +24,6 @@ import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 
 import com.onecard.GameStart;
-import com.onecard.MainActivity;
 import com.onecard.R;
 import com.onecard.Options;
 import com.onecard.GlobalVars;
@@ -151,13 +150,14 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		mDetector = new GestureDetector(getContext(), this);	// Detector 객체 생성
 		
 		gameControll = GameControll.getInstance();
+		
+		// 어플리케이션 데이터에 저장된 playerNum을 가져와서 실행한다. (디폴트 = 4)
 		playerNum = ((GlobalVars) context.getApplicationContext()).getPlayerNum();
 		if(playerNum == 2 || playerNum == 3 || playerNum == 4) {
-			
-			gameControll.start(playerNum);									// 설정된 게임 인원으로 시작
+			gameControll.start(playerNum);							// 설정된 게임 인원으로 시작
 		} else {
 			Log.d("MyLog", "playerNum : " + playerNum);
-			gameControll.start(4);
+			gameControll.start(4);									// 디폴트 4명으로 시작
 		}
 		
 		gameCurState = gameControll.getCurrentState();
