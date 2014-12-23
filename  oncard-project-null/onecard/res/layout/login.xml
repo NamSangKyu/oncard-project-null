@@ -50,11 +50,12 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:background="#00000000"
-            android:src="@drawable/join" />
+            android:layout_marginTop="10dp"
+            android:src="@drawable/joins" />
 
 		
 		<ImageButton
-		    android:id="@+id/btnExit"
+		    android:id="@+id/btnLoginExit"
 		    android:layout_width="wrap_content"
 		    android:layout_height="0dp"
 		    android:layout_weight="1"
