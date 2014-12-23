@@ -55,7 +55,7 @@
             android:gravity="center" >
             
             <ImageButton
-	            android:id="@+id/imageButton1"
+	            android:id="@+id/btnJoinConfirm"
 	            android:layout_width="0dp"
 	            android:layout_height="wrap_content"
 	            android:layout_weight="1"
@@ -64,7 +64,7 @@
 	            android:src="@drawable/join" />
             
 	        <ImageButton
-	            android:id="@+id/imageButton2"
+	            android:id="@+id/btnJoinExit"
 	            android:layout_width="0dp"
 	            android:layout_height="wrap_content"
 	            android:layout_weight="1"
