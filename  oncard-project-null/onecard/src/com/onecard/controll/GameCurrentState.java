@@ -382,6 +382,8 @@ public class GameCurrentState {
 		currentTurn = -1;
 		// 공격카드 초기화
 		attackCard = 0;
+		//턴방향 초기화
+		turn = true;
 	}
 
 	/**
@@ -516,7 +518,10 @@ public class GameCurrentState {
 		templateDec.remove(0);
 		// 초기 턴
 		currentTurn = 0;
-
+		//공격 초기화
+		attackCard=0;
+		//턴 방향
+		turn = true;
 	}
 
 	public void cardMerge() {
