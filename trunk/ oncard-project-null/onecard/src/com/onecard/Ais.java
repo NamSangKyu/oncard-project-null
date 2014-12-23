@@ -615,12 +615,17 @@ public class Ais implements com.onecard.gameinterface.AI
 			counterattack = "Nocounter";
 			countercard(3);
 			countercard(2);
+			countercard(1);
+			countercard(0);
 		}
 		else if (value[1] == attack[3])
 		{
 			Log.i("MyLog", "Cattack");
 			counterattack = "Nocounter";
 			countercard(3);
+			countercard(2);
+			countercard(1);
+			countercard(0);
 		}
 		else
 		{
