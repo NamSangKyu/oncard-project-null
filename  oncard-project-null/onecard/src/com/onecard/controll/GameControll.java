@@ -22,7 +22,8 @@ public class GameControll {
 	private static GameControll instance = new GameControll();
 	// 게임 상태 : 게임 시작 == 0, 게임 진행 == 1, 게임 오버 == 2
 	private int gameState;
-	
+	//ai 게임 상태
+	String aiPlay[];
 	// 게임 AI
 	private AI ai;
 
@@ -150,7 +151,7 @@ public class GameControll {
 	 */
 	public GameCurrentState playAI() {
 		// AI 선택 부분
-		String aiPlay[] = ai.play(currentState);
+		aiPlay = ai.play(currentState);
 		Log.d("MyLog", "ai : " + Arrays.toString(aiPlay));
 		/*//사용한 아이템
 		if(aiPlay[1]!=null){
