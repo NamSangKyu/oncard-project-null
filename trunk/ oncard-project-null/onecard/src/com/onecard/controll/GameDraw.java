@@ -102,6 +102,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 	static Bitmap card_back_top;				// 위쪽 플레이어 카드 뒷면
 	static Bitmap turn_left;					// 진행방향이 왼쪽
 	static Bitmap turn_right;					// 진행방향이 오른쪽
+	static Bitmap card_back;
 	
 	Bitmap card[] = new Bitmap[54];				// 카드를 저장할 비트맵 배열
 	Bitmap win[] = new Bitmap[6];				// 승리횟수 비트맵 배열
@@ -129,6 +130,14 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 	private ArrayList<String> dec;				// 플레이어(자신)이 가진 카드를 저장할 리스트
 	private HashMap<String , Integer> map;		// 카드이름과 카드번호를 저장할 HashMap
 	private Paint mPaint = new Paint();
+	
+	private int mx, my;							// 카드를 낼때 시작위치(플레이어)
+	private int mxR, myR;
+	private int mxT, myT;
+	private int mxL, myL;
+	private int centerX, centerY;				// 카드를 먹을 때 시작위치
+	private int moveX, moveY;					// 카드가 이동할 단위
+	private Bitmap cardInOut;
 	
 	
 	
@@ -243,30 +252,6 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		}
 		
 		
-//		// 승리 횟수 0
-//		bd = (BitmapDrawable) res.getDrawable(R.drawable.w0);
-//		win0 = bd.getBitmap();
-//		
-//		// 승리 횟수 1
-//		bd = (BitmapDrawable) res.getDrawable(R.drawable.w1);
-//		win1 = bd.getBitmap();
-//		
-//		// 승리 횟수 2
-//		bd = (BitmapDrawable) res.getDrawable(R.drawable.w2);
-//		win2 = bd.getBitmap();
-//		
-//		// 승리 횟수 3
-//		bd = (BitmapDrawable) res.getDrawable(R.drawable.w3);
-//		win3 = bd.getBitmap();
-//		
-//		// 승리 횟수 4
-//		bd = (BitmapDrawable) res.getDrawable(R.drawable.w4);
-//		win4 = bd.getBitmap();
-//		
-//		// 승리 횟수 5
-//		bd = (BitmapDrawable) res.getDrawable(R.drawable.w5);
-//		win5 = bd.getBitmap();
-		
 		int cw2=card_org.getWidth()/13;														// 원본 카드 이미지에서 카드조각을 잘라낼 길이 
 		int ch2=card_org.getHeight()/5;
 		
@@ -300,10 +285,15 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		
 		// 조커 카드
 		x=0;
-		for(int i=0; i<2; i++) {
-			card[i+52] = Bitmap.createBitmap(card_org, x, ch2*4, cw2, ch2);
-			x += cw2;
+		for(int i=0; i<3; i++) {
+			if(i<2) {
+				card[i+52] = Bitmap.createBitmap(card_org, x, ch2*4, cw2, ch2);
+				x += cw2;
+			} else { // 뒷면 카드
+				card_back = Bitmap.createBitmap(card_org, x, ch2*4, cw2, ch2);
+			}
 		}
+		
 		
 		// 클로버
 		cardName[0][0] = "CA";
@@ -402,6 +392,9 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 			card[i] = Bitmap.createScaledBitmap(card[i], cw, ch, true);		
 		} // for
 		
+		// 변경된 길이로 카드 뒷면 재생성
+		card_back = Bitmap.createScaledBitmap(card_back, cw, ch, true);
+		
 		// 카드뒷면 사이즈 재조정
 		bw = mHeight/7;
 		bh = mWidth/13;
@@ -474,8 +467,26 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		cw = mWidth*4/19;									// 카드 가로길이(비율은 스크린 가로의 4/19가 적당했음)
 		ch = mHeight*6/29;									// 카드 세로길이
 		
+		moveX = cw/2;										// 카드가 이동할 단위거리
+		moveY = ch/2;										// 카드가 이동할 단위거리
+		
 		mgnCenterLeft = (mWidth-cw)/2;						// 중앙에 놓을 카드 왼쪽 여백 
 		mgnCenterTop = (mHeight-ch)/3 + ch/4;				// 중앙에 놓을 카드 위쪽 여백
+		
+		mx = (mWidth - cw)/2;								// 카드 움직일 위치 초기 셋팅
+		my = (mHeight - ch);								
+		
+		mxR = (mWidth - cw);								// 카드 움직일 위치 초기 셋팅(오른쪽)
+		myR = mgnCenterTop;
+		
+		mxT = mx;											// 카드 움직일 위치 초기 셋팅(위쪽)
+		myT = 0;
+		
+		mxL = 0;											// 카드 움직일 위치 초기 셋팅(왼쪽)
+		myL = mgnCenterTop;
+		
+		centerX = mgnCenterLeft;							// 카드먹을때 움직일 위치 초기 셋팅(센터)
+		centerY = mgnCenterTop;
 		
 		forWin = 5;											// 목표 승리 수 5회
 		upIndexNum = 0;										// upIndexNum 초기값 0, - 1번째 카드;
@@ -795,6 +806,8 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 					mgn += cmargin;
 				} // for
 				
+				
+				
 				// AI가 소유한 카드 그리기 & 캐릭터 그리기 & 발바닥 그리기
 				if(playerNum == 2) {																		// 2인용이면
 					// 카드갯수를 가져와서 나열할 길이를 계산하여 적절한 위치에 겹쳐 그린다.
@@ -980,6 +993,16 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 					canvas.drawBitmap(turn_left, mgnLeftTurnImg, mgnCenterTop-doubleToInt((mgnBotTurnImg*1.5)), null);
 				}
 				
+				// 카드 내보내는 애니메이션
+				if(cardOut) {
+					moveCardOut(canvas, cardInOut);
+				}
+				
+				// 카드 먹는 애니메이션
+				if(cardIn) {
+					moveCardIn(canvas);
+				}
+				
 				// 중앙카드 그리기
 				canvas.drawBitmap(card[centerCardIdx], mgnCenterLeft, mgnCenterTop, null);
 				
@@ -995,7 +1018,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 			
 		} // DrawWin() 끝
 		
-		
+
 		//---------------------------------
 		// run() - Thread 본체
 		//---------------------------------
@@ -1144,6 +1167,19 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 					if(inOut >= 0) {
 						// 카드 내기
 						gameControll.cardInputOutput(false, upIndexNum);		// 카드를 내고, 사용자 소유의 카드 인덱스를 넘긴다. (0~14)
+						if(cardNumPlayer > player.getDec().size()) {
+							String cardInOutName = gameCurState.getUseDec().get(0);
+							
+							for(int j=0; j<card.length; j++) {
+								if(cardName[j][0].equals(cardInOutName)) {
+									cardInOut = card[j];
+									break;
+								}
+							}
+							
+							cardOut = true;
+						}
+						
 						if(upIndexNum == player.getDec().size()) {
 							upIndexNum = 0;
 						}
@@ -1151,6 +1187,8 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 					} else {
 						// 카드 먹기
 						gameControll.cardInputOutput(true, 0);
+						cardIn = true;
+						
 					}
 					
 					gameControll.nextTurn();									// 다음 턴으로 넘긴다.
@@ -1161,16 +1199,39 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 			} // if
 			
 			Log.d("MyLog", "현재상황 : " + gameCurState.toString());
+			
 		return false;
+	} // end of onFling()
+	
+	//-------------------------------------------------
+	// moveCardOut() - DrawAll()에서 호출. 카드 내는 움직임
+	//-------------------------------------------------
+	public void moveCardOut(Canvas canvas, Bitmap cardInOut) {
+		canvas.drawBitmap(cardInOut, mx, my, null);
+		my -= moveY;
+		
+		if(my <= mgnCenterTop) {
+			cardOut = false;
+			my = mHeight - ch;
+		}
+		
 	}
-
 	
-// 에러 : CK를 냈을때 다음 턴으로 바로 넘어감
-// 오른쪽 AI가 7을 냈는데 점프를 해버림
-// 
+	//-------------------------------------------------
+	// moveCardIn() - DrawAll()에서 호출. 카드 먹는 움직임
+	//-------------------------------------------------
+	public void moveCardIn(Canvas canvas) {
+		canvas.drawBitmap(card_back, centerX, centerY, null);
+		centerY += moveY;
+		
+		if(centerY >= mHeight-ch) {
+			cardIn = false;
+			centerY = mgnCenterTop;
+		}
+	}
 	
-
 } // end of class GameDraw
+
 
 /* <남은 작업들>
  * 시간 바
