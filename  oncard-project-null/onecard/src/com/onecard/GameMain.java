@@ -26,12 +26,12 @@ public class GameMain extends Activity {
 		btnOption = (ImageButton) findViewById(R.id.btnOption);
 		btnExit = (ImageButton) findViewById(R.id.btnExit);
 		
-		
 		//게임 시작 부분
 		btnStart.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
+				SoundManager.getInstance().play(0);
 				startActivity(new Intent(GameMain.this, GameStart.class));
 				
 			}
@@ -41,6 +41,7 @@ public class GameMain extends Activity {
 			
 			@Override
 			public void onClick(View v) {
+				SoundManager.getInstance().play(0);
 				// TODO Auto-generated method stub
 				
 			}
@@ -50,6 +51,7 @@ public class GameMain extends Activity {
 			
 			@Override
 			public void onClick(View v) {
+				SoundManager.getInstance().play(0);
 				startActivity(new Intent(GameMain.this, Options.class));
 			}
 		});
@@ -58,6 +60,7 @@ public class GameMain extends Activity {
 			
 			@Override
 			public void onClick(View v) {
+				SoundManager.getInstance().play(0);
 				finish();
 			}
 		});
