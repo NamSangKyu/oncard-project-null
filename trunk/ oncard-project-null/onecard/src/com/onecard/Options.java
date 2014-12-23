@@ -28,10 +28,13 @@ public class Options extends Activity {
 		
 		radioGroup = (RadioGroup) findViewById(R.id.RadioGroup01);
 		mBtnConfirm = (Button) findViewById(R.id.btnConfirm);
+
 		
 		mBtnConfirm.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				
+				SoundManager.getInstance().play(0);
 				Log.d("MyLog", "Confirm : ");
 				setting();
 				finish();

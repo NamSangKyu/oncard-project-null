@@ -23,10 +23,10 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 
-import com.onecard.GameStart;
-import com.onecard.R;
-import com.onecard.Options;
 import com.onecard.GlobalVars;
+import com.onecard.MediaManager;
+import com.onecard.R;
+import com.onecard.SoundManager;
 
 public class GameDraw extends SurfaceView implements Callback, OnGestureListener {
 	public static final String TAG = "MyLog";
@@ -44,6 +44,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 	private boolean checkGame;					// 게임 승패 여부
 	private boolean cardIn;						// 카드 먹을 때
 	private boolean cardOut;					// 카드 낼 때
+	private boolean AI_InOut;					// AI가 카드를 먹었는지 냈는지
 	private int playerTurn;						// 어떤 플레이어의 턴
 	private boolean mTurn;						// 턴방향(오른쪽 : true, 왼쪽 : false)
 	private int centerCardIdx;					// 중앙에 그릴 카드 인덱스
@@ -118,6 +119,8 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 	
 	private static GameCurrentState gameCurState;
 	private static GameControll gameControll;
+	private static MediaManager mediaManager;
+	private static SoundManager soundManager;
 	private ArrayList<Player> playerList;		// 플레이어 리스트를 가져올 리스트 객체
 	private Player player;						// 플레이어(자신)의 정보를 가져올 Player 객체
 	private ArrayList<String> useDec;			// 사용한 덱(중앙에 겹쳐진 카드 더미)
@@ -164,6 +167,10 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		}
 		
 		gameCurState = gameControll.getCurrentState();
+		mediaManager = MediaManager.getInstance();
+		soundManager = SoundManager.getInstance();
+		mediaManager.init(mContext);
+		soundManager.init(mContext);
 		
 		initGame();												// 게임환경 설정
 		initBitmap();											// 게임환경에 맞도록 카드길이 설정
@@ -490,6 +497,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		mPaint.setColor(Color.BLACK);						// 자신의 턴이 아닐때 비활성화 시킬 Paint 속성
 		mPaint.setAlpha(150);
 
+		mediaManager.play(1);
 		
 	}
 	
@@ -500,6 +508,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
 		try {
+			soundManager.play(2);
 			mThread.start();							// surfaceView가 생성되면 쓰레드 시작
 		} catch (Exception e) {
 			RestartGame(); 
@@ -523,6 +532,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 			try {
 				mThread.join();
 				done = false;
+				mediaManager.stop();
 			} catch(Exception e) {
 				
 			}
@@ -997,6 +1007,11 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 					moveCardIn(canvas);
 				}
 				
+				// AI카드 움직이는 애니메이션
+				if(AI_InOut) {
+					moveAI(canvas);
+				}
+				
 				// 중앙카드 그리기
 				canvas.drawBitmap(card[centerCardIdx], mgnCenterLeft, mgnCenterTop, null);
 				
@@ -1032,8 +1047,10 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 						decCheck();					// 플레이어들이 들고있는 카드 검사
 					
 						if(checkGame) {				// 게임의 승패 확인
+							mediaManager.stop();
 							whoWin();				// 누가 승리했는지 확인
 							gameControll.restart();
+							mediaManager.play((cntWinPlayer)%3+1);
 						}
 						
 						DrawAll(canvas);			// 전부 그리기
@@ -1091,7 +1108,9 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		
 		// 플레이어 턴이 아니면 터치할때마다 AI턴을 실행한다.
 		if(playerTurn != 0) {
+			AI_InOut = true;
 			gameControll.playAI();
+			soundManager.play(1);
 			gameControll.nextTurn();
 			upIndexNum = 0;
 		}
@@ -1161,8 +1180,9 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 						// 카드 내기
 						gameControll.cardInputOutput(false, upIndexNum);		// 카드를 내고, 사용자 소유의 카드 인덱스를 넘긴다. (0~14)
 						if(cardNumPlayer > player.getDec().size()) {
-							String cardInOutName = gameCurState.getUseDec().get(0);
+							soundManager.play(1);
 							
+							String cardInOutName = gameCurState.getUseDec().get(0);
 							for(int j=0; j<card.length; j++) {
 								if(cardName[j][0].equals(cardInOutName)) {
 									cardInOut = card[j];
@@ -1180,6 +1200,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 						
 					} else {
 						// 카드 먹기
+						soundManager.play(1);
 						gameControll.cardInputOutput(true, 0);
 						cardIn = true;
 					}
@@ -1206,8 +1227,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 			cardOut = false;
 			my = mHeight - ch;
 		}
-		
-	}
+	} // moveCardOut()
 	
 	//-------------------------------------------------
 	// moveCardIn() - DrawAll()에서 호출. 카드 먹는 움직임
@@ -1220,6 +1240,16 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		if(centerY >= mHeight-ch) {
 			cardIn = false;
 			centerY = mgnCenterTop;
+		}
+	} // moveCardIn()
+	
+	public void moveAI(Canvas canvas) {
+		if(playerTurn == 1) {
+			
+		} else if(playerTurn == 2) {
+			
+		} else if(playerTurn == 3) {
+			
 		}
 	}
 	

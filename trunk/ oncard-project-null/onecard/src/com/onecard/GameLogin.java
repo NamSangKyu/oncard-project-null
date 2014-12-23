@@ -13,6 +13,8 @@ import android.widget.ImageButton;
 public class GameLogin extends Activity{
 	
 	ImageButton mBtnLogin, mBtnJoin, mBtnLoginExit;
+	private SoundManager soundManager;
+	private MediaManager mediaManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -27,10 +29,19 @@ public class GameLogin extends Activity{
 		mBtnJoin = (ImageButton) findViewById(R.id.btnJoin);
 		mBtnLoginExit = (ImageButton) findViewById(R.id.btnLoginExit);
 		
+		soundManager = SoundManager.getInstance();
+		mediaManager = MediaManager.getInstance();
+		
+		soundManager.init(getApplicationContext());
+		mediaManager.init(getApplicationContext());
+		
+		mediaManager.play(0);
+		
 		mBtnLogin.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
+				soundManager.play(0);
 				startActivity(new Intent(GameLogin.this, GameMain.class));
 			}
 		}); // mBtnLogin
@@ -39,6 +50,7 @@ public class GameLogin extends Activity{
 			
 			@Override
 			public void onClick(View v) {
+				soundManager.play(0);
 				startActivity(new Intent(GameLogin.this, GameJoin.class));
 			}
 		});
@@ -47,8 +59,11 @@ public class GameLogin extends Activity{
 			
 			@Override
 			public void onClick(View v) {
+				soundManager.play(0);
+				mediaManager.stop();
 				moveTaskToBack(true);
 				android.os.Process.killProcess(android.os.Process.myPid());
+				
 			}
 		});
 		
