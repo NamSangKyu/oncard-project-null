@@ -90,12 +90,6 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 	static Bitmap rightCharacter;				// 오른쪽 AI 캐릭터
 	static Bitmap topCharacter;					// 위쪽 AI 캐릭터
 	static Bitmap leaveWin;						// 발바닥(남은 승리 수)
-//	static Bitmap win0;							// 승리 횟수 비트맵 0
-//	static Bitmap win1;							// 승리 횟수 비트맵 1
-//	static Bitmap win2;							// 승리 횟수 비트맵 2
-//	static Bitmap win3;							// 승리 횟수 비트맵 3
-//	static Bitmap win4;							// 승리 횟수 비트맵 4
-//	static Bitmap win5;							// 승리 횟수 비트맵 5
 	static Bitmap card_org;						// 카드 원본
 	static Bitmap card_back_right;				// 오른쪽 플레이어 카드 뒷면
 	static Bitmap card_back_left;				// 왼쪽 플레이어 카드 뒷면		
@@ -251,8 +245,8 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 			win[i] = bd.getBitmap();
 		}
 		
-		
-		int cw2=card_org.getWidth()/13;														// 원본 카드 이미지에서 카드조각을 잘라낼 길이 
+		// 원본 카드 이미지에서 카드조각을 잘라낼 길이 
+		int cw2=card_org.getWidth()/13;														
 		int ch2=card_org.getHeight()/5;
 		
 		// 클로버 카드
@@ -452,7 +446,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 	
 	
 	//---------------------------------------------------------
-	// initGame() - 생성자에서 호출됨. 게임 환경 셋팅(스크린길이)
+	// initGame() - 생성자에서 호출됨. 게임 환경 셋팅(스크린 길이)
 	//---------------------------------------------------------
 	private void initGame() {
 		playerList = gameCurState.getPlayerList();			// 플레이어 리스트를 가져온다.
@@ -1145,7 +1139,6 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 			int move = (int) e1.getX() - (int) e2.getX();
 			int inOut = (int) e1.getY() - (int) e2.getY();
 			
-			
 			// 플레이어 카드 좌우로 선택
 			if(Math.abs(move) >= mWidth/6 && playerTurn == 0) {				// 카드 좌우로 선택, 플레이어 턴일때만 카드터치 인식을 받겠다.
 				if(move >= 0) {
@@ -1174,12 +1167,13 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 								if(cardName[j][0].equals(cardInOutName)) {
 									cardInOut = card[j];
 									break;
-								}
-							}
+								} // if
+							} // for
 							
 							cardOut = true;
-						}
+						} // if
 						
+						// up할 카드는 항상 0번째 카드로
 						if(upIndexNum == player.getDec().size()) {
 							upIndexNum = 0;
 						}
@@ -1188,14 +1182,11 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 						// 카드 먹기
 						gameControll.cardInputOutput(true, 0);
 						cardIn = true;
-						
 					}
 					
 					gameControll.nextTurn();									// 다음 턴으로 넘긴다.
 					turnCheck();												// 플레이어 턴 재검사
 					
-				
-				
 			} // if
 			
 			Log.d("MyLog", "현재상황 : " + gameCurState.toString());
@@ -1210,6 +1201,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		canvas.drawBitmap(cardInOut, mx, my, null);
 		my -= moveY;
 		
+		// 중앙카드를 넘어가면 멈춤
 		if(my <= mgnCenterTop) {
 			cardOut = false;
 			my = mHeight - ch;
@@ -1224,6 +1216,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		canvas.drawBitmap(card_back, centerX, centerY, null);
 		centerY += moveY;
 		
+		// 중앙카드를 넘어가면 멈춤
 		if(centerY >= mHeight-ch) {
 			cardIn = false;
 			centerY = mgnCenterTop;
@@ -1235,10 +1228,6 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 
 /* <남은 작업들>
  * 시간 바
- * 아이템 창
- * AI턴 시간조절
- * 턴이 아닌 경우 검은 명암
- * Gesture
  * 
  */
 
