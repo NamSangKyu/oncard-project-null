@@ -67,6 +67,15 @@ public class GameLogin extends Activity{
 			}
 		});
 		
+		
+		
 	} // end of onCreate()
+	
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		moveTaskToBack(true);
+		android.os.Process.killProcess(android.os.Process.myPid());
+	}
 	
 } // end of class GameLogin
