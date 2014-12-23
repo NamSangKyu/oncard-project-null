@@ -143,7 +143,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 	//---------------------------------
 	public GameDraw(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		
+		Log.d("MyLog", "재호출 시 생성자 호출되나?");
 		SurfaceHolder holder = getHolder();
 		holder.addCallback(this);
 		
@@ -533,6 +533,22 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 				mThread.join();
 				done = false;
 				mediaManager.stop();
+				
+				// 사용한 비트맵 자원 클리어
+				imgBackground.recycle();				// 배경 비트맵
+				playerCharacter.recycle();				// 플레이어 캐릭터
+				leftCharacter.recycle();				// 왼쪽 AI 캐릭터
+				rightCharacter.recycle();				// 오른쪽 AI 캐릭터
+				topCharacter.recycle();					// 위쪽 AI 캐릭터
+				leaveWin.recycle();						// 발바닥(남은 승리 수)
+				card_org.recycle();						// 카드 원본
+				card_back_right.recycle();				// 오른쪽 플레이어 카드 뒷면
+				card_back_left.recycle();				// 왼쪽 플레이어 카드 뒷면		
+				card_back_top.recycle();				// 위쪽 플레이어 카드 뒷면
+				turn_left.recycle();					// 진행방향이 왼쪽
+				turn_right.recycle();					// 진행방향이 오른쪽
+				card_back.recycle();
+				cardInOut.recycle();
 			} catch(Exception e) {
 				
 			}
@@ -540,6 +556,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		Log.d("MyLog", "surfaceDestroyed");
 		
 	}
+	
 	
 	//---------------------------------
 	// RestartGame() - 쓰레드 정지
@@ -715,9 +732,9 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 				cardMgnRight = doubleToInt(bw*0.4);
 			}
 			
-			lengthTop = cw + cardMgnTop*(cardNumTop-1);					// 위쪽에 그릴 카드 전체길이 구하기
-			lengthLeft = cw + cardMgnLeft*(cardNumLeft-1);				// 왼쪽에 그릴 카드 전체길이 구하기
-			lengthRight = cw + cardMgnRight*(cardNumRight-1);				// 오른쪽에 그릴 카드 전체길이 구하기
+			lengthTop = bw + cardMgnTop*(cardNumTop-1);					// 위쪽에 그릴 카드 전체길이 구하기
+			lengthLeft = bw + cardMgnLeft*(cardNumLeft-1);				// 왼쪽에 그릴 카드 전체길이 구하기
+			lengthRight = bw + cardMgnRight*(cardNumRight-1);				// 오른쪽에 그릴 카드 전체길이 구하기
 			mgnTop = (mWidth - lengthTop)/2;							// 위쪽 카드를 그리기 시작할 위치
 			mgnLeft = (mHeight - ch - lengthLeft)/2;					// 왼쪽 카드를 그리기 시작할 위치
 			mgnRight = (mHeight - ch - lengthRight)/2;					// 오른쪽 카드를 그리기 시작할 위치
@@ -1049,8 +1066,9 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 						if(checkGame) {				// 게임의 승패 확인
 							mediaManager.stop();
 							whoWin();				// 누가 승리했는지 확인
-							gameControll.restart();
 							mediaManager.play((cntWinPlayer)%3+1);
+							gameControll.restart();
+							
 						}
 						
 						DrawAll(canvas);			// 전부 그리기
