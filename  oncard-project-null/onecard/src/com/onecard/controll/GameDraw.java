@@ -502,7 +502,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
 		try {
-			//mediaManager.play(1);
+			mediaManager.play(1);
 			mThread.start();							// surfaceView가 생성되면 쓰레드 시작
 		} catch (Exception e) {
 			RestartGame(); 
@@ -1119,25 +1119,25 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 				// 카드수가 감소(카드를 냈을경우)
 				AI_CardCheck();
 				AI_Out = true;
+				
 			} else {
 				// 카드수가 증가(카드를 먹었을 경우)
 				AI_In = true;
-				if(_attackCard > 0) {					// AI가 공격카드를 먹으면 폭발음 플레이
+				
+				if(_attackCard > 0) {							// AI가 공격카드를 먹으면 폭발음 플레이
 					soundManager.play(3);
 				} 
-				
 				if(playerList.get(tmpPlayerTurn).isWorkout()) {	// AI가 파산되면 좌절음 플레이
-					// 좌절음 플레이
-					soundManager.play(4);
+					soundManager.play(4);		// 좌절음 플레이
 				}
 			}
-			soundManager.play(1);
-			//gameControll.nextTurn(); // nextTurn을 애니메이션이 끝나고 호출하자.
+			
+			soundManager.play(1);				// 카드 이동음
 			upIndexNum = 0;
-		}
+		} // if(playerTurn)
 		
 		return false;
-	}
+	} // onDown()
 
 
 	@Override
