@@ -170,6 +170,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		mediaManager.init(mContext);
 		soundManager.init(mContext);
 		
+		soundManager.play(2);
 		initGame();												// 게임환경 설정
 		initBitmap();											// 게임환경에 맞도록 카드길이 설정
 		
@@ -489,7 +490,6 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		mPaint.setColor(Color.BLACK);						// 자신의 턴이 아닐때 비활성화 시킬 Paint 속성
 		mPaint.setAlpha(150);
 		
-		soundManager.play(2);
 		
 	} // initGame()
 	
@@ -1228,6 +1228,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 						cardIn = true;
 						if(cardNumPlayer >= 15) {
 							// 좌절음 플레이
+							mediaManager.stop();
 							soundManager.play(4);
 						}
 						
