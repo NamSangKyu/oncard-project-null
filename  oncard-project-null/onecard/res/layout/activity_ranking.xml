@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+    android:background="@drawable/home">
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="22dp"
+        android:src="@drawable/rankbar2" />
+
+    <ImageView
+        android:id="@+id/imgRankOk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/ok" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="51dp"
+        android:layout_toLeftOf="@+id/imgRankOk"
+        android:src="@drawable/num1" />
+
+    <TextView
+        android:id="@+id/RankName1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageView2"
+        android:layout_alignLeft="@+id/imgRankOk"
+        android:layout_marginLeft="22dp"
+        android:text="TextView" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/imageView2"
+        android:layout_below="@+id/imageView2"
+        android:layout_marginTop="31dp"
+        android:src="@drawable/num2" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/imageView3"
+        android:layout_below="@+id/imageView3"
+        android:layout_marginTop="34dp"
+        android:src="@drawable/num3" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/imageView4"
+        android:layout_below="@+id/imageView4"
+        android:layout_marginTop="37dp"
+        android:src="@drawable/num4" />
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/imageView5"
+        android:layout_below="@+id/imageView5"
+        android:layout_marginTop="37dp"
+        android:src="@drawable/num5" />
+
+    <ImageView
+        android:id="@+id/imageView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/imageView6"
+        android:layout_below="@+id/imageView6"
+        android:layout_marginTop="34dp"
+        android:src="@drawable/num6" />
+
+    <TextView
+        android:id="@+id/RankScore1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/RankName1"
+        android:layout_alignBottom="@+id/RankName1"
+        android:layout_marginLeft="52dp"
+        android:layout_toRightOf="@+id/RankName1"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/RankName2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageView3"
+        android:layout_alignLeft="@+id/RankName1"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/RankScore2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/RankName2"
+        android:layout_alignLeft="@+id/RankScore1"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/RankName3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageView4"
+        android:layout_alignLeft="@+id/RankName2"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/RankScore3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/RankName3"
+        android:layout_alignBottom="@+id/RankName3"
+        android:layout_alignRight="@+id/RankScore2"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/RankName4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageView5"
+        android:layout_alignLeft="@+id/RankName3"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/RankScore4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/RankName4"
+        android:layout_alignLeft="@+id/RankScore3"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/RankName5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageView6"
+        android:layout_alignRight="@+id/RankName4"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/RankScore5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/RankName5"
+        android:layout_alignRight="@+id/RankScore4"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/RankName6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageView7"
+        android:layout_alignLeft="@+id/RankName5"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/RankScore6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/RankName6"
+        android:layout_alignBottom="@+id/RankName6"
+        android:layout_alignLeft="@+id/RankScore5"
+        android:text="TextView" />
+
+</RelativeLayout>

@@ -30,6 +30,8 @@
         <activity android:name="Options"></activity>
         <activity android:name="GameMain"></activity>
     	<activity android:name="GameJoin"></activity>
+    	<activity android:name="LoginActivity"></activity>
+    	<activity android:name="RankActivity"></activity>
     </application>
 
 </manifest>
