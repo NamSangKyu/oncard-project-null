@@ -13,6 +13,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.provider.MediaStore.Audio.Playlists;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -170,7 +171,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		mediaManager.init(mContext);
 		soundManager.init(mContext);
 		
-		soundManager.play(2);
+		
 		initGame();												// 게임환경 설정
 		initBitmap();											// 게임환경에 맞도록 카드길이 설정
 		
@@ -490,6 +491,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		mPaint.setColor(Color.BLACK);						// 자신의 턴이 아닐때 비활성화 시킬 Paint 속성
 		mPaint.setAlpha(150);
 		
+		soundManager.play(2);
 		
 	} // initGame()
 	
@@ -500,7 +502,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
 		try {
-			mediaManager.play(1);
+			//mediaManager.play(1);
 			mThread.start();							// surfaceView가 생성되면 쓰레드 시작
 		} catch (Exception e) {
 			RestartGame(); 
@@ -1122,7 +1124,9 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 				AI_In = true;
 				if(_attackCard > 0) {					// AI가 공격카드를 먹으면 폭발음 플레이
 					soundManager.play(3);
-				} else if(playerList.get(tmpPlayerTurn).isWorkout()) {	// AI가 파산되면 좌절음 플레이
+				} 
+				
+				if(playerList.get(tmpPlayerTurn).isWorkout()) {	// AI가 파산되면 좌절음 플레이
 					// 좌절음 플레이
 					soundManager.play(4);
 				}
@@ -1218,7 +1222,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 					} else {
 						int _attackCard = gameCurState.getAttackCard();		// 공격카드가 있나 확인
 						if(_attackCard > 0) {								// 있으면
-							soundManager.play(3);		// 폭발음
+							//soundManager.play(3);		// 폭발음
 						} else {
 							soundManager.play(1);		// 일반 카드음
 						}
@@ -1226,7 +1230,8 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 						// 카드 먹기
 						gameControll.cardInputOutput(true, 0);
 						cardIn = true;
-						if(cardNumPlayer >= 15) {
+						if(playerList.get(0).isWorkout()) {
+							Log.d("MyLog", "player workout");
 							// 좌절음 플레이
 							mediaManager.stop();
 							soundManager.play(4);
