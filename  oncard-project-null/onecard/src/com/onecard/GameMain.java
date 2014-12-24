@@ -31,7 +31,7 @@ public class GameMain extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				SoundManager.getInstance().play(0);
+				MediaManager.getInstance().stop();
 				startActivity(new Intent(GameMain.this, GameStart.class));
 				
 			}
