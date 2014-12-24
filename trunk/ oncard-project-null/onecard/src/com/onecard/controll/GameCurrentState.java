@@ -250,7 +250,6 @@ public class GameCurrentState {
 		case 'Q':
 			changeTurn();
 			break;
-		case '7':
 		case 'K':
 			beforeTurn();
 			break;
@@ -476,7 +475,7 @@ public class GameCurrentState {
 			total += playerList.get(i).getDec().size();
 					
 		}
-		total *= playerList.get(playerIndex).getWin();
+		total *= playerList.get(playerIndex).getWin() * 123;
 		return total;
 	}
 
