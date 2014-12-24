@@ -42,7 +42,7 @@ public class GameMain extends Activity {
 			@Override
 			public void onClick(View v) {
 				SoundManager.getInstance().play(0);
-				// TODO Auto-generated method stub
+				startActivity(new Intent(GameMain.this, RankActivity.class));
 				
 			}
 		});

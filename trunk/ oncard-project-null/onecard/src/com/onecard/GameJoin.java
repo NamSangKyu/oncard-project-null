@@ -1,18 +1,20 @@
 package com.onecard;
 
 import android.app.Activity;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageButton;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 public class GameJoin extends Activity {
 
-	ImageButton mBtnJoinConfirm, mBtnJoinExit;
-	// EditText 정의
+	ImageView mImgcancle, mImgJoinFinish;
+	EditText mTextnick, mTextname, mTextpw, mTextpw2;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -21,81 +23,73 @@ public class GameJoin extends Activity {
 		// 풀스크린 모드
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		setContentView(R.layout.join);
+		setContentView(R.layout.activity_join);
 		
-		mBtnJoinConfirm = (ImageButton) findViewById(R.id.btnJoinConfirm);
-		mBtnJoinExit = (ImageButton) findViewById(R.id.btnJoinExit);
+		mImgcancle = (ImageView) findViewById(R.id.imgJoinCancle);
+		mImgJoinFinish = (ImageView) findViewById(R.id.imgJoinFinish);
+
+		mTextnick = (EditText) findViewById(R.id.textjnick);
+		mTextname = (EditText) findViewById(R.id.textjname);
+		mTextpw = (EditText) findViewById(R.id.textjpw);
+		mTextpw2 = (EditText) findViewById(R.id.textjpw2);
 		
-		// EditText 연결
-		
-		mBtnJoinConfirm.setOnClickListener(new OnClickListener() {
-			
+		mImgJoinFinish.setOnClickListener(new OnClickListener() {
+
 			@Override
 			public void onClick(View v) {
-				if(confirm()) {				// confirm()이 true 이면 데이터베이스에 등록
-					join();
-				} 
-				
-				finish();
-				
+				// TODO Auto-generated method stub
+				makeId();
 			}
-		}); // mBtnJoinConfirm
+		});
 		
-		mBtnJoinExit.setOnClickListener(new OnClickListener() {
+		mImgcancle.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				finish();
+				// TODO Auto-generated method stub
+				 finish();
+				
 			}
 		});
 		
 	}// end of onCreate()
 	
-	//------------------------------------
-	// 닉네임 중복 체크 & 비밀번호 재확인 체크
-	//------------------------------------
-	private boolean confirm() {
-		boolean ok = false;
-		String nickName="";
-		
-		/*
-		 * ----- 닉네임 체크 ------
-		*/
-		
-		// 닉네임이 사용가능하면 ok에 true
-		ok = true;
-		
-		// 중복이면 토스트 메시지 띄우고 리턴
-		if(!ok) {
-			Toast.makeText(GameJoin.this, "닉네임 중복", Toast.LENGTH_LONG).show();
-			return true;
-		}
-		
-		
-		/* 
-		 * ----- 비밀번호 재확인 체크 ------
-		*/
-		
-		
-		// 비밀번호 재확인이 일치하지 않으면 ok에 false, 토스트 메시지 띄우고 리턴
-		ok = false;
-		
-		if(!ok) {
-			Toast.makeText(GameJoin.this, "비밀번호 불일치", Toast.LENGTH_LONG).show();
-			return true;
+	private void makeId() {
+		String nick = mTextnick.getText().toString();
+		String name = mTextname.getText().toString();
+		String pw = mTextpw.getText().toString();
+		String pw2 = mTextpw2.getText().toString();
+		if (nick.equals("")) {// 닉네임을입력햇는지 확인
+			Toast.makeText(getApplicationContext(), "닉네임을 입력해주세요",
+					Toast.LENGTH_SHORT).show();
 		} else {
-			Toast.makeText(GameJoin.this, "가입 완료\n" + "닉네임 : " + nickName, Toast.LENGTH_LONG).show();
+
+			Cursor cursor = GameLogin.mOnemgr.testnick(nick);
+			
+			if (cursor.getCount() != 0) {// 입력한 닉네임이 있는지 확인
+				cursor.moveToFirst();
+				String testnick = cursor.getString(0);
+
+				if (nick.equals(testnick)) {// 입력한 닉네임과 가입되어있는 닉네임과 비교
+					Toast.makeText(getApplicationContext(), "이미 중복된 아이디가있어요",
+							Toast.LENGTH_SHORT).show();
+				}
+			} else if (name.equals("")) {// 이름칸이 비엇는지 확인
+				Toast.makeText(getApplicationContext(), "이름을 입력해주세요",
+						Toast.LENGTH_SHORT).show();
+			} else if (pw.equals("")) {// 비밀번호칸이 비엇는지 확인
+				Toast.makeText(getApplicationContext(), "비밀번호을 입력해주세요",
+						Toast.LENGTH_SHORT).show();
+			} else if (!pw.equals(pw2)) {
+				Toast.makeText(getApplicationContext(), "비밀번호를 올바르게 적어주세요",
+						Toast.LENGTH_SHORT).show();
+			} else {// 정상이면 회원가입을 한다
+				GameLogin.mOnemgr.insert(name, nick, pw);
+				Toast.makeText(getApplicationContext(), "생성 완료",
+						Toast.LENGTH_SHORT).show();
+			}
 		}
-		
-		return ok;
-	} // confirm()
-	
-	//------------------------------------
-	// 가입
-	//------------------------------------
-	private void join() {
-		
-	} // join()
+	}
 	
 	
 } // end of class GameJoin
