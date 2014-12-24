@@ -4,16 +4,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
-import android.provider.MediaStore.Audio.Playlists;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -136,7 +137,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 	private int moveX, moveY;					// 카드가 이동할 단위
 	private Bitmap cardInOut;
 	
-	
+	CustomDialog dialog;
 	
 	//---------------------------------
 	// 생성자
@@ -171,7 +172,8 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		mediaManager.init(mContext);
 		soundManager.init(mContext);
 		
-		
+		dialog = new CustomDialog(mContext);
+
 		initGame();												// 게임환경 설정
 		initBitmap();											// 게임환경에 맞도록 카드길이 설정
 		
@@ -1214,6 +1216,13 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 							cardOut = true;
 						} // if
 						
+						if(gameCurState.getUseDec().get(0) == "H7" || 
+							gameCurState.getUseDec().get(0) == "S7" ||
+							gameCurState.getUseDec().get(0) == "D7" ||
+							gameCurState.getUseDec().get(0) == "C7" ) {
+							dialog.show();
+						}
+						
 						// up할 카드는 항상 0번째 카드로
 						if(upIndexNum == player.getDec().size()) {
 							upIndexNum = 0;
@@ -1236,7 +1245,6 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 							mediaManager.stop();
 							soundManager.play(4);
 						}
-						
 					}
 					
 					gameControll.nextTurn();									// 다음 턴으로 넘긴다.
