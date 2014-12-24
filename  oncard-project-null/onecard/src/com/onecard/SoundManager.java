@@ -11,6 +11,7 @@ import android.media.SoundPool;
   * 1 - 카드 inout
   * 2 - 카드 섞는음
   * 3 - 폭발음
+  * 4 - 플레이어 죽는 음악
  *
  */
 public class SoundManager {
@@ -47,6 +48,7 @@ public class SoundManager {
 		addSound(1, R.raw.cardinout);
 		addSound(2, R.raw.cardsuffle);
 		addSound(3, R.raw.boom);
+		addSound(4, R.raw.dead);
 	}
 	
 	public void addSound(int index, int soundId){
