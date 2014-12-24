@@ -1109,6 +1109,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		if(playerTurn != 0) {
 			tmpPlayerTurn = playerTurn;
 			int AI_CurCardNum = playerList.get(tmpPlayerTurn).getDec().size(); 	// 현재 카드수 저장
+			int _attackCard = gameCurState.getAttackCard();						// 현재 저장된 공격카드 수
 			
 			gameControll.playAI();												// AI가 카드플레이를 하고
 			
@@ -1119,8 +1120,11 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 			} else {
 				// 카드수가 증가(카드를 먹었을 경우)
 				AI_In = true;
-				if(playerList.get(tmpPlayerTurn).isWorkout()) {					// AI가 workOut이 되면 폭발음 플레이
+				if(_attackCard > 0) {					// AI가 공격카드를 먹으면 폭발음 플레이
 					soundManager.play(3);
+				} else if(playerList.get(tmpPlayerTurn).isWorkout()) {	// AI가 파산되면 좌절음 플레이
+					// 좌절음 플레이
+					soundManager.play(4);
 				}
 			}
 			soundManager.play(1);
@@ -1212,10 +1216,21 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 						}
 						
 					} else {
+						int _attackCard = gameCurState.getAttackCard();		// 공격카드가 있나 확인
+						if(_attackCard > 0) {								// 있으면
+							soundManager.play(3);		// 폭발음
+						} else {
+							soundManager.play(1);		// 일반 카드음
+						}
+						
 						// 카드 먹기
-						soundManager.play(1);
 						gameControll.cardInputOutput(true, 0);
 						cardIn = true;
+						if(cardNumPlayer >= 15) {
+							// 좌절음 플레이
+							soundManager.play(4);
+						}
+						
 					}
 					
 					gameControll.nextTurn();									// 다음 턴으로 넘긴다.
