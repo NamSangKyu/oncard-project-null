@@ -154,7 +154,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		map = new HashMap<String , Integer>();					// 해쉬맵 생성
 		mDetector = new GestureDetector(getContext(), this);	// Detector 객체 생성
 		
-		gameControll = GameControll.getInstance();
+		gameControll = GameControll.getInstance(context);
 		
 		// 어플리케이션 데이터에 저장된 playerNum을 가져와서 실행한다. (디폴트 = 4)
 		playerNum = ((GlobalVars) context.getApplicationContext()).getPlayerNum();

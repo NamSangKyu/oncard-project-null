@@ -3,6 +3,7 @@ package com.onecard.controll;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.onecard.Ais;
@@ -19,22 +20,25 @@ public class GameControll {
 	public boolean inputSelect;
 	public static GameCurrentState currentState = new GameCurrentState();
 	// 게임 컨트롤러
-	private static GameControll instance = new GameControll();
+	private static GameControll instance = null;
 	// 게임 상태 : 게임 시작 == 0, 게임 진행 == 1, 게임 오버 == 2
 	private int gameState;
 	//ai 게임 상태
 	String aiPlay[];
 	// 게임 AI
 	private AI ai;
+	
+	private Context context;
 
-	private GameControll() {
+	private GameControll(Context context) {
 		super();
 		// TODO Auto-generated constructor stub
+		this.context  = context;
 	}
 
-	public static GameControll getInstance() {
+	public static GameControll getInstance(Context context) {
 		if (instance == null)
-			instance = new GameControll();
+			instance = new GameControll(context);
 		return instance;
 	}
 
@@ -187,6 +191,7 @@ public class GameControll {
 		}
 		if(currentState.resultGame()){
 			gameState = GAME_OVER;
+			currentState.rankUpdate(context);
 		}
 		return gameState;
 	}
