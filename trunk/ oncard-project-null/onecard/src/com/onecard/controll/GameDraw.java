@@ -43,8 +43,10 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 	private boolean checkGame;					// 게임 승패 여부
 	private boolean cardIn;						// 카드 먹을 때
 	private boolean cardOut;					// 카드 낼 때
-	private boolean AI_InOut;					// AI가 카드를 먹었는지 냈는지
+	private boolean AI_In;						// AI가 카드를 먹은 경우인지
+	private boolean AI_Out;						// AI가 카드를 낸 경우인지
 	private int playerTurn;						// 어떤 플레이어의 턴
+	private int tmpPlayerTurn;					// (계산용) 임시 플레이어 턴 
 	private boolean mTurn;						// 턴방향(오른쪽 : true, 왼쪽 : false)
 	private int centerCardIdx;					// 중앙에 그릴 카드 인덱스
 	private String centerCardName;				// 중앙에 그릴 카드 이름
@@ -96,6 +98,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 	static Bitmap turn_right;					// 진행방향이 오른쪽
 	static Bitmap card_back;
 	
+	Bitmap AI_CurCard;							// (계산용) AI의 카드 애니메이션용
 	Bitmap card[] = new Bitmap[54];				// 카드를 저장할 비트맵 배열
 	Bitmap win[] = new Bitmap[6];				// 승리횟수 비트맵 배열
 	String cardName[][] = new String[54][2];	// 카드 이름과 비트맵 인덱스를 저장하는 2차원배열
@@ -485,8 +488,8 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		
 		mPaint.setColor(Color.BLACK);						// 자신의 턴이 아닐때 비활성화 시킬 Paint 속성
 		mPaint.setAlpha(150);
-
-		mediaManager.play(1);
+		
+		soundManager.play(2);
 		
 	} // initGame()
 	
@@ -497,7 +500,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
 		try {
-			soundManager.play(2);
+			mediaManager.play(1);
 			mThread.start();							// surfaceView가 생성되면 쓰레드 시작
 		} catch (Exception e) {
 			RestartGame(); 
@@ -991,9 +994,14 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 					moveCardIn(canvas);
 				}
 				
-				// AI카드 움직이는 애니메이션
-				if(AI_InOut) {
-					moveAI(canvas);
+				// AI가 카드를 먹는 애니메이션
+				if(AI_In) {
+					moveAI_In(canvas);
+				}
+				
+				// AI가 카드를 내는 애니메이션
+				if(AI_Out) {
+					moveAI_Out(canvas);
 				}
 				
 				// 중앙카드 그리기
@@ -1080,23 +1088,43 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		
 	} // GameThread 끝
 	
+	//----------------------------------------------------------
+	// AI_CardCheck() - onDown()에서 호출됨. AI가 낸 카드비트맵 저장
+	//----------------------------------------------------------
+	public void AI_CardCheck() {
+		centerCardCheck();
+		AI_CurCard = card[centerCardIdx];
+	}
+	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 			mDetector.onTouchEvent(event);
-			
 			return true;
 	}
 
 
 	@Override
 	public boolean onDown(MotionEvent e) {
-		
 		// 플레이어 턴이 아니면 터치할때마다 AI턴을 실행한다.
 		if(playerTurn != 0) {
-			AI_InOut = true;
-			gameControll.playAI();
+			tmpPlayerTurn = playerTurn;
+			int AI_CurCardNum = playerList.get(tmpPlayerTurn).getDec().size(); 	// 현재 카드수 저장
+			
+			gameControll.playAI();												// AI가 카드플레이를 하고
+			
+			if(AI_CurCardNum > playerList.get(tmpPlayerTurn).getDec().size()) {	// 카드갯수가 증가? 감소?
+				// 카드수가 감소(카드를 냈을경우)
+				AI_CardCheck();
+				AI_Out = true;
+			} else {
+				// 카드수가 증가(카드를 먹었을 경우)
+				AI_In = true;
+				if(playerList.get(tmpPlayerTurn).isWorkout()) {					// AI가 workOut이 되면 폭발음 플레이
+					soundManager.play(3);
+				}
+			}
 			soundManager.play(1);
-			gameControll.nextTurn();
+			//gameControll.nextTurn(); // nextTurn을 애니메이션이 끝나고 호출하자.
 			upIndexNum = 0;
 		}
 		
@@ -1221,22 +1249,165 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		canvas.drawBitmap(card_back, centerX, centerY, null);
 		centerY += moveY;
 		
-		// 중앙카드를 넘어가면 멈춤
+		// 자기 카드덱 위치를 넘어가면
 		if(centerY >= mHeight-ch) {
 			cardIn = false;
 			centerY = mgnCenterTop;
 		}
 	} // moveCardIn()
 	
-	public void moveAI(Canvas canvas) {
-		if(playerTurn == 1) {
+	
+	//------------------------------------------------------
+	// moveAI_In() - DrawAll()에서 호출. AI가 카드를 먹는 움직임
+	//------------------------------------------------------
+	public void moveAI_In(Canvas canvas) {
+		switch(playerNum) {
+		case 2:
+			if(tmpPlayerTurn == 1) { // 위쪽 AI
+				canvas.drawBitmap(card_back, centerX, centerY, null);
+				centerY -= moveY;
+				
+				// AI 카드덱 위치를 넘어가면
+				if(centerY <= bh) {
+					AI_In = false;
+					centerY = mgnCenterTop;
+					gameControll.nextTurn();
+				} // if(centerY)
+			} // if(tmpPlayerTurn)
+			break;
 			
-		} else if(playerTurn == 2) {
+		case 3:
+			if(tmpPlayerTurn == 1) { // 오른쪽 AI
+				canvas.drawBitmap(card_back, centerX, centerY, null);
+				centerX += moveX;
+				
+				if(centerX >= bh) {
+					AI_In = false;
+					centerX = mgnCenterLeft;
+					gameControll.nextTurn();
+				} // if(centerX)
+			} else if(tmpPlayerTurn == 2) { // 왼쪽 AI
+				canvas.drawBitmap(card_back, centerX, centerY, null);
+				centerX -= moveX;
+				
+				if(centerX <= bh) {
+					AI_In = false;
+					centerX = mgnCenterLeft;
+					gameControll.nextTurn();
+				} // if(centerX)
+			} // if(tmpPlayerTurn)
+			break;
 			
-		} else if(playerTurn == 3) {
+		case 4:
+			if(tmpPlayerTurn == 1) { // 오른쪽 AI
+				canvas.drawBitmap(card_back, centerX, centerY, null);
+				centerX += moveX;
+				
+				if(centerX >= mWidth-bh) {
+					AI_In = false;
+					centerX = mgnCenterLeft;
+					gameControll.nextTurn();
+				} // if(centerX)
+			} else if(tmpPlayerTurn == 2) { // 위쪽 AI
+				canvas.drawBitmap(card_back, centerX, centerY, null);
+				centerY -= moveY;
+				
+				// AI 카드덱 위치를 넘어가면
+				if(centerY <= bh) {
+					AI_In = false;
+					centerY = mgnCenterTop;
+					gameControll.nextTurn();
+				} // if(centerY)
+			} else if(tmpPlayerTurn == 3) { // 왼쪽 AI
+				canvas.drawBitmap(card_back, centerX, centerY, null);
+				centerX -= moveX;
+				
+				if(centerX <= bh) {
+					AI_In = false;
+					centerX = mgnCenterLeft;
+					gameControll.nextTurn();
+				} // if(centerX)
+			} // if(tmpPlayerTurn)
+			break;
 			
-		}
-	}
+		} // switch(playerNum)
+		
+	} // moveAI_In()
+	
+	
+	//-------------------------------------------------------
+	// moveAI_Out() - DrawAll()에서 호출. AI가 카드를 내는 움직임
+	//-------------------------------------------------------
+	public void moveAI_Out(Canvas canvas) {
+		switch(playerNum) {
+		case 2:
+			if(tmpPlayerTurn == 1) { // 위쪽 AI
+				canvas.drawBitmap(AI_CurCard, mxT, myT, null);
+				myT += moveY;
+				
+				if(myT >= mgnCenterTop) {
+					AI_Out = false;
+					myT = 0;
+					gameControll.nextTurn();
+				}// if(myT)
+			} // if(tmpPlayerTurn)
+			break;
+			
+		case 3:
+			if(tmpPlayerTurn == 1) { // 오른쪽 AI
+				canvas.drawBitmap(AI_CurCard, mxR, myR, null);
+				mxR -= moveX;
+				
+				if(mxR <= mgnCenterLeft) {
+					AI_Out = false;
+					mxR = mWidth - cw;
+					gameControll.nextTurn();
+				} // if(mxR)
+			} else if(tmpPlayerTurn == 2) { // 왼쪽 AI
+				canvas.drawBitmap(AI_CurCard, mxL, myL, null);
+				mxL += moveX;
+				
+				if(mxL >= mgnCenterTop) {
+					AI_Out = false;
+					mxL = 0;
+					gameControll.nextTurn();
+				} // if(mxL)
+			} // if(tmpPlayerTurn)
+			break;
+			
+		case 4:
+			if(tmpPlayerTurn == 1) { // 오른쪽 AI
+				canvas.drawBitmap(AI_CurCard, mxR, myR, null);
+				mxR -= moveX;
+				
+				if(mxR <= mgnCenterLeft) {
+					AI_Out = false;
+					mxR = mWidth - cw;
+					gameControll.nextTurn();
+				} // if(mxR)
+			} else if(tmpPlayerTurn == 2) { // 위쪽 AI
+				canvas.drawBitmap(AI_CurCard, mxT, myT, null);
+				myT += moveY;
+				
+				if(myT >= mgnCenterTop) {
+					AI_Out = false;
+					myT = 0;
+					gameControll.nextTurn();
+				}// if(myT)ll.nextTurn();
+			} else if(tmpPlayerTurn == 3) { // 왼쪽 AI
+				canvas.drawBitmap(AI_CurCard, mxL, myL, null);
+				mxL += moveX;
+				
+				if(mxL >= mgnCenterTop) {
+					AI_Out = false;
+					mxL = 0;
+					gameControll.nextTurn();
+				} // if(mxL)ntroll.nextTurn();
+			} // if(tmpPlayerTurn)
+			break;
+			
+		} // switch
+	} // moveAI_Out()
 	
 } // end of class GameDraw
 
