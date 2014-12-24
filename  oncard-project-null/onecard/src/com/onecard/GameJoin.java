@@ -1,8 +1,10 @@
 package com.onecard;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -15,16 +17,17 @@ public class GameJoin extends Activity {
 
 	ImageView mImgcancle, mImgJoinFinish;
 	EditText mTextnick, mTextname, mTextpw, mTextpw2;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		// 풀스크린 모드
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_join);
-		
+
 		mImgcancle = (ImageView) findViewById(R.id.imgJoinCancle);
 		mImgJoinFinish = (ImageView) findViewById(R.id.imgJoinFinish);
 
@@ -32,29 +35,31 @@ public class GameJoin extends Activity {
 		mTextname = (EditText) findViewById(R.id.textjname);
 		mTextpw = (EditText) findViewById(R.id.textjpw);
 		mTextpw2 = (EditText) findViewById(R.id.textjpw2);
-		
+
 		mImgJoinFinish.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				makeId();
+				if (makeId()) {
+					finish();
+				}
 			}
 		});
-		
+
 		mImgcancle.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				 finish();
-				
+				finish();
 			}
 		});
-		
+
 	}// end of onCreate()
-	
-	private void makeId() {
+
+	private boolean makeId() {
+		boolean temp = false;
 		String nick = mTextnick.getText().toString();
 		String name = mTextname.getText().toString();
 		String pw = mTextpw.getText().toString();
@@ -65,7 +70,7 @@ public class GameJoin extends Activity {
 		} else {
 
 			Cursor cursor = GameLogin.mOnemgr.testnick(nick);
-			
+
 			if (cursor.getCount() != 0) {// 입력한 닉네임이 있는지 확인
 				cursor.moveToFirst();
 				String testnick = cursor.getString(0);
@@ -87,15 +92,13 @@ public class GameJoin extends Activity {
 				GameLogin.mOnemgr.insert(name, nick, pw);
 				Toast.makeText(getApplicationContext(), "생성 완료",
 						Toast.LENGTH_SHORT).show();
+
+				temp = true;
 			}
 		}
+		Log.d("login", String.valueOf(temp));
+		return temp;
 	}
-	
-	
+
 } // end of class GameJoin
-
-
-
-
-
 

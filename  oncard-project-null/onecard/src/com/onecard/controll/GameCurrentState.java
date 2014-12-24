@@ -2,11 +2,15 @@ package com.onecard.controll;
 
 import java.util.ArrayList;
 
+import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.onecard.CardModel;
 import com.onecard.GameMain;
+import com.onecard.LoginActivity;
+import com.onecard.db.OnecardManager;
+import com.onecard.db.Userdata;
 import com.onecard.gameinterface.CardSuffle;
 import com.onecard.gameinterface.GameResult;
 
@@ -365,7 +369,7 @@ public class GameCurrentState {
 		playerList = new ArrayList<Player>();
 		// 플레이어 덱 셋팅
 		for (int i = 0; i < playerCount; i++) {
-			String name = "플레이어";
+			String name = LoginActivity.mUser.getNick();
 			if (i != 0) {
 				name = "인공지능 " + i;
 			}
@@ -537,6 +541,17 @@ public class GameCurrentState {
 		Log.d("MyLog", templateDec.toString());
 		for (int i = 0; i < playerList.size(); i++) {
 			Log.d("MyLog", playerList.get(i).getDec().toString());
+		}
+	}
+
+	public void rankUpdate(Context context) {
+		// TODO Auto-generated method stub
+		//랭크 업데이트 부분
+		int userScore = Integer.parseInt(LoginActivity.mUser.getScor());
+		int playScore = gameResultList.get(0).getScore();
+		if(playScore > userScore){
+			LoginActivity.mUser.setScor(String.valueOf(playScore));
+			OnecardManager.getInstance(context).updatesco(LoginActivity.mUser.getName(), LoginActivity.mUser.getScor());;
 		}
 	}
 }
