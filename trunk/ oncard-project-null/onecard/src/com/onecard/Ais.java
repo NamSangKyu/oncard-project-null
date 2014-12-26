@@ -23,11 +23,12 @@ public class Ais implements com.onecard.gameinterface.AI
 	String counterattack;
 	String othercard;
 	String comb;
+	
 	char[] value;
 	char[] coms;
 	char[] attack = { '2', 'A', 'B', 'C' };
 	char[] two = { 'K', 'J' };
-	char[] pattens;
+	char[] pattens = new char[2];
 	char J = 'J';
 	int random;
 	int nulls = 0;
@@ -113,7 +114,7 @@ public class Ais implements com.onecard.gameinterface.AI
 		Gc = currentState;
 		Log.i("MyLog", "t1:::" + Gc.getTemplateDec().get(0));
 		patten = currentState.getPattern();
-		pattens = patten.toCharArray();
+		pattens[0] = patten.toCharArray()[0];
 		turn = Gc.getCurrentTurn();
 		
 		if (Gc.getPlayerList().get(0).getDec().size() > 7 && Gc.getUseDec().get(0).toCharArray()[0] == J && fjock == false)
@@ -243,7 +244,8 @@ public class Ais implements com.onecard.gameinterface.AI
 	{
 		decklist = Gc.getPlayerList();
 		userdeck = Gc.getUseDec();
-		groundcard = userdeck.get(0);
+		pattens[1] = userdeck.get(0).toCharArray()[1];
+		groundcard =  new String(pattens); 
 		switch (decklist.size())
 		{
 			case 2:
