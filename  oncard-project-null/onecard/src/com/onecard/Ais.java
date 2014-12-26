@@ -37,7 +37,7 @@ public class Ais implements com.onecard.gameinterface.AI
 	int turn;
 	
 	//게임 난이도
-	int level = 0;
+	int level = 2;
 	
 	//연산용
 	int attacknum;
@@ -115,10 +115,12 @@ public class Ais implements com.onecard.gameinterface.AI
 		patten = currentState.getPattern();
 		pattens = patten.toCharArray();
 		turn = Gc.getCurrentTurn();
-		if(Gc.getPlayerList().get(0).getDec().size()>7&&Gc.getUseDec().get(0).toCharArray()[0]==J&&fjock==false){
+		
+		if (Gc.getPlayerList().get(0).getDec().size() > 7 && Gc.getUseDec().get(0).toCharArray()[0] == J && fjock == false)
+		{
 			fjock = true;
-			change =true;		
-			changeJ =true;	
+			change = true;
+			changeJ = true;
 		}
 		
 		if (!send.isEmpty())
@@ -172,12 +174,69 @@ public class Ais implements com.onecard.gameinterface.AI
 			default:
 				break;
 		}
+		String send;
+		Log.i("MyLog", "sends[0]1 : : : " + sends[0]);
+		seven(sends[0]);
+	
 		
-		Log.i("MyLog", "sends[0] : : : " + sends[0]);
-		
+		Log.i("MyLog", "sends[0]2 : : : " + sends[0]);
 		return sends;
 		
+		
 	};
+	
+	
+	public String seven(String s){
+		String seven = s;
+		char [] sum = new char[2];
+		
+		if(s!=null){
+		if(s.toCharArray()[1]=='7'){
+		
+		
+		sum[0] = rendomseven();
+		sum[1] = sends[0].toCharArray()[1];
+		seven = new String(sum);
+		
+		Log.i("MyLog", "change");
+		}
+		}
+		
+		return seven;
+		//카드를 바꾸지말고 문양만바꿔야함
+		
+	}
+	
+	
+	public char rendomseven()
+	{
+		
+		int num = (int) (Math.random() * 3);
+		char rendom='?';
+		switch (num)
+		{
+			case 0:
+				rendom = 'H';
+				break;
+			
+			case 1:
+				rendom = 'D';
+				break;
+			case 2:
+				rendom = 'S';
+				
+				break;
+			case 3:
+				rendom = 'C';
+				break;
+			default:
+				break;
+		}
+		Gc.changePattern(String.valueOf(rendom));
+		Log.i("MyLog", "char + " +String.valueOf(rendom));
+		return rendom;
+		
+	}
 	
 	
 	public void usernum()
@@ -301,8 +360,6 @@ public class Ais implements com.onecard.gameinterface.AI
 				break;
 		}
 		
-		
-		
 		return attacker;
 		
 	}
@@ -319,7 +376,7 @@ public class Ais implements com.onecard.gameinterface.AI
 			}
 		}
 		attackok = list.size() - attacknum;
-		if (attackok < 3 && attacknum > 2)
+		if (attackok < 5 && attacknum > 1)
 		{
 			attackers = true;
 		}
@@ -458,7 +515,7 @@ public class Ais implements com.onecard.gameinterface.AI
 	public void easy()
 	{
 		Log.i("MyLog", "useratteack + " + String.valueOf(userattack()));
-		if (userattack() == null||change==true)
+		if (userattack() == null || change == true)
 		{
 			change = false;
 			Log.i("MyLog", "eazyprototipe");
@@ -501,7 +558,7 @@ public class Ais implements com.onecard.gameinterface.AI
 	public void hardtwo(String temp)
 	{
 		
-		if (userattack() == null||change==true)
+		if (userattack() == null || change == true)
 		{//공격을 받았는지 유무
 			//k,j패턴 추가
 			change = false;
@@ -524,7 +581,7 @@ public class Ais implements com.onecard.gameinterface.AI
 						sends = new String[send.size()];
 						for (int i = 0; i < send.size(); i++)
 						{
-													
+							
 							sends[i] = send.get(i);
 						}
 						attackafter();
@@ -695,7 +752,7 @@ public class Ais implements com.onecard.gameinterface.AI
 	
 	public void eazyprototipe()
 	{
-		nulls = 1;
+		
 		//유저가 공격을 안했을때
 		value = groundcard.toCharArray();
 		
@@ -705,8 +762,9 @@ public class Ais implements com.onecard.gameinterface.AI
 			Log.i("MyLog", "size!" + playing.size());
 			Log.i("MyLog", "i!" + String.valueOf(i));
 			coms = playing.get(i).toCharArray();
-	
-			if(value[0]==J&&changeJ==true){
+			
+			if (value[0] == J && changeJ == true)
+			{
 				changeJ = false;
 				send.add(playing.get(i).toString());
 				send.add(null);
@@ -767,7 +825,7 @@ public class Ais implements com.onecard.gameinterface.AI
 			}
 			else
 			{
-				nulls += 1;
+				
 				Log.i("MyLog", "nulls");
 				
 			}
@@ -777,7 +835,7 @@ public class Ais implements com.onecard.gameinterface.AI
 				Log.i("MyLog", "111111111");
 				send.add(null);
 				send.add(null);
-				nulls = 1;
+				
 			}
 			;
 			
@@ -798,24 +856,26 @@ public class Ais implements com.onecard.gameinterface.AI
 	public void hardprototipe()
 	{
 		Log.i("MyLog", "hardprototipe");
-		nulls = 1;
+		
 		//공격타이밍이 아닐때
 		value = groundcard.toCharArray();
 		for (int i = 0; i < playing.size(); i++)
 		{
 			coms = playing.get(i).toCharArray();
 			
-			
-			if(value[0]==J&&changeJ==true){
+			if (value[0] == J && changeJ == true)
+			{
 				changeJ = false;
 				send.add(playing.get(i).toString());
 				send.add(null);
 				break;
 				
-			}else if (value[0] == coms[0])
+			}
+			else if (value[0] == coms[0])
 			//낼수 있는 카드가 있는지 검사
 			{
 				send.add(playing.get(i).toString());
+				send.add(null);
 				
 				break;
 				
@@ -823,6 +883,7 @@ public class Ais implements com.onecard.gameinterface.AI
 			else if (value[1] == coms[1])
 			{
 				send.add(playing.get(i).toString());
+				send.add(null);
 				
 				break;
 				
@@ -849,14 +910,14 @@ public class Ais implements com.onecard.gameinterface.AI
 			}
 			else
 			{
-				nulls += 1;
 				
 			}
 			;
-			if (nulls == playing.size())
+			if (i+1 == playing.size())
 			{
 				send.add(null);
-				nulls = 1;
+				send.add(null);
+				
 			}
 			;
 			
@@ -876,7 +937,7 @@ public class Ais implements com.onecard.gameinterface.AI
 	
 	public void hardattackorder()
 	{
-		nulls = 1;
+		
 		///////공격명령을 받았을시
 		value = groundcard.toCharArray();
 		for (int i = 0; i < whatattackcards().size(); i++)
@@ -919,16 +980,18 @@ public class Ais implements com.onecard.gameinterface.AI
 			}
 			else
 			{
-				nulls += 1;
+				
 				Log.i("MyLog", "nulls");
 				
 			}
 			;
-			if (nulls == whatattackcards().size())
+			if (i + 1 == whatattackcards().size())
 			{
 				Log.i("MyLog", "nullsxxxx");
-				hardprototipe();
 				nulls = 999;
+				hardprototipe();
+				break;
+				
 			}
 			;
 			
@@ -938,6 +1001,7 @@ public class Ais implements com.onecard.gameinterface.AI
 		/////리턴값 출력
 		if (nulls != 999)
 		{
+			Log.i("MyLog", "attackcard");
 			sends = new String[send.size()];
 			for (int i = 0; i < send.size(); i++)
 			{
@@ -947,15 +1011,17 @@ public class Ais implements com.onecard.gameinterface.AI
 		}
 	}
 	
-
-public void attackafter(){
-	change = false;
-	changeJ = false;
-	if(sends[0]==null){
-		change =true;		
-		changeJ =true;	
-		Log.i("MyLog", "trues");
-	}
 	
-};
+	public void attackafter()
+	{
+		change = false;
+		changeJ = false;
+		if (sends[0] == null)
+		{
+			change = true;
+			changeJ = true;
+			Log.i("MyLog", "trues");
+		}
+		
+	};
 }
