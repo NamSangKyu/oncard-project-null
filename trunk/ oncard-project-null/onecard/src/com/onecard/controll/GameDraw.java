@@ -2,13 +2,10 @@ package com.onecard.controll;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import com.onecard.*;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -1118,9 +1115,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 					gameCurState.getPlayerList().get(3).getWin() == forWin) 
 				{
 					StopGame();
-					dialog = new ResultDialog(mContext);
-					dialog.setCancelable(false);
-					dialog.show();
+					getContext().startActivity(new Intent(getContext(), ResultDialog.class ));
 				} 
 			
 			if(AI_CurCardNum > playerList.get(tmpPlayerTurn).getDec().size()) {	// 카드갯수가 증가? 감소?
@@ -1230,9 +1225,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 							gameCurState.getPlayerList().get(3).getWin() == forWin) 
 						{
 							StopGame();
-							dialog = new ResultDialog(mContext);
-							dialog.setCancelable(false);
-							dialog.show();
+							getContext().startActivity(new Intent(getContext(), ResultDialog.class ));
 						} else {
 							finishGame = true;
 						}
