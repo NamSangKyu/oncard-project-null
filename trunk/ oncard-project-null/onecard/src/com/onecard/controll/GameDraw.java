@@ -1216,12 +1216,12 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 							cardOut = true;
 						} // if
 						
-						if(gameCurState.getUseDec().get(0) == "H7" || 
-							gameCurState.getUseDec().get(0) == "S7" ||
-							gameCurState.getUseDec().get(0) == "D7" ||
-							gameCurState.getUseDec().get(0) == "C7" ) {
-							dialog.show();
-						}
+//						if(gameCurState.getUseDec().get(0) == "H7" || 
+//							gameCurState.getUseDec().get(0) == "S7" ||
+//							gameCurState.getUseDec().get(0) == "D7" ||
+//							gameCurState.getUseDec().get(0) == "C7" ) {
+//							dialog.show();
+//						}
 						
 						// up할 카드는 항상 0번째 카드로
 						if(upIndexNum == player.getDec().size()) {
