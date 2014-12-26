@@ -122,11 +122,16 @@ public class GameCurrentState {
 		this.pattern = pattern;
 	}
 
+	
+
 	@Override
 	public String toString() {
 		return "GameCurrentState [playerList=" + playerList + ", turn=" + turn
 				+ ", currentTurn=" + currentTurn + ", inputCard=" + inputCard
-				+ ", attackCard=" + attackCard + "]";
+				+ ", attackCard=" + attackCard + ", templateDec=" + templateDec
+				+ ", useDec=" + useDec + ", pattern=" + pattern
+				+ ", cardSuffle=" + cardSuffle + ", gameResultList="
+				+ gameResultList + ", context=" + context + "]";
 	}
 
 	/**
