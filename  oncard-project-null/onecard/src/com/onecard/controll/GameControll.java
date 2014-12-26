@@ -39,6 +39,7 @@ public class GameControll {
 	public static GameControll getInstance(Context context) {
 		if (instance == null){
 			instance = new GameControll(context);
+			currentState = getCurrentState();
 		}
 		return instance;
 	}
