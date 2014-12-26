@@ -1,6 +1,7 @@
 package com.onecard.controll;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import android.content.Context;
 import android.util.Log;
@@ -36,14 +37,17 @@ public class GameCurrentState {
 	private CardSuffle cardSuffle;
 	// 각 플레이어 게임 결과 저장 리스트
 	private ArrayList<GameResult> gameResultList;
+	
+	private Context context;
 
-	public GameCurrentState() {
+	public GameCurrentState(Context context) {
 		super();
 		// TODO Auto-generated constructor stub
 		currentTurn = -1;
 		turn = true;
 		cardSuffle = CardModel.getInstance(null);
 		gameResultList = new ArrayList<GameResult>();
+		this.context = context;
 	}
 
 	public ArrayList<GameResult> getGameResultList() {
@@ -256,6 +260,36 @@ public class GameCurrentState {
 		case 'J':
 			nextTurn();
 			break;
+		case '7':
+			inputPattern();
+			break;
+		}
+	}
+
+	private void inputPattern() {
+		// TODO Auto-generated method stub
+		if(currentTurn == 0){
+			CustomDialog dialog = new CustomDialog(context);
+			dialog.show();
+		}else{
+			String pattern="";
+			Random r = new Random();
+			int no = r.nextInt(5);
+			switch(no){
+			case 0:
+				pattern = "S";
+				break;
+			case 1:
+				pattern = "C";
+				break;
+			case 2:
+				pattern = "D";
+				break;
+			case 3:
+				pattern = "H";
+				break;
+			}
+			changePattern(pattern);
 		}
 	}
 
