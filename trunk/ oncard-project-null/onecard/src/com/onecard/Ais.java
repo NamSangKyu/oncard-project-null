@@ -563,8 +563,9 @@ public class Ais implements com.onecard.gameinterface.AI
 		if (userattack() == null || change == true)
 		{//공격을 받았는지 유무
 			//k,j패턴 추가
+			Log.i("MyLog", "userattack" + String.valueOf(change));
 			change = false;
-			Log.i("MyLog", "userattack");
+			
 			
 			if (whatattackcards().isEmpty())
 			{//공격할지말지유무
@@ -636,7 +637,9 @@ public class Ais implements com.onecard.gameinterface.AI
 				
 				sends[i] = send.get(i);
 			}
+			if(userattack()==null){
 			attackafter();
+			}
 			
 		}
 		;
