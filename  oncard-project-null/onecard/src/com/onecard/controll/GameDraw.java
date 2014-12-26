@@ -99,6 +99,11 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 	static Bitmap turn_right;					// 진행방향이 오른쪽
 	static Bitmap card_back;
 	
+	Bitmap heart;
+	Bitmap spade;
+	Bitmap diamond;
+	Bitmap clover;
+	
 	Bitmap AI_CurCard;							// (계산용) AI의 카드 애니메이션용
 	Bitmap card[] = new Bitmap[54];				// 카드를 저장할 비트맵 배열
 	Bitmap win[] = new Bitmap[6];				// 승리횟수 비트맵 배열
@@ -216,6 +221,18 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		// 플레이어의 캐릭터
 		bd = (BitmapDrawable) res.getDrawable(R.drawable.c1);
 		playerCharacter = bd.getBitmap();
+		
+		bd = (BitmapDrawable) res.getDrawable(R.drawable.s);
+		spade = bd.getBitmap();
+		
+		bd = (BitmapDrawable) res.getDrawable(R.drawable.h);
+		heart = bd.getBitmap();
+		
+		bd = (BitmapDrawable) res.getDrawable(R.drawable.d);
+		diamond = bd.getBitmap();
+		
+		bd = (BitmapDrawable) res.getDrawable(R.drawable.c);
+		clover = bd.getBitmap();
 		
 		if(playerNum == 2) {
 			// 위쪽 AI의 캐릭터
@@ -435,6 +452,11 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		
 		// 발바닥 사이즈 재조정
 		leaveWin = Bitmap.createScaledBitmap(leaveWin, ch/6, ch/6, true);					// 발바닥 이미지 : 캐릭터 1/3
+		
+		heart = Bitmap.createScaledBitmap(heart, ch/5, ch/5, true);
+		spade = Bitmap.createScaledBitmap(spade, ch/5, ch/5, true);
+		clover = Bitmap.createScaledBitmap(clover, ch/5, ch/5, true);
+		diamond = Bitmap.createScaledBitmap(diamond, ch/5, ch/5, true);
 		
 		// 승리 횟수 비트맵 사이즈 재조정
 		for(int i=0; i<win.length; i++) {
@@ -1009,6 +1031,22 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 				
 				// 중앙카드 그리기
 				canvas.drawBitmap(card[centerCardIdx], mgnCenterLeft, mgnCenterTop, null);
+				
+				if(gameCurState.getPattern().equals("H")) {
+					canvas.drawBitmap(heart, (mWidth-heart.getWidth())/2, mgnCenterTop + ch + heart.getWidth()/2, null);
+				}
+				
+				if(gameCurState.getPattern().equals("S")) {
+					canvas.drawBitmap(spade, (mWidth-heart.getWidth())/2, mgnCenterTop + ch + heart.getWidth()/2, null);
+				}
+				
+				if(gameCurState.getPattern().equals("C")) {
+					canvas.drawBitmap(clover, (mWidth-heart.getWidth())/2, mgnCenterTop + ch + heart.getWidth()/2, null);
+				}
+				
+				if(gameCurState.getPattern().equals("D")) {
+					canvas.drawBitmap(diamond, (mWidth-heart.getWidth())/2, mgnCenterTop + ch + heart.getWidth()/2, null);
+				}
 				
 			} // if(canvas != null)
 			

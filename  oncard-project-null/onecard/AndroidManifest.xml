@@ -31,7 +31,6 @@
         <activity android:name="GameStart"></activity>
         <activity android:name="Options"></activity>
         <activity android:name="GameMain"></activity>
-        <activity android:name="ResultDialog"></activity>
     	<activity android:name="GameJoin"
     	    android:windowSoftInputMode="stateHidden"
     	    ></activity>
@@ -39,6 +38,7 @@
     	    android:windowSoftInputMode="stateHidden"
     	    ></activity>
     	<activity android:name="RankActivity"></activity>
+    	<activity android:name=".controll.ResultDialog"></activity>
     </application>
 
 </manifest>
