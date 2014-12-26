@@ -18,7 +18,7 @@ public class GameControll {
 	public static final int GAME_ROUND_EXIT = 3;
 	
 	public boolean inputSelect;
-	public static GameCurrentState currentState = new GameCurrentState();
+	public static GameCurrentState currentState;
 	// 게임 컨트롤러
 	private static GameControll instance = null;
 	// 게임 상태 : 게임 시작 == 0, 게임 진행 == 1, 게임 오버 == 2
@@ -28,7 +28,7 @@ public class GameControll {
 	// 게임 AI
 	private AI ai;
 	
-	private Context context;
+	private static Context context;
 
 	private GameControll(Context context) {
 		super();
@@ -37,8 +37,9 @@ public class GameControll {
 	}
 
 	public static GameControll getInstance(Context context) {
-		if (instance == null)
+		if (instance == null){
 			instance = new GameControll(context);
+		}
 		return instance;
 	}
 
@@ -208,7 +209,7 @@ public class GameControll {
 
 	public static GameCurrentState getCurrentState() {
 		if (currentState == null)
-			currentState = new GameCurrentState();
+			currentState = new GameCurrentState(context);
 		return currentState;
 	}
 
