@@ -7,6 +7,9 @@ import android.content.Context;
 import android.util.Log;
 
 import com.onecard.Ais;
+import com.onecard.LoginActivity;
+import com.onecard.db.OnecardDb;
+import com.onecard.db.OnecardManager;
 import com.onecard.gameinterface.AI;
 import com.onecard.gameinterface.GameResult;
 import com.onecard.gameinterface.Item;
@@ -144,6 +147,7 @@ public class GameControll {
 		
 		Log.d("CardInfo","총 카드 개수 : " + count);
 		Log.d("CardInfo","현재 턴 : " + currentState.getCurrentTurn());
+		Log.d("CardInfo", "------------------------------");
 		return currentState;
 	}
 
