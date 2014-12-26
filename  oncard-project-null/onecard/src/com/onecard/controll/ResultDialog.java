@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
@@ -42,9 +43,11 @@ public class ResultDialog extends Dialog implements android.view.View.OnClickLis
 		
 		if(gameResult.get(0).getWin() == 0) {
 			Toast.makeText(getContext(), "패배!", Toast.LENGTH_SHORT).show();
+			Log.d("MyLog", "result dialog 승리");
 //			setContentView(R.layout.result_fail);			// 패배
 		} else {
 			Toast.makeText(getContext(), "승리!", Toast.LENGTH_SHORT).show();
+			Log.d("MyLog", "result dialog 승리");
 //			setContentView(R.layout.result);				// 승리
 		}
 		
@@ -58,7 +61,7 @@ public class ResultDialog extends Dialog implements android.view.View.OnClickLis
 		winnerName = LoginActivity.mUser.getNick();
 		winnerScore = LoginActivity.mUser.getScor();
 		winnerRank = oneManager.viewrank(winnerName);
-				
+		
 		mName.setText(winnerName);
 		mScore.setText(winnerScore);
 		mRank.setText(winnerRank);
