@@ -2,6 +2,7 @@ package com.onecard.controll;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import com.onecard.*;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -137,7 +138,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 	private int moveX, moveY;					// 카드가 이동할 단위
 	private Bitmap cardInOut;
 	
-	CustomDialog dialog;
+	ResultDialog dialog;
 	
 	//---------------------------------
 	// 생성자
@@ -172,7 +173,8 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		mediaManager.init(mContext);
 		soundManager.init(mContext);
 		
-		dialog = new CustomDialog(mContext);
+		dialog = new ResultDialog(mContext);
+		dialog.setCancelable(false);
 
 		initGame();												// 게임환경 설정
 		initBitmap();											// 게임환경에 맞도록 카드길이 설정
@@ -485,7 +487,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		centerX = mgnCenterLeft;							// 카드먹을때 움직일 위치 초기 셋팅(센터)
 		centerY = mgnCenterTop;
 		
-		forWin = 5;											// 목표 승리 수 5회
+		forWin = 2;											// 목표 승리 수 2회
 		upIndexNum = 0;										// upIndexNum 초기값 0, - 1번째 카드;
 		
 		gameControll.nextTurn();							// 턴 초기값이 -1 이므로 플레이어 턴(0)으로 바꾼다.
@@ -1016,14 +1018,6 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		} // DrawAll() 끝
 		
 		
-		//-------------------------------------------------
-		// DrawWin() - run()에서 호출. 승리했을 경우 그리는 곳
-		//-------------------------------------------------
-		public void DrawWin(Canvas canvas) {
-			
-		} // DrawWin() 끝
-		
-
 		//---------------------------------
 		// run() - Thread 본체
 		//---------------------------------
@@ -1043,11 +1037,15 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 						decCheck();					// 플레이어들이 들고있는 카드 검사
 					
 						if(checkGame) {				// 게임의 승패 확인
-							mediaManager.stop();
-							whoWin();				// 누가 승리했는지 확인
-							mediaManager.play((cntWinPlayer)%3+1);
-							gameControll.restart();
-							
+							if(cntWinPlayer == forWin || cntWinLeft == forWin || cntWinRight == forWin || cntWinTop == forWin) {
+								stopThread();
+								dialog.show();
+							} else {
+								mediaManager.stop();
+								whoWin();				// 누가 승리했는지 확인
+								mediaManager.play((cntWinPlayer)%3+1);
+								gameControll.restart();
+							}
 						}
 						
 						DrawAll(canvas);			// 전부 그리기
