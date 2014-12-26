@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.onecard.GameMain;
 import com.onecard.LoginActivity;
@@ -34,15 +35,20 @@ public class ResultDialog extends Dialog implements android.view.View.OnClickLis
 		super(context);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		
+		gameControll = GameControll.getInstance(context);
+		gameCurState = GameControll.getCurrentState();
 		gameResult = gameCurState.getGameResultList();
+		oneManager = OnecardManager.getInstance(context);
 		
 		if(gameResult.get(0).getWin() == 0) {
-			setContentView(R.layout.result_fail);
+			Toast.makeText(getContext(), "패배!", Toast.LENGTH_SHORT).show();
+//			setContentView(R.layout.result_fail);			// 패배
 		} else {
-			setContentView(R.layout.result);
+			Toast.makeText(getContext(), "승리!", Toast.LENGTH_SHORT).show();
+//			setContentView(R.layout.result);				// 승리
 		}
 		
-		gameControll = GameControll.getInstance(context);
+		
 		
 		mName = (TextView) findViewById(R.id.vName);
 		mScore = (TextView) findViewById(R.id.vScore);
