@@ -1032,19 +1032,15 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 				// 중앙카드 그리기
 				canvas.drawBitmap(card[centerCardIdx], mgnCenterLeft, mgnCenterTop, null);
 				
+				
+				// 현재 카드의 패턴(문양) 그리기
 				if(gameCurState.getPattern().equals("H")) {
 					canvas.drawBitmap(heart, (mWidth-heart.getWidth())/2, mgnCenterTop + ch + heart.getWidth()/2, null);
-				}
-				
-				if(gameCurState.getPattern().equals("S")) {
+				} else if(gameCurState.getPattern().equals("S")) {
 					canvas.drawBitmap(spade, (mWidth-heart.getWidth())/2, mgnCenterTop + ch + heart.getWidth()/2, null);
-				}
-				
-				if(gameCurState.getPattern().equals("C")) {
+				} else if(gameCurState.getPattern().equals("C")) {
 					canvas.drawBitmap(clover, (mWidth-heart.getWidth())/2, mgnCenterTop + ch + heart.getWidth()/2, null);
-				}
-				
-				if(gameCurState.getPattern().equals("D")) {
+				} else if(gameCurState.getPattern().equals("D")) {
 					canvas.drawBitmap(diamond, (mWidth-heart.getWidth())/2, mgnCenterTop + ch + heart.getWidth()/2, null);
 				}
 				
@@ -1075,7 +1071,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 						if(checkGame && finishGame) {		// 게임의 승패 확인
 							mediaManager.stop();
 							mediaManager.play((cntWinPlayer)%3+1);
-							finishGame = true;
+							finishGame = false;
 							gameControll.restart();
 							
 						}
