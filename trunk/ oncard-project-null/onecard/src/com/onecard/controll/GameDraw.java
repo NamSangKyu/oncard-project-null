@@ -76,6 +76,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 	private int idx;							// 사용자가 up한 카드 실제 인덱스
 	private String whoWin;						// 이긴 플레이어의 이름
 	private int whoWinIdx;						// 이긴 플레이어의 번호
+	private boolean finishGame = false;
 	
 	// 카드를 그릴 위치 계산용 변수
 	private int lengthPlayer;					// 플레이어 카드를 그릴 위치 계산용 전체길이 변수
@@ -1036,9 +1037,10 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 						decCheck();					// 플레이어들이 들고있는 카드 검사
 						whoWin();					// 누가 승리했는지 확인
 						
-						if(checkGame && (cntWinPlayer != forWin && cntWinLeft != forWin && cntWinRight != forWin && cntWinTop != forWin)) {		// 게임의 승패 확인
+						if(checkGame && finishGame) {		// 게임의 승패 확인
 							mediaManager.stop();
 							mediaManager.play((cntWinPlayer)%3+1);
+							finishGame = true;
 							gameControll.restart();
 							
 						}
@@ -1110,6 +1112,17 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 			
 			gameControll.playAI();												// AI가 카드플레이를 하고
 			
+			if(gameCurState.getPlayerList().get(0).getWin() == forWin ||
+					gameCurState.getPlayerList().get(1).getWin() == forWin ||
+					gameCurState.getPlayerList().get(2).getWin() == forWin ||
+					gameCurState.getPlayerList().get(3).getWin() == forWin) 
+				{
+					StopGame();
+					dialog = new ResultDialog(mContext);
+					dialog.setCancelable(false);
+					dialog.show();
+				} 
+			
 			if(AI_CurCardNum > playerList.get(tmpPlayerTurn).getDec().size()) {	// 카드갯수가 증가? 감소?
 				// 카드수가 감소(카드를 냈을경우)
 				AI_CardCheck();
@@ -1127,16 +1140,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 				}
 			}
 			
-			if(gameCurState.getPlayerList().get(0).getWin() == forWin ||
-				gameCurState.getPlayerList().get(1).getWin() == forWin ||
-				gameCurState.getPlayerList().get(2).getWin() == forWin ||
-				gameCurState.getPlayerList().get(3).getWin() == forWin) 
-			{
-				StopGame();
-				dialog = new ResultDialog(mContext);
-				dialog.setCancelable(false);
-				dialog.show();
-			} 
+			
 			
 			soundManager.play(1);				// 카드 이동음
 			upIndexNum = 0;
@@ -1229,7 +1233,9 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 							dialog = new ResultDialog(mContext);
 							dialog.setCancelable(false);
 							dialog.show();
-						} 
+						} else {
+							finishGame = true;
+						}
 						
 						// up할 카드는 항상 0번째 카드로
 						if(upIndexNum == player.getDec().size()) {
