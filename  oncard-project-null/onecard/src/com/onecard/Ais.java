@@ -177,7 +177,7 @@ public class Ais implements com.onecard.gameinterface.AI
 		}
 		String send;
 		Log.i("MyLog", "sends[0]1 : : : " + sends[0]);
-		seven(sends[0]);
+		//seven(sends[0]);
 	
 		
 		Log.i("MyLog", "sends[0]2 : : : " + sends[0]);
@@ -233,7 +233,7 @@ public class Ais implements com.onecard.gameinterface.AI
 			default:
 				break;
 		}
-		Gc.changePattern(String.valueOf(rendom));
+		//Gc.changePattern(String.valueOf(rendom));
 		Log.i("MyLog", "char + " +String.valueOf(rendom));
 		return rendom;
 		
