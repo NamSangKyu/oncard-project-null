@@ -33,6 +33,9 @@ public class ResultDialog extends Dialog implements android.view.View.OnClickLis
 	public ResultDialog(Context context) {
 		super(context);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		
+		gameResult = gameCurState.getGameResultList();
+		
 		if(gameResult.get(0).getWin() == 0) {
 			setContentView(R.layout.result_fail);
 		} else {

@@ -173,8 +173,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		mediaManager.init(mContext);
 		soundManager.init(mContext);
 		
-		dialog = new ResultDialog(mContext);
-		dialog.setCancelable(false);
+		
 
 		initGame();												// 게임환경 설정
 		initBitmap();											// 게임환경에 맞도록 카드길이 설정
@@ -1039,6 +1038,8 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 						if(checkGame) {				// 게임의 승패 확인
 							if(cntWinPlayer == forWin || cntWinLeft == forWin || cntWinRight == forWin || cntWinTop == forWin) {
 								stopThread();
+								dialog = new ResultDialog(mContext);
+								dialog.setCancelable(false);
 								dialog.show();
 							} else {
 								mediaManager.stop();
