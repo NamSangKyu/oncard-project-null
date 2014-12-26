@@ -28,7 +28,18 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/imageView2"
         android:src="@drawable/pw" />
-
+    
+ 	<EditText
+        android:id="@+id/editNick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageView2"
+        android:layout_alignLeft="@+id/editPw"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="20dp"
+        android:background="@null"
+        android:ems="10" />
+ 	
     <EditText
         android:id="@+id/editPw"
         android:layout_width="wrap_content"
@@ -42,16 +53,7 @@
 
     </EditText>
 
-    <EditText
-        android:id="@+id/editNick"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/imageView2"
-        android:layout_alignLeft="@+id/editPw"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="20dp"
-        android:background="@null"
-        android:ems="10" />
+   
 
     <ImageView
         android:id="@+id/imgLogin"

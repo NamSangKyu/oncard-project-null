@@ -93,7 +93,7 @@
         android:layout_alignBottom="@+id/RankName1"
         android:layout_marginLeft="52dp"
         android:layout_toRightOf="@+id/RankName1"
-        android:text="TextView" />
+         />
 
     <TextView
         android:id="@+id/RankName2"
@@ -101,7 +101,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/imageView3"
         android:layout_alignLeft="@+id/RankName1"
-        android:text="TextView" />
+         />
 
     <TextView
         android:id="@+id/RankScore2"
@@ -109,7 +109,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/RankName2"
         android:layout_alignLeft="@+id/RankScore1"
-        android:text="TextView" />
+         />
 
     <TextView
         android:id="@+id/RankName3"
@@ -117,7 +117,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/imageView4"
         android:layout_alignLeft="@+id/RankName2"
-        android:text="TextView" />
+         />
 
     <TextView
         android:id="@+id/RankScore3"
@@ -126,7 +126,7 @@
         android:layout_alignBaseline="@+id/RankName3"
         android:layout_alignBottom="@+id/RankName3"
         android:layout_alignRight="@+id/RankScore2"
-        android:text="TextView" />
+         />
 
     <TextView
         android:id="@+id/RankName4"
@@ -134,7 +134,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/imageView5"
         android:layout_alignLeft="@+id/RankName3"
-        android:text="TextView" />
+         />
 
     <TextView
         android:id="@+id/RankScore4"
@@ -142,7 +142,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/RankName4"
         android:layout_alignLeft="@+id/RankScore3"
-        android:text="TextView" />
+         />
 
     <TextView
         android:id="@+id/RankName5"
@@ -150,7 +150,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/imageView6"
         android:layout_alignRight="@+id/RankName4"
-        android:text="TextView" />
+         />
 
     <TextView
         android:id="@+id/RankScore5"
@@ -158,7 +158,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/RankName5"
         android:layout_alignRight="@+id/RankScore4"
-        android:text="TextView" />
+         />
 
     <TextView
         android:id="@+id/RankName6"
@@ -166,7 +166,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/imageView7"
         android:layout_alignLeft="@+id/RankName5"
-        android:text="TextView" />
+         />
 
     <TextView
         android:id="@+id/RankScore6"
@@ -175,6 +175,6 @@
         android:layout_alignBaseline="@+id/RankName6"
         android:layout_alignBottom="@+id/RankName6"
         android:layout_alignLeft="@+id/RankScore5"
-        android:text="TextView" />
+         />
 
 </RelativeLayout>
