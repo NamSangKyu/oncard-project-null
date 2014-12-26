@@ -33,6 +33,7 @@ public class Ais implements com.onecard.gameinterface.AI
 	int random;
 	int nulls = 0;
 	int sum = 0;
+	int nums = 0;
 	
 	//현재턴
 	int turn;
@@ -116,8 +117,9 @@ public class Ais implements com.onecard.gameinterface.AI
 		patten = currentState.getPattern();
 		pattens[0] = patten.toCharArray()[0];
 		turn = Gc.getCurrentTurn();
-		
-		if (Gc.getPlayerList().get(0).getDec().size() > 7 && Gc.getUseDec().get(0).toCharArray()[0] == J && fjock == false)
+		nums++;
+		Log.i("MyLog", "nums:::" + nums);
+		if (Gc.getPlayerList().get(0).getDec().size() == 7 && Gc.getUseDec().get(0).toCharArray()[0] == J && fjock == false&& nums ==0)
 		{
 			fjock = true;
 			change = true;
@@ -952,6 +954,7 @@ public class Ais implements com.onecard.gameinterface.AI
 			//낼수 있는 카드가 있는지 검사
 			{
 				send.add(whatattackcards().get(i).toString());
+				send.add(null);
 				
 				break;
 				
@@ -959,6 +962,7 @@ public class Ais implements com.onecard.gameinterface.AI
 			else if (value[1] == coms[1])
 			{
 				send.add(whatattackcards().get(i).toString());
+				send.add(null);
 				
 				break;
 				
