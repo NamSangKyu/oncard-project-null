@@ -486,7 +486,7 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 		centerX = mgnCenterLeft;							// 카드먹을때 움직일 위치 초기 셋팅(센터)
 		centerY = mgnCenterTop;
 		
-		forWin = 2;											// 목표 승리 수 2회
+		forWin = 1;											// 목표 승리 수 2회
 		upIndexNum = 0;										// upIndexNum 초기값 0, - 1번째 카드;
 		
 		gameControll.nextTurn();							// 턴 초기값이 -1 이므로 플레이어 턴(0)으로 바꾼다.
@@ -1034,19 +1034,13 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 						turnCheck();				// 플레이어 턴 검사, 턴 방향 검사
 						centerCardCheck();			// 중앙에 내려진 카드 검사
 						decCheck();					// 플레이어들이 들고있는 카드 검사
-					
-						if(checkGame) {				// 게임의 승패 확인
-							if(cntWinPlayer == forWin || cntWinLeft == forWin || cntWinRight == forWin || cntWinTop == forWin) {
-								stopThread();
-								dialog = new ResultDialog(mContext);
-								dialog.setCancelable(false);
-								dialog.show();
-							} else {
-								mediaManager.stop();
-								whoWin();				// 누가 승리했는지 확인
-								mediaManager.play((cntWinPlayer)%3+1);
-								gameControll.restart();
-							}
+						whoWin();					// 누가 승리했는지 확인
+						
+						if(checkGame && (cntWinPlayer != forWin && cntWinLeft != forWin && cntWinRight != forWin && cntWinTop != forWin)) {		// 게임의 승패 확인
+							mediaManager.stop();
+							mediaManager.play((cntWinPlayer)%3+1);
+							gameControll.restart();
+							
 						}
 						
 						DrawAll(canvas);			// 전부 그리기
@@ -1133,6 +1127,17 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 				}
 			}
 			
+			if(gameCurState.getPlayerList().get(0).getWin() == forWin ||
+				gameCurState.getPlayerList().get(1).getWin() == forWin ||
+				gameCurState.getPlayerList().get(2).getWin() == forWin ||
+				gameCurState.getPlayerList().get(3).getWin() == forWin) 
+			{
+				StopGame();
+				dialog = new ResultDialog(mContext);
+				dialog.setCancelable(false);
+				dialog.show();
+			} 
+			
 			soundManager.play(1);				// 카드 이동음
 			upIndexNum = 0;
 		} // if(playerTurn)
@@ -1215,12 +1220,16 @@ public class GameDraw extends SurfaceView implements Callback, OnGestureListener
 							cardOut = true;
 						} // if
 						
-//						if(gameCurState.getUseDec().get(0) == "H7" || 
-//							gameCurState.getUseDec().get(0) == "S7" ||
-//							gameCurState.getUseDec().get(0) == "D7" ||
-//							gameCurState.getUseDec().get(0) == "C7" ) {
-//							dialog.show();
-//						}
+						if(gameCurState.getPlayerList().get(0).getWin() == forWin ||
+							gameCurState.getPlayerList().get(1).getWin() == forWin ||
+							gameCurState.getPlayerList().get(2).getWin() == forWin ||
+							gameCurState.getPlayerList().get(3).getWin() == forWin) 
+						{
+							StopGame();
+							dialog = new ResultDialog(mContext);
+							dialog.setCancelable(false);
+							dialog.show();
+						} 
 						
 						// up할 카드는 항상 0번째 카드로
 						if(upIndexNum == player.getDec().size()) {
