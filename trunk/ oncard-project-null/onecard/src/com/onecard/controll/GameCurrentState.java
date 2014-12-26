@@ -280,7 +280,7 @@ public class GameCurrentState {
 		}else{
 			String pattern=this.pattern;
 			Random r = new Random();
-			int no = r.nextInt(5);
+			int no = r.nextInt(3);
 			switch(no){
 			case 0:
 				pattern = "S";
