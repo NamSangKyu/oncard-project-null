@@ -31,6 +31,7 @@
         <activity android:name="GameStart"></activity>
         <activity android:name="Options"></activity>
         <activity android:name="GameMain"></activity>
+        <activity android:name="ResultDialog"></activity>
     	<activity android:name="GameJoin"
     	    android:windowSoftInputMode="stateHidden"
     	    ></activity>
