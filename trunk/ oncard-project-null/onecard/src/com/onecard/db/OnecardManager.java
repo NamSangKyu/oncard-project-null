@@ -92,6 +92,26 @@ public class OnecardManager {
 
 		return cursor;
 	}
+	public String viewrank(String nick) {//랭킹조회 (최고점수로 알아봄)
+		Cursor cursor = mDb
+				.rawQuery(
+						"select * from onecarduser order by score desc",
+						null);
+		String rank = "";
+		int i = 1;
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			if(cursor.getString(cursor.getColumnIndex("nickname")).equals(nick)){
+				rank = String.valueOf(i);
+				break;
+			}
+			i++;
+			cursor.moveToNext();
+		}
+		
+		
+		return rank;
+	}
 
 	public Cursor testpw(String nick) {//닉네임으로 비밀번호 조회
 		String s= "select passwd from onecarduser where nickname="+"'"+nick+"'";

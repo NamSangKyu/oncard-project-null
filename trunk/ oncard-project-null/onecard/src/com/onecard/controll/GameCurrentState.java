@@ -266,6 +266,7 @@ public class GameCurrentState {
 			nextTurn();
 			break;
 		case '7':
+			Log.d("pattern", "패턴변경");
 			inputPattern();
 			break;
 		}
@@ -589,7 +590,7 @@ public class GameCurrentState {
 		int playScore = gameResultList.get(0).getScore();
 		if(playScore > userScore){
 			LoginActivity.mUser.setScor(String.valueOf(playScore));
-			OnecardManager.getInstance(context).updatesco(LoginActivity.mUser.getName(), LoginActivity.mUser.getScor());;
+			OnecardManager.getInstance(context).updatesco(LoginActivity.mUser.getName(), LoginActivity.mUser.getScor());
 		}
 	}
 }
